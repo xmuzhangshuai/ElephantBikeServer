@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Random;
 
 import com.xxn.constants.BikeConstants;
 
@@ -15,13 +16,14 @@ public class NormalUtil {
 		else
 			return true;
 	}
-	
+
 	/**
 	 * 判断该字符串是否可转化为浮点数值
+	 * 
 	 * @param value
 	 * @return
 	 */
-	public static boolean isStringFloat(String value){
+	public static boolean isStringFloat(String value) {
 		try {
 			Float.valueOf(value);
 			return true;
@@ -29,12 +31,14 @@ public class NormalUtil {
 			return false;
 		}
 	}
+
 	/**
 	 * 判断该字符串是否可转化为整形数值
+	 * 
 	 * @param value
 	 * @return
 	 */
-	public static boolean isStringInteger(String value){
+	public static boolean isStringInteger(String value) {
 		try {
 			Integer.valueOf(value);
 			return true;
@@ -45,6 +49,7 @@ public class NormalUtil {
 
 	/**
 	 * 根据分钟计费
+	 * 
 	 * @param mins
 	 * @param stage
 	 * @return
@@ -87,7 +92,7 @@ public class NormalUtil {
 				e.printStackTrace();
 			}
 		}
-		//根据分钟数计算费用
+		// 根据分钟数计算费用
 		Iterator<String> it = prop.stringPropertyNames().iterator();
 		while (it.hasNext()) {
 			String key = it.next();
@@ -123,7 +128,7 @@ public class NormalUtil {
 					+ (1440 - 60) * stagefee[3];
 			fee = leiji + (mins - 1440) * stagefee[4];
 		}
-		//关闭文件流
+		// 关闭文件流
 		try {
 			in.close();
 		} catch (IOException e) {
@@ -132,4 +137,10 @@ public class NormalUtil {
 		return fee;
 	}
 
+	public static String generateRandom(){
+		Random random = new Random();
+		int x = random.nextInt(899999);
+		x = x+100000;		
+		return String.valueOf(x);
+	}
 }

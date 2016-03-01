@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -100,7 +101,10 @@ public class UserLogin extends HttpServlet {
 			}
 			else {
 				// 先判断验证码是否正确
-				if (verify_code.equals(BikeConstants.VERIFY_CODE)) {
+				ServletContext application=this.getServletContext(); 
+				String yzm = (String) application.getAttribute(phone);
+				System.out.println("验证码:"+yzm);
+				if (verify_code.equals(yzm)) {
 					// 先去判断是否已经有该用户
 					int res = iUserService.getUserExist(user);
 					if (res == 1) {
