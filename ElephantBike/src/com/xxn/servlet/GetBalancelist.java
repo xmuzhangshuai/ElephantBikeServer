@@ -57,10 +57,12 @@ public class GetBalancelist extends HttpServlet {
 
 		String phone = request.getParameter("phone");
 		String countStr = request.getParameter("count");
+		if(null == countStr || countStr.isEmpty())
+			countStr = "0";
+		
 		int count = 0;
 		
-		if (NormalUtil.isStringLegal(phone)
-				&& NormalUtil.isStringInteger(countStr)) {
+		if (NormalUtil.isStringLegal(phone) && NormalUtil.isStringInteger(countStr)) {
 			count = Integer.parseInt(countStr);
 			Wallet wallet = new Wallet(phone, 0.0f, "");
 			List<Map<String, Object>> list = iWalletService.getBalancelist(
