@@ -1,6 +1,7 @@
 package com.xxn.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.cloopen.rest.sdk.CCPRestSmsSDK;
+import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.NormalUtil;
 import com.xxn.constants.BikeConstants;
 
@@ -41,6 +43,10 @@ public class SMS extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html;Charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		System.out.println("/api/msg/sms");
 		HashMap result = null;
 		Map<String, String> map = new HashMap<>();
 		
@@ -60,8 +66,6 @@ public class SMS extends HttpServlet {
 				, new String[]{randomNumer,"60"});
 		
 		
-		System.out.println("SDKTestGetSubAccounts result="+result);
-		
 		if("000000".equals(result.get("statusCode"))){
 			//正常返回输出data包体信息(Map)
 			ServletContext application = this.getServletContext();
@@ -72,6 +76,9 @@ public class SMS extends HttpServlet {
 			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
 			map.put(BikeConstants.MESSAGE, "短信发送失败,请重新获取");
 		}
+		System.out.println(FastJsonTool.createJsonString(map));
+		out.print(FastJsonTool.createJsonString(map));
+		out.close();
 	}
 
 }

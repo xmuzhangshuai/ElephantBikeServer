@@ -9,4 +9,5 @@ public interface IUserService {
 	public int addUser(User user);
 	public String getUserInfo(String val,Map query);
 	public int updateUserState(User user);
+	public int completeUserInfo(User user);
 }

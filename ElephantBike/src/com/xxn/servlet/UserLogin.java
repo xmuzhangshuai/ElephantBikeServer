@@ -72,7 +72,7 @@ public class UserLogin extends HttpServlet {
 		String isfrozen = "0", isfinish = "0", ispay = "0";
 
 		// 登录情况分大两种 1.已经登录过 2.退出登录，清空缓存，第一次登录，卸载app等--需要验证码
-		if (NormalUtil.isStringLegal(phone)) {
+		if (NormalUtil.isStringLegal(phone)&&NormalUtil.isStringLegal(islogin)) {
 			User user = new User(phone, isfrozen, DateTool.dateToString(new Date()));
 			// 电话号码不为空
 			if (islogin.equals("1")) {
@@ -158,7 +158,7 @@ public class UserLogin extends HttpServlet {
 		} else {
 			// 电话号码为空
 			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-			map.put(BikeConstants.MESSAGE, "手机号码为空");
+			map.put(BikeConstants.MESSAGE, "手机号码为空或者是否登录参数不合法");
 		}
 
 		System.out.println(FastJsonTool.createJsonString(map));

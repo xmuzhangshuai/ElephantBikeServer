@@ -76,6 +76,17 @@ public class User {
 		this.userstate = userstate;
 		this.registerdate = registerdate;
 	}
-	
+	public User(String phone, String wxid, String idcardaddr,
+			String stucardaddr, String userstate, String college,
+			String registerdate) {
+		super();
+		this.phone = phone;
+		this.wxid = wxid;
+		this.idcardaddr = idcardaddr;
+		this.stucardaddr = stucardaddr;
+		this.userstate = userstate;
+		this.college = college;
+		this.registerdate = registerdate;
+	}
 	
 }

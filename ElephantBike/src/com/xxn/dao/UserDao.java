@@ -107,4 +107,24 @@ public class UserDao implements IUserDao {
 		return result;
 	}
 
+	@Override
+	public int completeUserInfo(User user) {
+		int result = 0;
+		String sql = "update u_users set idcardaddr = ? and stucardaddr = ? where phone = ?";
+		Connection connection =  JdbcUtils_DBCP.getConnection();
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, user.getIdcardaddr());
+			pstmt.setString(2, user.getStucardaddr());
+			pstmt.setString(3, user.getPhone());
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, null);
+		}
+		return result;
+	}
+
 }

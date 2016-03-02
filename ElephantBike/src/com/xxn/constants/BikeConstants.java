@@ -2,6 +2,12 @@ package com.xxn.constants;
 
 public class BikeConstants {
 	
+	
+	/**
+	 * 图片存储地址文件夹
+	 */
+	public static final String IMAGR_URL = "bikeimage";
+	public static final String WEB_IMAGR_URL = "WebImage/images/";
 	/**
 	 * 状态标签
 	 */

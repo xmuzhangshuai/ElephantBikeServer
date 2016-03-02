@@ -33,4 +33,10 @@ public class UserService implements IUserService{
 		return iUserDao.updateUserState(user);
 	}
 
+	@Override
+	public int completeUserInfo(User user) {
+		IUserDao iUserDao = new UserDao();
+		return iUserDao.completeUserInfo(user);
+	}
+
 }

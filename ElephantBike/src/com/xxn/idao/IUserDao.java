@@ -26,6 +26,7 @@ public interface IUserDao {
 	 * @return
 	 */
 	public int updateUserState(User user);
+	public int completeUserInfo(User user);
 	/**
 	 * 根据查询条件获取用户某个字段信息
 	 * @param val
