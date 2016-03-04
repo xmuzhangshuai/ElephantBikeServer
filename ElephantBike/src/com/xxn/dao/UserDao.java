@@ -155,4 +155,64 @@ public class UserDao implements IUserDao {
 		return result;
 	}
 
+	@Override
+	public int getNewUserCount(String joindate) {
+		int result = 0;
+		Connection connection = null;
+		connection = JdbcUtils_DBCP.getConnection();
+		String sql = "select count(*) from nu_newusers where joindate = ?";
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, joindate);
+			resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				result = resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, resultSet);
+		}
+		return result;
+	}
+
+	@Override
+	public int addNewUserCount(String joindate) {
+		int result = 0;
+		String sql = "insert into nu_newusers(joindate,amount) values(?,?)";
+		Connection connection =  JdbcUtils_DBCP.getConnection();
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, joindate);
+			pstmt.setInt(2, 1);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, null);
+		}
+		return result;
+	}
+
+	@Override
+	public int updateNewUser(String joindate) {
+		int result = 0;
+		String sql = "update nu_newusers set amount = amount + 1 where joindate = ?";
+		Connection connection =  JdbcUtils_DBCP.getConnection();
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, joindate);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, null);
+		}
+		return result;
+	}
+
 }

@@ -11,4 +11,14 @@ public interface IUserService {
 	public int updateUserState(User user);
 	public int completeUserInfo(User user);
 	public Map<String, String> getCardURL(User user);
+	
+	/**
+	 * 新增用户
+	 * @param user
+	 * @return
+	 */
+	public int getNewUserCount(String joindate);
+	public int addNewUserCount(String joindate);
+	public int updateNewUser(String joindate);
+	
 }

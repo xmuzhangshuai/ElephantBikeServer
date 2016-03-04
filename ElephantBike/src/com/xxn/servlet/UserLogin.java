@@ -2,6 +2,7 @@ package com.xxn.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -136,6 +137,14 @@ public class UserLogin extends HttpServlet {
 						Wallet wallet = new Wallet(phone, 0.0f, 0);
 						if (iUserService.addUser(user) > 0 && iWalletService.createWallet(wallet) > 0) {
 							// 注册写入成功 --创建个人钱包
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
+					        String joindate = sdf.format(new Date()); 
+							if(iUserService.getNewUserCount(joindate) == 0){
+								iUserService.addNewUserCount(joindate);
+							}
+							else{
+								iUserService.updateNewUser(joindate);
+							}
 							System.out.println("注册写入成功--钱包创建成功");
 							map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 							map.put("isfrozen", isfrozen);

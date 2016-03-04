@@ -41,4 +41,10 @@ public interface IUserDao {
 	 * @return idcard,stucard 
 	 */
 	public Map<String, String> getCardURL(User user);
+	
+	//新增用户数据表的操作
+	
+	public int getNewUserCount(String joindate);
+	public int addNewUserCount(String joindate);
+	public int updateNewUser(String joindate);
 }

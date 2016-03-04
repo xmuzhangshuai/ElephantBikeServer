@@ -45,4 +45,24 @@ public class UserService implements IUserService{
 		return iUserDao.getCardURL(user);
 	}
 
+	@Override
+	public int getNewUserCount(String joindate) {
+		IUserDao iUserDao = new UserDao();
+		return iUserDao.getNewUserCount(joindate);
+	}
+
+	@Override
+	public int addNewUserCount(String joindate) {
+		IUserDao iUserDao = new UserDao();
+		return iUserDao.addNewUserCount(joindate);
+	}
+
+	@Override
+	public int updateNewUser(String joindate) {
+		IUserDao iUserDao = new UserDao();
+		return iUserDao.updateNewUser(joindate);
+	}
+
+	
+
 }
