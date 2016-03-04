@@ -2,8 +2,8 @@ package com.xxn.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -12,25 +12,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.xxn.butils.DateTool;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.NormalUtil;
 import com.xxn.constants.BikeConstants;
-import com.xxn.entity.Wallet;
-import com.xxn.iservice.IWalletService;
-import com.xxn.service.WalletService;
+import com.xxn.entity.User;
+import com.xxn.iservice.IOrderService;
+import com.xxn.iservice.IUserService;
+import com.xxn.service.OrderService;
+import com.xxn.service.UserService;
 
 /**
- * Servlet implementation class Recharge
+ * Servlet implementation class GetCostAndTime
  */
-@WebServlet("/api/money/recharge")
-public class Recharge extends HttpServlet {
+@WebServlet("/api/bike/costandtime")
+public class GetCostAndTime extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public Recharge() {
+	public GetCostAndTime() {
 		super();
 	}
 
@@ -52,34 +53,38 @@ public class Recharge extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		System.out.println("/api/money/recharge");
+		System.out.println("/api/bike/costandtime");
 		Map<String, String> map = new HashMap<>();
-		IWalletService iWalletService = new WalletService();
+		IOrderService iOrderService = new OrderService();
 
 		String phone = request.getParameter("phone");
-		String value = request.getParameter("value");
-		System.out.println(phone);
-		System.out.println(value);
-		if (NormalUtil.isStringLegal(phone) && NormalUtil.isStringLegal(value)) {
-			// 先增加个人余额
-			Wallet wallet = new Wallet(phone, Float.valueOf(value), 0);
+		String finish = request.getParameter("isfinish");
+		if (NormalUtil.isStringLegal(phone)) {
+			if (finish.equals("1")) {
+				Map<String, String> val = new HashMap<>();
+				Map<String, String> query = new HashMap<>();
 
-			Wallet walletlist = new Wallet(phone, Float.valueOf(value),
-					DateTool.dateToString(new Date()));
-			if (iWalletService.rechargeWallet(wallet) > 0
-					&& iWalletService.addWalletList(walletlist) > 0) {
-				map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-				if (Float.valueOf(value) > 0)
-					map.put(BikeConstants.MESSAGE, "充值成功");
-				else
-					map.put(BikeConstants.MESSAGE, "扣费成功");
+				val.put("cost", "");
+				val.put("usedtime", "");
+				query.put("phone", phone);
+				query.put("finishtime", "not null");
+				query.put("paymode", null);
+				map = iOrderService.getOrderInfo(
+						val, query);
+				if (map.containsKey("cost")) {
+					map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
+				}
+				else {
+					map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+					map.put(BikeConstants.MESSAGE, "查询失败");
+				}
 			} else {
 				map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-				map.put(BikeConstants.MESSAGE, "充值失败");
+				map.put(BikeConstants.MESSAGE, "该用户未还车");
 			}
 		} else {
 			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-			map.put(BikeConstants.MESSAGE, "充值失败，手机号码不合法或者充值余额不合法");
+			map.put(BikeConstants.MESSAGE, "手机号码不合法");
 		}
 
 		System.out.println(FastJsonTool.createJsonString(map));

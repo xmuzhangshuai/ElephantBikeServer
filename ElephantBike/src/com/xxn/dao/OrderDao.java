@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.xxn.butils.JdbcUtils_DBCP;
@@ -159,6 +162,54 @@ public class OrderDao implements IOrderDao{
 			JdbcUtils_DBCP.release(connection, preparedStatement, resultSet);
 		}
 		return number;
+	}
+
+	@Override
+	public Map<String, String> getOrderInfo(Map<String, String> val,
+			Map<String, String> query) {
+		Map<String, String> result = new HashMap<>();
+		
+		String sql = "select ";
+		for (Object object : val.keySet()) {
+			String key = object.toString();
+			sql += String.format(" %s,", key);
+		}
+		sql = sql.substring(0, sql.length() - 1);
+		sql += " from o_order where 1=1 ";
+		for (Object object : query.keySet()) {
+			String key = object.toString();
+			if(null == query.get(key)){
+				sql +=String.format(" and %s is null",key);
+			}
+			else{
+				if("not null".equals(query.get(key))){
+					sql +=String.format(" and %s is not null",key);
+				}
+				else{
+					String value = query.get(key).toString();
+					sql += String.format(" and %s = '%s'", key, value);
+				}
+			}
+		}
+		Connection connection = JdbcUtils_DBCP.getConnection();
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = connection.prepareStatement(sql);
+			resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				for (Object object : val.keySet()) {
+					String key = object.toString();
+					String value = resultSet.getString(key);
+					result.put(key, value);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, resultSet);
+		}
+		return result;
 	}
 
 }

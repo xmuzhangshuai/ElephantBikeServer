@@ -39,4 +39,10 @@ public class UserService implements IUserService{
 		return iUserDao.completeUserInfo(user);
 	}
 
+	@Override
+	public Map<String, String> getCardURL(User user) {
+		IUserDao iUserDao = new UserDao();
+		return iUserDao.getCardURL(user);
+	}
+
 }

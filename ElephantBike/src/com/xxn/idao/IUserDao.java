@@ -1,5 +1,6 @@
 package com.xxn.idao;
 
+import java.util.List;
 import java.util.Map;
 
 import com.xxn.entity.User;
@@ -31,7 +32,13 @@ public interface IUserDao {
 	 * 根据查询条件获取用户某个字段信息
 	 * @param val
 	 * @param query
-	 * @return
+	 * @return 
 	 */
 	public String getUserInfo(String val,Map query);
+	/**
+	 * 根据用户手机号码获取通过审核通过的证件URL
+	 * @param user
+	 * @return idcard,stucard 
+	 */
+	public Map<String, String> getCardURL(User user);
 }

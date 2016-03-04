@@ -1,5 +1,6 @@
 package com.xxn.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.xxn.dao.OrderDao;
@@ -37,6 +38,12 @@ public class OrderService implements IOrderService {
 	public String getBikeid(Order order) {
 		IOrderDao iOrderDao = new OrderDao();
 		return iOrderDao.getBikeid(order);
+	}
+
+	@Override
+	public Map<String, String> getOrderInfo(Map<String, String> val, Map<String, String> query) {
+		IOrderDao iOrderDao = new OrderDao();
+		return iOrderDao.getOrderInfo(val, query);
 	}
 
 

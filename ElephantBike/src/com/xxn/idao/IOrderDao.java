@@ -1,5 +1,6 @@
 package com.xxn.idao;
 
+import java.util.List;
 import java.util.Map;
 
 import com.xxn.entity.Order;
@@ -24,5 +25,13 @@ public interface IOrderDao {
 	 * @return
 	 */
 	public String getBikeid(Order order);
+	
+	/**
+	 * 根据参数获取相应信息
+	 * @param val
+	 * @param query
+	 * @return
+	 */
+	public Map<String, String> getOrderInfo(Map<String,String> val,Map<String,String> query);
 	
 }

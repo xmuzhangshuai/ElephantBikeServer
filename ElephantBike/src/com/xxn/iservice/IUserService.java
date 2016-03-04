@@ -10,4 +10,5 @@ public interface IUserService {
 	public String getUserInfo(String val,Map query);
 	public int updateUserState(User user);
 	public int completeUserInfo(User user);
+	public Map<String, String> getCardURL(User user);
 }

@@ -115,7 +115,6 @@ public class UploadImage extends HttpServlet {
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));
 		out.close();
-
 	}
 
 }

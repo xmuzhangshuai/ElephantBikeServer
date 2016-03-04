@@ -58,9 +58,10 @@ public class CountBikeFee extends HttpServlet {
 
 		String phone = request.getParameter("phone");
 		String bikeid = request.getParameter("bikeid");
+		String isfinish = request.getParameter("isfinish");
 		int mins = 0;
 		float fee = 0.0f;
-		if (NormalUtil.isStringLegal(phone) && NormalUtil.isStringLegal(bikeid)) {
+		if (NormalUtil.isStringLegal(phone) && NormalUtil.isStringLegal(bikeid) && NormalUtil.isStringLegal(isfinish)) {
 			// 先去数据查找订单未finish的starttime---计算时长和费用
 			Order order = new Order(phone, bikeid, null);
 			String starttime = iOrderService.getOrderInfo(order);
@@ -69,36 +70,42 @@ public class CountBikeFee extends HttpServlet {
 				Date finish = new Date();
 				long seconds = (finish.getTime() - start.getTime()) / 1000;
 				System.out.println("秒数:" + seconds);
-				
+
 				// 根据秒数计算分钟数，获取费用
-				mins = (int) (seconds/60);
+				mins = (int) (seconds / 60);
 				if (seconds % 60 != 0) {
 					mins += 1;
 				}
-				fee = NormalUtil.countFee(mins,1);
-				//计算使用时长
+				fee = NormalUtil.countFee(mins, 1);
+				// 计算使用时长
 				String usedtime = DateTool.calcUsedTime(seconds);
-				
-				//写入数据库订单
-				Map<String, String> val = new HashMap<>();
-				val.put("finishtime", DateTool.dateToString(finish));
-				val.put("usedtime", usedtime);
-				val.put("cost", fee+"");
-				Map<String, String> query = new HashMap<>();
-				query.put("phone", phone);
-				query.put("bikeid", bikeid);
-				query.put("finishtime", null);
-				if(iOrderService.updateOrder(val, query) > 0){
-					System.out.println("订单修改完成");
+
+				if (isfinish.equals("0")) {
 					map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 					map.put("fee", String.valueOf(fee));
 					map.put("time", usedtime);
 				}
-				else{
-					map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-					map.put(BikeConstants.MESSAGE, "订单修改失败");
+				if (isfinish.equals("1")) {
+					// 写入数据库订单
+					Map<String, String> val = new HashMap<>();
+					val.put("finishtime", DateTool.dateToString(finish));
+					val.put("usedtime", usedtime);
+					val.put("cost", fee + "");
+					Map<String, String> query = new HashMap<>();
+					query.put("phone", phone);
+					query.put("bikeid", bikeid);
+					query.put("finishtime", null);
+					if (iOrderService.updateOrder(val, query) > 0) {
+						System.out.println("订单修改完成");
+						map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
+						map.put("fee", String.valueOf(fee));
+						map.put("time", usedtime);
+					} else {
+						map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+						map.put(BikeConstants.MESSAGE, "订单修改失败");
+					}
 				}
-				
+
 			} else {
 				map.put(BikeConstants.STATUS, BikeConstants.FAIL);
 				map.put(BikeConstants.MESSAGE, "查找不到该未完成订单");

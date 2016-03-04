@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.xxn.butils.JdbcUtils_DBCP;
@@ -123,6 +125,32 @@ public class UserDao implements IUserDao {
 			e.printStackTrace();
 		} finally {
 			JdbcUtils_DBCP.release(connection, pstmt, null);
+		}
+		return result;
+	}
+
+	@Override
+	public Map<String, String> getCardURL(User user) {
+		Map<String, String> result = new HashMap<>();
+		Connection connection = null;
+		connection = JdbcUtils_DBCP.getConnection();
+		String sql = "select idcardaddr,stucardaddr from u_users where phone=? and userstate=1 ";
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, user.getPhone());
+			resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				String idcard = resultSet.getString(1);
+				String stucard = resultSet.getString(2);
+				result.put("idcard", idcard);
+				result.put("stucard", stucard);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, resultSet);
 		}
 		return result;
 	}
