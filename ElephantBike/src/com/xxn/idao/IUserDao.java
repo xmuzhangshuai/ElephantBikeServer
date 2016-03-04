@@ -41,6 +41,7 @@ public interface IUserDao {
 	 * @return idcard,stucard 
 	 */
 	public Map<String, String> getCardURL(User user);
+	public int getURLExist(User user);
 	
 	//新增用户数据表的操作
 	

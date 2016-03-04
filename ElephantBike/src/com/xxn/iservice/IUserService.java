@@ -11,7 +11,7 @@ public interface IUserService {
 	public int updateUserState(User user);
 	public int completeUserInfo(User user);
 	public Map<String, String> getCardURL(User user);
-	
+	public int getURLExist(User user);
 	/**
 	 * 新增用户
 	 * @param user

@@ -63,6 +63,12 @@ public class UserService implements IUserService{
 		return iUserDao.updateNewUser(joindate);
 	}
 
+	@Override
+	public int getURLExist(User user) {
+		IUserDao iUserDao = new UserDao();
+		return iUserDao.getURLExist(user);
+	}
+
 	
 
 }

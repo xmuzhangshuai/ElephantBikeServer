@@ -55,7 +55,7 @@ public class UploadImage extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		
+		System.out.println("/api/file/upload");
 		Map<String, String> map = new HashMap<>();
 		IWebToolService iWebToolService = new WebToolService();
 
@@ -73,11 +73,10 @@ public class UploadImage extends HttpServlet {
 			su.setAllowedFilesList("gif,png,jpg,jpeg,JPEG");
 			try {
 				su.upload();
-				int ss = su.getFiles().getCount();
-				String im = su.getRequest().getParameter("imgurl");
-
+				System.out.println("数量:"+su.getFiles().getCount());
 				for (int i = 0; i < su.getFiles().getCount(); i++) 
 				{
+					System.out.println("格式:"+su.getFiles().getFile(i).getFileExt());
 					if (su.getFiles().getFile(i).getFileExt().equals("jpg")
 							|| su.getFiles().getFile(i).getFileExt().equals("jpeg")
 							|| su.getFiles().getFile(i).getFileExt().equals("png")
@@ -99,7 +98,6 @@ public class UploadImage extends HttpServlet {
 							image_file.saveAs(imgurl + imgurl_name);
 							map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 							map.put("url", BikeConstants.WEB_IMAGR_URL+imgurl_name);
-							
 						}
 					}
 				}

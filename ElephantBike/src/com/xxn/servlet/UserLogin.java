@@ -80,7 +80,8 @@ public class UserLogin extends HttpServlet {
 				// 已经登录---需要拿到3个变量
 				Map<String, String> queryisfrozen = new HashMap<>();
 				queryisfrozen.put("phone", phone);
-				isfrozen = iUserService.getUserInfo("userstate", queryisfrozen);
+				if(iUserService.getURLExist(user) > 0 )isfrozen = "2";
+				else isfrozen = iUserService.getUserInfo("userstate", queryisfrozen);
 				
 				Map<String, String> queryisfinish = new HashMap<>();
 				queryisfinish.put("phone", phone);
@@ -112,7 +113,8 @@ public class UserLogin extends HttpServlet {
 						// 已经有该用户--则不写入新增用户表---获取用户状态 是否结束 是否付款
 						Map<String, String> queryisfrozen = new HashMap<>();
 						queryisfrozen.put("phone", phone);
-						isfrozen = iUserService.getUserInfo("userstate", queryisfrozen);
+						if(iUserService.getURLExist(user) > 0 )isfrozen = "2";
+						else isfrozen = iUserService.getUserInfo("userstate", queryisfrozen);
 						
 						Map<String, String> queryisfinish = new HashMap<>();
 						queryisfinish.put("phone", phone);

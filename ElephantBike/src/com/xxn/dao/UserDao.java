@@ -154,6 +154,30 @@ public class UserDao implements IUserDao {
 		}
 		return result;
 	}
+	
+	@Override
+	public int getURLExist(User user) {
+		int result = 0;
+		Connection connection = null;
+		connection = JdbcUtils_DBCP.getConnection();
+		String sql = "select count(*) from u_users where phone=? and userstate=0 "
+				+ "and idcardaddr is not null and stucardaddr is not null";
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, user.getPhone());
+			resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				result = resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, resultSet);
+		}
+		return result;
+	}
 
 	@Override
 	public int getNewUserCount(String joindate) {
