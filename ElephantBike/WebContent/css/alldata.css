@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+#news {
+    width:90%;
+    border:2px solid #eee;
+    margin:10px 0 0 3%;
+}
+#news li{
+    list-style-type:none;
+    float:left;
+    width:12%;
+    text-align:center;
+    background:#eee;
+    margin-right:2px;
+    margin-bottom:2px;
+    line-height:30px;
+    font-size:14px;
+}
+#news li.bt{font-size:16px; font-weight:bold; background:#5B9BD5;}

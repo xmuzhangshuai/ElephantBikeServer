@@ -20,7 +20,7 @@ public class QuestionDao implements IQuestionDao{
 		try {
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setString(1, question.getPhone());
-			pstmt.setString(2, question.getBikeaddr());
+			pstmt.setString(2, question.getBikeid());
 			pstmt.setString(3, question.getType());
 			pstmt.setString(4, question.getDescription());
 			pstmt.setString(5, question.getBikeaddr());

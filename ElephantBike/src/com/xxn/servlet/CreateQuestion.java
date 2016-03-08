@@ -44,6 +44,7 @@ public class CreateQuestion extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
@@ -60,6 +61,7 @@ public class CreateQuestion extends HttpServlet {
 		if(null == description)description="";
 		if(null == addr)addr="";
 		if(null == evidence)evidence="";
+		
 		
 		Question question = new Question(phone, bikeid, type, description, addr, evidence);
 		if(iQuestionService.addQuestion(question) > 0){

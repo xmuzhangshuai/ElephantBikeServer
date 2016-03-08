@@ -53,6 +53,7 @@ public class ReturnPay extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
@@ -63,8 +64,7 @@ public class ReturnPay extends HttpServlet {
 
 		String phone = request.getParameter("phone");
 		String bikeid = request.getParameter("bikeid");
-		String paymode = new String(request.getParameter("paymode").getBytes(
-				"ISO8859-1"), "UTF-8");
+		String paymode = request.getParameter("paymode");
 		String ismissing = request.getParameter("ismissing");
 		System.out.println("paymode:" + paymode);
 //		ismissing = "0";

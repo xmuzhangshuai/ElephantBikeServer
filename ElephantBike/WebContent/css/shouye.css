@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+
+.block1{
+	width: 44%; 
+	height: 50px; 
+	background: #5B9BD5; 
+	float: left;
+}
+.block2{
+	width: 22%; 
+	height: 50px; 
+	background: #5B9BD5; 
+	float: left;
+}
+.span{
+	margin: 0 auto; 
+	text-align: center;
+}

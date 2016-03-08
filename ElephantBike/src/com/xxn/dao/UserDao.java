@@ -112,7 +112,7 @@ public class UserDao implements IUserDao {
 	@Override
 	public int completeUserInfo(User user) {
 		int result = 0;
-		String sql = "update u_users set idcardaddr = ? and stucardaddr = ? where phone = ?";
+		String sql = "update u_users set idcardaddr = ? , stucardaddr = ? where phone = ?";
 		Connection connection =  JdbcUtils_DBCP.getConnection();
 		PreparedStatement pstmt = null;
 		try {

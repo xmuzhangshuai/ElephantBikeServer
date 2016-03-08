@@ -3,7 +3,6 @@ package com.xxn.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -15,11 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.NormalUtil;
 import com.xxn.constants.BikeConstants;
-import com.xxn.entity.User;
 import com.xxn.iservice.IOrderService;
-import com.xxn.iservice.IUserService;
 import com.xxn.service.OrderService;
-import com.xxn.service.UserService;
 
 /**
  * Servlet implementation class GetCostAndTime
@@ -58,29 +54,21 @@ public class GetCostAndTime extends HttpServlet {
 		IOrderService iOrderService = new OrderService();
 
 		String phone = request.getParameter("phone");
-		String finish = request.getParameter("isfinish");
 		if (NormalUtil.isStringLegal(phone)) {
-			if (finish.equals("1")) {
-				Map<String, String> val = new HashMap<>();
-				Map<String, String> query = new HashMap<>();
+			Map<String, String> val = new HashMap<>();
+			Map<String, String> query = new HashMap<>();
 
-				val.put("cost", "");
-				val.put("usedtime", "");
-				query.put("phone", phone);
-				query.put("finishtime", "not null");
-				query.put("paymode", null);
-				map = iOrderService.getOrderInfo(
-						val, query);
-				if (map.containsKey("cost")) {
-					map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-				}
-				else {
-					map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-					map.put(BikeConstants.MESSAGE, "查询失败");
-				}
+			val.put("cost", "");
+			val.put("usedtime", "");
+			query.put("phone", phone);
+			query.put("finishtime", "not null");
+			query.put("paymode", null);
+			map = iOrderService.getOrderInfo(val, query);
+			if (map.containsKey("cost")) {
+				map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 			} else {
 				map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-				map.put(BikeConstants.MESSAGE, "该用户未还车");
+				map.put(BikeConstants.MESSAGE, "查询失败");
 			}
 		} else {
 			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
