@@ -2,6 +2,7 @@ package com.xxn.butils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Random;
@@ -134,13 +135,19 @@ public class NormalUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		//费用四舍五入 两位小数点
+		int scale = 2;// 设置位数
+		int roundingMode = 4;// 表示四舍五入，可以选择其他舍值方式，例如去尾，等等.
+		BigDecimal bd = new BigDecimal((double) fee);
+		bd = bd.setScale(scale, roundingMode);
+		fee = bd.floatValue();
 		return fee;
 	}
 
-	public static String generateRandom(){
+	public static String generateRandom() {
 		Random random = new Random();
 		int x = random.nextInt(899999);
-		x = x+100000;		
+		x = x + 100000;
 		return String.valueOf(x);
 	}
 }

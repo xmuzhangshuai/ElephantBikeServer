@@ -18,12 +18,12 @@ public class LocationTool {
 		return p.contains(point);
 	}
 	public static void gouzao(){
-		Point2D.Double point = new Point2D.Double(116.307115, 40.05855);
+		Point2D.Double point = new Point2D.Double(118.130541, 24.444345);
 		long time1 = System.currentTimeMillis(); 
 		List<Point2D.Double> polygon = new ArrayList<>();
-		polygon.add(new Point2D.Double(116.302516, 40.05924));
-		polygon.add(new Point2D.Double(116.314122, 40.060842));
-		polygon.add(new Point2D.Double(116.309667, 40.054076));
+		polygon.add(new Point2D.Double(118.130137, 24.445012));
+		polygon.add(new Point2D.Double(118.129445, 24.444112));
+		polygon.add(new Point2D.Double(118.130896, 24.444614));
 		long time2 = 0;
 		if(checkWithJdkGeneralPath(point,polygon)){
 			time2 = System.currentTimeMillis();

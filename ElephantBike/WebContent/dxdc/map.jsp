@@ -88,7 +88,7 @@ li {
 	<script type="text/javascript">
 		// 百度地图API功能
 		var map = new BMap.Map('map');
-		var poi = new BMap.Point(116.307852, 40.057031);
+		var poi = new BMap.Point(118.113123, 24.441949);
 		map.centerAndZoom(poi, 16);
 		map.enableScrollWheelZoom();
 		var overlays = [];

@@ -36,6 +36,11 @@ public class DateTool {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return sdf.format(date);
 	}
+	
+	public static String date2String(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		return sdf.format(date);
+	}
 
 	public static String calcUsedTime(long seconds) {
 		int day = 0, hour = 0, mins = 0, sec = 0;

@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,8 @@ public class BikeLocation extends HttpServlet {
 		boolean legal = false;
 		String bikeid = request.getParameter("bikeid");
 		String location = request.getParameter("location");
+		System.out.println(location);
+		long time1 = new Date().getTime();
 		if (NormalUtil.isStringLegal(bikeid)
 				&& NormalUtil.isStringLegal(location)) {
 			// TODO 根据单车编号去获取大学
@@ -109,6 +112,8 @@ public class BikeLocation extends HttpServlet {
 			map.put(BikeConstants.MESSAGE, "参数不符合要求");
 		}
 
+		long time2 = new Date().getTime();
+		System.out.println("时间差"+(time2-time1));
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));
 		out.close();
