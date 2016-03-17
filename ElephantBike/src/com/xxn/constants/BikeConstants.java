@@ -1,7 +1,24 @@
 package com.xxn.constants;
 
 public class BikeConstants {
+
+	/**
+	 * sign key
+	 */
+	public static final String SIGN_KEY = "dfeb3d35bc3543rdc234";
 	
+	/**
+	 * 云通讯
+	 */
+	public static final String YUN_TEMPLATEID = "72742";
+	public static final String YUN_ACCOUNT_SID = "8a48b55152f73add0152ff0804121100";
+	public static final String YUN_AUTH_TOKEN = "1cda62228f8040d4a0b0929eaf00b96b";
+	public static final String YUN_REST_URL = "https://app.cloopen.com:8883";
+	public static final String YUN_APP_ID = "aaf98f895350b688015372c58ad23634";
+	
+	/**
+	 * 微信支付
+	 */
 	public static final String WX_PAY_ORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 	public static final String WX_KEY = "13190819011daxiangdanche12345678";
 	public static final String WX_APP_ID = "wx4a480f3f5a6c4c6c";

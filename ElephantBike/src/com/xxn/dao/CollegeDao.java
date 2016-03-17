@@ -56,4 +56,29 @@ public class CollegeDao implements ICollegeDao{
 		return res;
 	}
 
+	@Override
+	public List<College> getDistinctName() {
+		
+		List<College> res = new ArrayList<>();
+		Connection connection = null;
+		connection = JdbcUtils_DBCP.getConnection();
+		String sql = "select distinct(college),collegeid from c_college;";
+		ResultSet resultSet = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				String name = resultSet.getString(1);
+				String collegeid = resultSet.getString(2);
+				College college = new College("", name, collegeid);
+				res.add(college);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, preparedStatement, resultSet);
+		}
+		return res;
+	}
 }

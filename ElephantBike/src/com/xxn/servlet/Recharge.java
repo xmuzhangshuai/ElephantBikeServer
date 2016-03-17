@@ -49,6 +49,7 @@ public class Recharge extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
@@ -58,12 +59,10 @@ public class Recharge extends HttpServlet {
 
 		String phone = request.getParameter("phone");
 		String value = request.getParameter("value");
-		System.out.println(phone);
-		System.out.println(value);
+		
 		if (NormalUtil.isStringLegal(phone) && NormalUtil.isStringLegal(value)) {
 			// 先增加个人余额
 			Wallet wallet = new Wallet(phone, Float.valueOf(value), 0);
-
 			Wallet walletlist = new Wallet(phone, Float.valueOf(value),
 					DateTool.dateToString(new Date()));
 			if (iWalletService.rechargeWallet(wallet) > 0

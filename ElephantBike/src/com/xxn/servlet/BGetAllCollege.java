@@ -14,22 +14,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.NormalUtil;
-import com.xxn.constants.BikeConstants;
-import com.xxn.entity.Wallet;
-import com.xxn.iservice.IWalletService;
-import com.xxn.service.WalletService;
+import com.xxn.entity.College;
+import com.xxn.iservice.ICollegeService;
+import com.xxn.service.CollegeService;
 
 /**
- * Servlet implementation class GetBalancelist
+ * Servlet implementation class BGetAllCollege
  */
-@WebServlet("/api/money/balancelist")
-public class GetBalancelist extends HttpServlet {
+@WebServlet("/allcollege")
+public class BGetAllCollege extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public GetBalancelist() {
+	public BGetAllCollege() {
 		super();
 	}
 
@@ -52,34 +51,12 @@ public class GetBalancelist extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		System.out.println("/api/money/balancelist");
 		Map<String, Object> map = new HashMap<>();
-		IWalletService iWalletService = new WalletService();
-
-		String phone = request.getParameter("phone");
-		String countStr = request.getParameter("count");
-		if(null == countStr || countStr.isEmpty())
-			countStr = "0";
-		
-		int count = 0;
-		
-		if (NormalUtil.isStringLegal(phone) && NormalUtil.isStringInteger(countStr)) {
-			count = Integer.parseInt(countStr);
-			Wallet wallet = new Wallet(phone, 0.0f, "");
-			List<Map<String, Object>> list = iWalletService.getBalancelist(
-					wallet, count);
-			if (list.size() > 0) {
-				map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-				map.put("data", list);
-			} else {
-				map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-				map.put(BikeConstants.MESSAGE, "没有更多数据了...");
-			}
-		} else {
-			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-			map.put(BikeConstants.MESSAGE, "手机号码不合法");
+		ICollegeService iCollegeService = new CollegeService();
+		List<College> result = iCollegeService.getDistinctName();
+		if(result.size() > 0){
+			map.put("college", result);
 		}
-
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));
 		out.close();

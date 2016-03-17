@@ -21,7 +21,7 @@ fieldset {
 -webkit-border-radius: 5px;
 -moz-border-radius: 5px;
 border-radius: 5px;
-background: #3EAFE0;
+background: #fff;
 border: 1px solid #ccc;
 padding: 1% 0%;
 margin: 10px 0;
@@ -104,7 +104,7 @@ option {
     margin-right: 5%;
     padding: 5px 0;
 }
-input[type=submit].alt_btn {
+.alt_btn {
     background: #D0D1D4 url(../images/btn_submit_2.png) repeat-x;
     border: 1px solid#30B0C8;
     -webkit-box-shadow: 0 1px 0 #fff;

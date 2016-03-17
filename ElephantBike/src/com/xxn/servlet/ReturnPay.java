@@ -92,7 +92,7 @@ public class ReturnPay extends HttpServlet {
 				Wallet wallet1 = new Wallet(phone, -fee, 0);
 				Wallet wallet2 = new Wallet(phone, -fee,
 						DateTool.dateToString(new Date()));
-				if (paymode.equals("大象钱包")) {
+				if (paymode.equals("大象钱包")||paymode.equals("微信支付")) {
 
 					if (ismissing.equals("0")) {
 						// 正常还车-->请求先扣费，再进行订单写入
@@ -119,9 +119,9 @@ public class ReturnPay extends HttpServlet {
 						//TODO 
 					}
 				}
-				if (paymode.equals("微信支付")) {
-					//TODO 
-				}
+//				if (paymode.equals("微信支付")) {
+//					//TODO 
+//				}
 				if (paymode.equals("支付宝")) {
 					//TODO 
 				}

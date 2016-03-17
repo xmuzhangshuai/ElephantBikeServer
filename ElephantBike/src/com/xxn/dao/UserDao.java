@@ -134,7 +134,7 @@ public class UserDao implements IUserDao {
 		Map<String, String> result = new HashMap<>();
 		Connection connection = null;
 		connection = JdbcUtils_DBCP.getConnection();
-		String sql = "select idcardaddr,stucardaddr from u_users where phone=? and userstate=1 ";
+		String sql = "select idcardaddr,stucardaddr from u_users where phone=?";
 		ResultSet resultSet = null;
 		PreparedStatement pstmt = null;
 		try {

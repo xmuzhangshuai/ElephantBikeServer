@@ -3,6 +3,7 @@ package com.xxn.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -12,23 +13,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xxn.butils.FastJsonTool;
-import com.xxn.butils.NormalUtil;
-import com.xxn.constants.BikeConstants;
-import com.xxn.entity.User;
-import com.xxn.iservice.IUserService;
-import com.xxn.service.UserService;
+import com.xxn.entity.College;
+import com.xxn.iservice.ICollegeService;
+import com.xxn.service.CollegeService;
 
 /**
- * Servlet implementation class GetCardURL
+ * Servlet implementation class BAddBike
  */
-@WebServlet("/api/user/cardurl")
-public class GetCardURL extends HttpServlet {
+@WebServlet("/addbike")
+public class BAddBike extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetCardURL() {
+    public BAddBike() {
         super();
     }
 
@@ -47,26 +46,13 @@ public class GetCardURL extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		System.out.println("/api/user/cardurl");
-		Map<String, String> map = new HashMap<>();
-		IUserService iUserService = new UserService();
+		Map<String, Object> map = new HashMap<>();
+		ICollegeService iCollegeService = new CollegeService();
 		
-		String phone = request.getParameter("phone");
-		if(NormalUtil.isStringLegal(phone)){
-			User user = new User(phone, "");
-			map = iUserService.getCardURL(user);
-			if(map.containsKey("idcard")){
-				map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-			}
-			else{
-				map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-				map.put(BikeConstants.MESSAGE, "无该用户证件信息");
-			}
-		}
-		else{
-			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-			map.put(BikeConstants.MESSAGE, "手机号码不合法");
-		}
+		String fid = request.getParameter("id");
+		String lid = request.getParameter("b_id");
+		String name = request.getParameter("name");
+		System.out.println(fid+lid+"="+name);
 		
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));

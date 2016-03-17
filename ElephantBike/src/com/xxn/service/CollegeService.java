@@ -21,4 +21,10 @@ public class CollegeService implements ICollegeService{
 		return iCollegeDao.getAddrByCollege(college);
 	}
 
+	@Override
+	public List<College> getDistinctName() {
+		ICollegeDao iCollegeDao = new CollegeDao();
+		return iCollegeDao.getDistinctName();
+	}
+
 }

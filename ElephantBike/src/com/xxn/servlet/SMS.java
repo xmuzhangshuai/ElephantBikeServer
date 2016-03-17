@@ -42,7 +42,7 @@ public class SMS extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
@@ -53,19 +53,17 @@ public class SMS extends HttpServlet {
 		CCPRestSmsSDK restAPI = new CCPRestSmsSDK();
 		// 初始化服务器地址和端口，沙盒环境配置成sandboxapp.cloopen.com，
 		//生产环境配置成app.cloopen.com，端口都是8883.
-		restAPI.init("sandboxapp.cloopen.com", "8883");
-		restAPI.setAccount("8a48b55152f73add0152ff0804121100", 
-				"1cda62228f8040d4a0b0929eaf00b96b");
-		restAPI.setAppId("8a48b55152f73add0152ff0a3c4d1109");
+		restAPI.init("app.cloopen.com", "8883");
+		restAPI.setAccount(BikeConstants.YUN_ACCOUNT_SID, 
+				BikeConstants.YUN_AUTH_TOKEN);
+//		restAPI.setAppId("8a48b55152f73add0152ff0a3c4d1109");
+		restAPI.setAppId(BikeConstants.YUN_APP_ID);
 		
 		String phone = request.getParameter("phone");
-		
 		String randomNumer = NormalUtil.generateRandom();
 		//randomNumer随机产生
-		result = restAPI.sendTemplateSMS(phone, "1"
+		result = restAPI.sendTemplateSMS(phone, BikeConstants.YUN_TEMPLATEID
 				, new String[]{randomNumer,"60"});
-		
-		
 		if("000000".equals(result.get("statusCode"))){
 			//正常返回输出data包体信息(Map)
 			ServletContext application = this.getServletContext();
@@ -74,7 +72,7 @@ public class SMS extends HttpServlet {
 			map.put(BikeConstants.MESSAGE, "短信发送成功,请查收");
 		}else{
 			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-			map.put(BikeConstants.MESSAGE, "短信发送失败,请重新获取");
+			map.put(BikeConstants.MESSAGE, "短信发送失败,请重新获取\n"+"错误码=" + result.get("statusCode") +" 错误信息= "+result.get("statusMsg"));
 		}
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));
