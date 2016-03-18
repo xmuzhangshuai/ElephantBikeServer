@@ -18,7 +18,11 @@ public interface IWalletDao {
 	 * @return
 	 */
 	public int rechargeWallet(Wallet wallet);
-	
+	/**
+	 * 批量增加
+	 * @return
+	 */
+	public int batchRecharge(float val);
 	/**
 	 * 获取用户余额
 	 * @param wallet

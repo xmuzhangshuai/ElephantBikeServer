@@ -59,12 +59,13 @@ public class FrozenUser extends HttpServlet {
 		if(NormalUtil.isStringLegal(phone)){
 			User user = new User(phone, state);
 			if(iUserService.updateUserState(user) > 0){
-				map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 				if(state.equals(BikeConstants.FROZEN)){
+					map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 					map.put(BikeConstants.MESSAGE, "冻结用户成功");
 				}
 				if(state.equals(BikeConstants.CENTIFY)){
-					map.put(BikeConstants.MESSAGE, "用户认证成功");
+//					map.put(BikeConstants.MESSAGE, "用户认证成功");
+					out.print(1);
 				}
 			}
 			else{
@@ -76,9 +77,9 @@ public class FrozenUser extends HttpServlet {
 			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
 			map.put(BikeConstants.MESSAGE, "手机号码不合法");
 		}
-		
 		System.out.println(FastJsonTool.createJsonString(map));
-		out.print(FastJsonTool.createJsonString(map));
+		if(!map.isEmpty())
+			out.print(FastJsonTool.createJsonString(map));
 		out.close();
 	}
 

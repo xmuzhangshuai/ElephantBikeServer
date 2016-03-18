@@ -43,6 +43,14 @@ public interface IUserDao {
 	public Map<String, String> getCardURL(User user);
 	public int getURLExist(User user);
 	
+	// 获取条数
+	public int getUserCount(Map queryParams);
+
+	// 获取列表
+	public List<User> findForPage(int start, int end, String sort,
+			String order, Map queryParams);
+	
+	
 	//新增用户数据表的操作
 	
 	public int getNewUserCount(String joindate);

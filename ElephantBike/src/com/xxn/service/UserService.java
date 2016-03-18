@@ -1,5 +1,6 @@
 package com.xxn.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.xxn.dao.UserDao;
@@ -67,6 +68,19 @@ public class UserService implements IUserService{
 	public int getURLExist(User user) {
 		IUserDao iUserDao = new UserDao();
 		return iUserDao.getURLExist(user);
+	}
+
+	@Override
+	public int getUserCount(Map queryParams) {
+		IUserDao iUserDao = new UserDao();
+		return iUserDao.getUserCount(queryParams);
+	}
+
+	@Override
+	public List<User> findForPage(int start, int end, String sort,
+			String order, Map queryParams) {
+		IUserDao iUserDao = new UserDao();
+		return iUserDao.findForPage(start, end, sort, order, queryParams);
 	}
 
 	

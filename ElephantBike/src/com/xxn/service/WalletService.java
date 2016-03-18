@@ -40,4 +40,10 @@ public class WalletService implements IWalletService{
 		return iWalletDao.getBalance(wallet);
 	}
 
+	@Override
+	public int batchRecharge(float val) {
+		IWalletDao iWalletDao = new WalletDao();
+		return iWalletDao.batchRecharge(val);
+	}
+
 }

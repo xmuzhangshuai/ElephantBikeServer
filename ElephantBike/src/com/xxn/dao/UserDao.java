@@ -4,13 +4,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.xxn.butils.JdbcUtils_DBCP;
 import com.xxn.entity.User;
+import com.xxn.entity.Wallet;
 import com.xxn.idao.IUserDao;
+import com.xxn.idao.IWalletDao;
 
 public class UserDao implements IUserDao {
 
@@ -237,6 +240,90 @@ public class UserDao implements IUserDao {
 			JdbcUtils_DBCP.release(connection, pstmt, null);
 		}
 		return result;
+	}
+
+	@Override
+	public int getUserCount(Map queryParams) {
+		int count = 0;
+		String sql = "select count(*) from u_users"
+				+ " where 1 = 1";
+		for (Object object : queryParams.keySet()) {
+			String key = object.toString();
+			String value = queryParams.get(key).toString();
+			if(key.equals("userstate"))
+				if(value.equals("1"))
+					sql += String.format(" and  %s ='%s' ", key, value);
+				else 
+					sql += String.format(" and  %s <>1 ", key);
+			else
+				sql += String.format(" and  %s like '%%%s%%' ", key, value);
+		}
+		System.out.println(sql);
+		Connection connection = JdbcUtils_DBCP.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+		try {
+			pstmt = connection.prepareStatement(sql);
+			resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				count = resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, resultSet);
+		}
+		return count;
+	}
+
+	@Override
+	public List<User> findForPage(int start, int end, String sort,
+			String order, Map queryParams) {
+		String sql = " select tmp.* from ( " + " select * from u_users where 1=1 ";
+		for (Object object : queryParams.keySet()) {
+			String key = object.toString();
+			String value = queryParams.get(key).toString();
+			if(key.equals("userstate"))
+				if(value.equals("1"))
+					sql += String.format(" and  %s ='%s' ", key, value);
+				else 
+					sql += String.format(" and  %s <>1 ", key);
+			else
+				sql += String.format(" and  %s like '%%%s%%' ", key, value);
+		}
+		sql += " order by " + sort + " " + order + " ) tmp limit " + start
+				+ " ," + end;
+
+		Connection connection = JdbcUtils_DBCP.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+		List<User> resultList = new ArrayList<User>();
+		try {
+			pstmt = connection.prepareStatement(sql);
+			resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String phone = resultSet.getString("phone");
+				String wxid = resultSet.getString("wxid");
+				String idcardaddr = resultSet.getString("idcardaddr");
+				String stucardaddr = resultSet.getString("stucardaddr");
+				String userstate = resultSet.getString("userstate");
+				String college = resultSet.getString("college");
+				String registerdate = resultSet.getString("registerdate");
+				String vip = "",vipdate="";
+				//获取余额
+				IWalletDao iWalletDao = new WalletDao();
+				float balance = iWalletDao.getBalance(new Wallet(phone));
+				User user = new User(id, phone, wxid, idcardaddr, stucardaddr, 
+						userstate, college, registerdate, vip, vipdate, balance);
+				resultList.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, resultSet);
+		}
+		return resultList;
 	}
 
 }

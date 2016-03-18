@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.NormalUtil;
+import com.xxn.constants.BikeConstants;
 import com.xxn.entity.College;
 import com.xxn.iservice.ICollegeService;
 import com.xxn.service.CollegeService;
@@ -55,7 +56,12 @@ public class BGetAllCollege extends HttpServlet {
 		ICollegeService iCollegeService = new CollegeService();
 		List<College> result = iCollegeService.getDistinctName();
 		if(result.size() > 0){
+			map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 			map.put("college", result);
+		}
+		else {
+			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+			map.put(BikeConstants.MESSAGE, "获取失败");
 		}
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));

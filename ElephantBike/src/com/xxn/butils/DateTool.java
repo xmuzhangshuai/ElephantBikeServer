@@ -36,7 +36,7 @@ public class DateTool {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return sdf.format(date);
 	}
-	
+
 	public static String date2String(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		return sdf.format(date);
@@ -44,11 +44,29 @@ public class DateTool {
 
 	public static String calcUsedTime(long seconds) {
 		int day = 0, hour = 0, mins = 0, sec = 0;
-		
+
 		day = (int) (seconds / (60 * 60 * 24));
 		hour = (int) ((seconds - day * 60 * 60 * 24) / (60 * 60));
 		mins = (int) ((seconds - day * 60 * 60 * 24 - hour * 60 * 60) / 60);
 		sec = (int) ((seconds - day * 60 * 60 * 24 - hour * 60 * 60 - mins * 60));
-		return day+":"+hour+":"+mins+":"+sec;
+		return day + ":" + hour + ":" + mins + ":" + sec;
 	}
+
+	public static int getT() {
+		int t = 1;
+		String dateStr = "2016-03-18 00:00:00";
+		Date date = stringToDate(dateStr);
+		long millsec = new Date().getTime() - date.getTime();
+		int mins = (int) (millsec / 1000) / (60);
+		System.out.println("mins" + mins);
+		t = t + mins / 40;
+		System.out.println("t:" + t);
+		if (t % 8 == 0)
+			t = 8;
+		else
+			t = t % 8;
+		System.out.println("mod8:" + t);
+		return t;
+	}
+
 }

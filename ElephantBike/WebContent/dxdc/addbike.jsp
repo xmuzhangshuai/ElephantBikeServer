@@ -65,7 +65,7 @@ $(document).ready(function(){
 			<div class="clear"></div>
 		</div>
 		<footer>
-		<div class="submit_link">
+		<div class="submit_link" style="float:left;margin-left:3%">
 			<input type="submit" value="添加" class="alt_btn"> <input
 				type="reset" value="重置">
 		</div>

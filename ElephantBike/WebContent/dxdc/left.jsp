@@ -52,20 +52,24 @@ $(function(){
         <li><cite></cite><a href="myInfo.jsp"  target="rightFrame">用户分析</a><i></i></li>
         <li><cite></cite><a href="myInfo.jsp"  target="rightFrame">车辆分析</a><i></i></li>
         <li><cite></cite><a href="myInfo.jsp"  target="rightFrame">丢失车辆</a><i></i></li>
+        
     </ul>    
     </dd>  
 
     <dd><div class="title"><span></span>用户管理</div>
       <ul class="menuson">
-        <li><cite></cite><a href="myInfo.jsp" target="rightFrame">用户列表</a>
-        <li><cite></cite><a href="myInfo.jsp" target="rightFrame">身份认证审核</a>
+        <li><cite></cite><a href="centiusermanage.jsp" target="rightFrame">用户列表</a>
+        <li><cite></cite><a href="uncentiusermanage.jsp" target="rightFrame">身份认证审核</a>
       </ul>
     </dd>   
     
     <dd><div class="title"><span></span>车辆管理</div>
       <ul class="menuson">
         <li><cite></cite><a href="myInfo.jsp" target="rightFrame">单车列表</a>
-        <li><cite></cite><a href="myInfo.jsp" target="rightFrame">添加单车</a>
+        <li><cite></cite><a href="choosecollege.jsp" target="rightFrame">添加单车</a>
+        <li><cite></cite><a href="map.jsp" target="rightFrame">添加学校</a>
+        <li><cite></cite><a href="../qrcode.jsp" target="rightFrame">生成二维码</a>
+        <li><cite></cite><a href="./unlock.jsp" target="rightFrame">解锁密码</a>
       </ul>
     </dd>  
     <dd><div class="title"><span></span>内容管理</div>

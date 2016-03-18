@@ -16,8 +16,8 @@ public class HttpsRequest {
 			URL url = new URL(urlStr);
 			URLConnection con = url.openConnection();
 			con.setDoOutput(true);
-			con.setRequestProperty("Cache-Control", "no-cache");
-			con.setRequestProperty("Content-Type", "text/xml");
+//			con.setRequestProperty("Cache-Control", "no-cache");
+//			con.setRequestProperty("Content-Type", "text/xml");
 			OutputStreamWriter out = new OutputStreamWriter(
 					con.getOutputStream());
 			out.write(new String(xmlParam.getBytes("utf-8")));
