@@ -54,7 +54,7 @@ public class DateTool {
 
 	public static int getT() {
 		int t = 1;
-		String dateStr = "2016-03-18 00:00:00";
+		String dateStr = "2016-03-20 00:00:00";
 		Date date = stringToDate(dateStr);
 		long millsec = new Date().getTime() - date.getTime();
 		int mins = (int) (millsec / 1000) / (60);

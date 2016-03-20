@@ -16,8 +16,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
 import com.tencent.WXPay;
 import com.tencent.common.Signature;
 import com.xxn.butils.DateTool;
@@ -27,6 +25,8 @@ import com.xxn.butils.XMLUtil;
 import com.xxn.constants.BikeConstants;
 import com.xxn.entity.PayReqData;
 import com.xxn.entity.PayResData;
+import com.xxn.iservice.IOrderService;
+import com.xxn.service.OrderService;
 
 /**
  * Servlet implementation class WXPayOrder 请求生成支付订单
@@ -62,7 +62,15 @@ public class WXPayOrder extends HttpServlet {
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		System.out.println("/api/pay/wxpayorder");
+		IOrderService iOrderService = new OrderService();
 		Map<String, Object> resultMap = new HashMap<>();
+
+		String phone = request.getParameter("phone");
+		String bikeid = request.getParameter("bikeid");
+		String fee = request.getParameter("totalFee");
+		int totalFee = (int) (Float.parseFloat(fee)*100);
+
+		String resurl = this.getServletContext().getRealPath("/");
 
 		String url = BikeConstants.WX_PAY_ORDER;
 		String xmlString = "";
@@ -71,11 +79,26 @@ public class WXPayOrder extends HttpServlet {
 		String mchID = BikeConstants.WX_MCH_ID;
 		String certPassword = BikeConstants.WX_CERTPASSWORD;
 
+		Map<String, String> val = new HashMap<>();
+		Map<String, String> query = new HashMap<>();
+		Map<String, String> resmap = new HashMap<>();
+		val.put("orderid", "");
+		query.put("phone", phone);
+		query.put("bikeid", bikeid);
+		query.put("paymode", null);
+		resmap = iOrderService.getOrderInfo(val, query);
+		String orderid = "";
+		if (resmap.containsKey("orderid"))
+			orderid = resmap.get("orderid");
+		// 清空map
+
 		String body = "elephant bike";
-		String outTradeNo = DateTool.date2String(new Date());
-		int totalFee = 1;
+		// String outTradeNo = DateTool.date2String(new Date());
+		String outTradeNo = orderid;
+
 		String spBillCreateIP = "192.168.0.103";
-		String notify_url = "http://www.xxnnet.cn";
+		String notify_url = BikeConstants.APP_URL
+				+ "/ElephantBike/api/pay/response";
 		String trade_type = "APP";
 		String sdbMchID = "";
 		String certLocalPath = "";
@@ -117,12 +140,10 @@ public class WXPayOrder extends HttpServlet {
 				resultMap.put(BikeConstants.STATUS, BikeConstants.FAIL);
 				resultMap.put(BikeConstants.MESSAGE, "sign验证不通过");
 			}
-		}
-		else{
+		} else {
 			resultMap.put(BikeConstants.STATUS, BikeConstants.FAIL);
-			resultMap.put(BikeConstants.MESSAGE, res+"\n"+result);
+			resultMap.put(BikeConstants.MESSAGE, res + "\n" + result);
 		}
-
 		System.out.println(FastJsonTool.createJsonString(resultMap));
 		out.print(FastJsonTool.createJsonString(resultMap));
 		out.close();

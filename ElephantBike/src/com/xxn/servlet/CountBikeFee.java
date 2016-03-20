@@ -16,8 +16,11 @@ import com.xxn.butils.DateTool;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.NormalUtil;
 import com.xxn.constants.BikeConstants;
+import com.xxn.entity.Bike;
 import com.xxn.entity.Order;
+import com.xxn.iservice.IBikeService;
 import com.xxn.iservice.IOrderService;
+import com.xxn.service.BikeService;
 import com.xxn.service.OrderService;
 
 /**
@@ -56,7 +59,7 @@ public class CountBikeFee extends HttpServlet {
 		System.out.println("/api/money/bikefee");
 		Map<String, String> map = new HashMap<>();
 		IOrderService iOrderService = new OrderService();
-
+		IBikeService iBikeService = new BikeService();
 		String phone = request.getParameter("phone");
 		String bikeid = request.getParameter("bikeid");
 		String isfinish = request.getParameter("isfinish");
@@ -70,7 +73,6 @@ public class CountBikeFee extends HttpServlet {
 				Date start = DateTool.stringToDate(starttime);
 				Date finish = new Date();
 				long seconds = (finish.getTime() - start.getTime()) / 1000;
-				System.out.println("秒数:" + seconds);
 
 				// 根据秒数计算分钟数，获取费用
 				mins = (int) (seconds / 60);
@@ -87,7 +89,7 @@ public class CountBikeFee extends HttpServlet {
 					map.put("time", usedtime);
 				}
 				if (isfinish.equals("1")) {
-					// 写入数据库订单
+					// 写入数据库订单  1 还车成功
 					Map<String, String> val = new HashMap<>();
 					val.put("finishtime", DateTool.dateToString(finish));
 					val.put("usedtime", usedtime);
@@ -96,8 +98,8 @@ public class CountBikeFee extends HttpServlet {
 					query.put("phone", phone);
 					query.put("bikeid", bikeid);
 					query.put("finishtime", null);
-					if (iOrderService.updateOrder(val, query) > 0) {
-						System.out.println("订单修改完成");
+					Bike bike = new Bike(bikeid, 1, "", "");
+					if (iOrderService.updateOrder(val, query) > 0 && iBikeService.updateBikeState(bike) > 0) {
 						map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 						map.put("fee", String.valueOf(fee));
 						map.put("time", usedtime);

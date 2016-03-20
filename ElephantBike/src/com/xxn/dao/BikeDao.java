@@ -25,8 +25,8 @@ public class BikeDao implements IBikeDao{
 			pstmt.setInt(2, bike.getState());
 			pstmt.setString(3, bike.getCollege());
 			pstmt.setString(4, bike.getUsedtime());
-			pstmt.setInt(5, 2);
-			pstmt.setInt(6, 1);
+			pstmt.setInt(5, 1);
+			pstmt.setInt(6, 2);
 			pstmt.setString(7, "");
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
@@ -91,6 +91,51 @@ public class BikeDao implements IBikeDao{
 		try {
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setString(1, bike.getBikeid());
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, null);
+		}
+		return result;
+	}
+
+	@Override
+	public boolean isCanUsed(Bike bike) {
+		int count = 0 ;
+		Connection connection = null;
+		connection = JdbcUtils_DBCP.getConnection();
+		String sql = "select state from b_bike where bikeid = ? ";
+		ResultSet resultSet = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, bike.getBikeid());
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				count = resultSet.getInt("state");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, preparedStatement, resultSet);
+		}
+		System.out.println(sql);
+		System.out.println(count);
+		if(count > 0)return true;
+		else return false;
+	}
+
+	@Override
+	public int updateBikeState(Bike bike) {
+		int result = 0;
+		String sql = "update b_bike set state = ? where bikeid = ?";
+		Connection connection =  JdbcUtils_DBCP.getConnection();
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setInt(1, bike.getState());
+			pstmt.setString(2, bike.getBikeid());
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -7,4 +7,6 @@ public interface IBikeService {
 	public Bike getBikeMN(Bike bike);
 	public int addBikeMN(Bike bike);
 	public int resetBikeMN(Bike bike);
+	public boolean isCanUsed(Bike bike);
+	public int updateBikeState(Bike bike);
 }

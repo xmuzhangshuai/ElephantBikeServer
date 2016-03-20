@@ -4,11 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import com.xxn.butils.DateTool;
 import com.xxn.butils.JdbcUtils_DBCP;
 import com.xxn.entity.Order;
 import com.xxn.idao.IOrderDao;
@@ -18,14 +18,15 @@ public class OrderDao implements IOrderDao{
 	@Override
 	public int createOrder(Order order) {
 		int result = 0;
-		String sql = "insert into o_order(phone,bikeid,starttime) values(?,?,?)";
+		String sql = "insert into o_order(orderid,phone,bikeid,starttime) values(?,?,?,?)";
 		Connection connection =  JdbcUtils_DBCP.getConnection();
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = connection.prepareStatement(sql);
-			pstmt.setString(1, order.getPhone());
-			pstmt.setString(2, order.getBikeid());
-			pstmt.setString(3, order.getStarttime());
+			pstmt.setString(1, DateTool.date2String(new Date()));
+			pstmt.setString(2, order.getPhone());
+			pstmt.setString(3, order.getBikeid());
+			pstmt.setString(4, order.getStarttime());
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -59,7 +60,6 @@ public class OrderDao implements IOrderDao{
 		}
 		return number;
 	}
-
 	@Override
 	public int updateOrder(Map val, Map query) {
 		

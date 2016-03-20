@@ -81,8 +81,8 @@ public class WalletDao implements IWalletDao{
 		List<Map<String, Object>> reslist = new ArrayList<>();
 		Connection connection = null;
 		connection = JdbcUtils_DBCP.getConnection();
-		String sql = "select fee,fee_time from wl_walletlist where phone = ? "
-				+ "limit "+ (count*BikeConstants.BAL_COUNT)+","+BikeConstants.BAL_COUNT;
+		String sql = "select fee,fee_time from wl_walletlist where phone = ? order by fee_time desc"
+				+ " limit "+ (count*BikeConstants.BAL_COUNT)+","+BikeConstants.BAL_COUNT;
 		ResultSet resultSet = null;
 		PreparedStatement preparedStatement = null;
 		try {

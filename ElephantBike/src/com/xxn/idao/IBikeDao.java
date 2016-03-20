@@ -32,4 +32,12 @@ public interface IBikeDao {
 	 */
 	public int resetBikeMN(Bike bike);
 	
+	public int updateBikeState(Bike bike);
+	/**
+	 * 判断单车是否可以使用
+	 * @param bike
+	 * @return
+	 */
+	public boolean isCanUsed(Bike bike);
+	
 }

@@ -31,4 +31,18 @@ public class BikeService implements IBikeService{
 		return iBikeDao.resetBikeMN(bike);
 	}
 
+	@Override
+	public boolean isCanUsed(Bike bike) {
+		//false为该车未被占用
+		IBikeDao iBikeDao = new BikeDao();
+		return iBikeDao.isCanUsed(bike);
+	}
+
+	@Override
+	public int updateBikeState(Bike bike) {
+		IBikeDao iBikeDao = new BikeDao();
+		return iBikeDao.updateBikeState(bike);
+	}
+	
+
 }

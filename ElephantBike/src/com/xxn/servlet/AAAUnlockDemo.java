@@ -61,6 +61,7 @@ public class AAAUnlockDemo extends HttpServlet {
 			System.out.println(unlockpass);
 			out.print(unlockpass+"");
 		}else{
+			out.print("查找不到该编号的单车");
 			System.out.println("查找不到该编号的单车");
 		}
 		

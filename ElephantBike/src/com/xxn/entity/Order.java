@@ -3,6 +3,7 @@ package com.xxn.entity;
 public class Order {
 	
 	private int id;
+	private String orderid;
 	private String phone;
 	private String bikeid;
 	private String starttime;
@@ -17,6 +18,12 @@ public class Order {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public String getOrderid() {
+		return orderid;
+	}
+	public void setOrderid(String orderid) {
+		this.orderid = orderid;
 	}
 	public String getPhone() {
 		return phone;

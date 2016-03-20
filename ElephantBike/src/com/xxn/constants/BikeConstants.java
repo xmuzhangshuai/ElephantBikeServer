@@ -2,6 +2,8 @@ package com.xxn.constants;
 
 public class BikeConstants {
 
+	public static final String APP_URL = "http://210.121.164.111/";
+	
 	/**
 	 * sign key
 	 */
@@ -61,7 +63,7 @@ public class BikeConstants {
 	/**
 	 * 余额明细列表请求条数
 	 */
-	public static final int BAL_COUNT = 10;
+	public static final int BAL_COUNT = 5;
 	/**
 	 * 用户状态 -1:冻结  0:普通用户  1:认证用户
 	 */
