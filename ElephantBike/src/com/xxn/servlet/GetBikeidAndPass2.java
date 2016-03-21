@@ -59,7 +59,7 @@ public class GetBikeidAndPass2 extends HttpServlet {
 			String bikeid = iOrderService.getBikeid(order);
 			if(!bikeid.equals("")){
 				//TODO 获取单车解锁密码
-				String pass = PassWordTool.getUnlockPass(bikeid);;
+				String pass = PassWordTool.getUnlockPass(bikeid);
 				map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 				map.put("bikeid", bikeid);
 				map.put("pass", pass);

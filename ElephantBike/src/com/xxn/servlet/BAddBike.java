@@ -57,6 +57,7 @@ public class BAddBike extends HttpServlet {
 		IBikeService iBikeService = new BikeService();
 
 		String fid = request.getParameter("id");
+		System.out.println(fid);
 		String lid = request.getParameter("b_id");
 		String name = request.getParameter("name");
 		if (NormalUtil.isStringLegal(fid) && NormalUtil.isStringLegal(lid)

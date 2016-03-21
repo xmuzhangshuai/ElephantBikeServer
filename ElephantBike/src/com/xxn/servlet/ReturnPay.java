@@ -66,7 +66,7 @@ public class ReturnPay extends HttpServlet {
 		String bikeid = request.getParameter("bikeid");
 		String paymode = request.getParameter("paymode");
 		String ismissing = request.getParameter("ismissing");
-		System.out.println("paymode:"+paymode);
+		System.out.println("paymode:"+paymode+"--phone:"+phone+"--bikeid:"+bikeid);
 		// ismissing = "0";
 		if (NormalUtil.isStringLegal(phone)
 				&& NormalUtil.isStringLegal(ismissing)
@@ -88,7 +88,7 @@ public class ReturnPay extends HttpServlet {
 			} else {
 				fee = 200;
 			}
-
+			System.out.println("fee"+fee);
 			if (fee > 0.0f) {
 				Wallet wallet1 = new Wallet(phone, -fee, 0);
 				Wallet wallet2 = new Wallet(phone, -fee,

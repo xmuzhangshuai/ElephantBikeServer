@@ -70,6 +70,7 @@ $(function(){
         <li><cite></cite><a href="map.jsp" target="rightFrame">添加学校</a>
         <li><cite></cite><a href="../qrcode.jsp" target="rightFrame">生成二维码</a>
         <li><cite></cite><a href="./unlock.jsp" target="rightFrame">解锁密码</a>
+        <li><cite></cite><a href="./settime.jsp" target="rightFrame">时间设置</a>
       </ul>
     </dd>  
     <dd><div class="title"><span></span>内容管理</div>

@@ -23,7 +23,7 @@ import com.xxn.service.OrderService;
 /**
  * Servlet implementation class GetUnlockCode
  */
-@WebServlet("/api/pass/unlockcode2")
+@WebServlet("/api/pass/unlockcode")
 public class GetUnlockCode extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

@@ -67,9 +67,11 @@ public class WXPayOrder extends HttpServlet {
 
 		String phone = request.getParameter("phone");
 		String bikeid = request.getParameter("bikeid");
-		String fee = request.getParameter("totalFee");
+		String fee = request.getParameter("totalfee");
+		System.out.println("fee"+fee);
 		int totalFee = (int) (Float.parseFloat(fee)*100);
-
+		totalFee = 1;
+		
 		String resurl = this.getServletContext().getRealPath("/");
 
 		String url = BikeConstants.WX_PAY_ORDER;
@@ -91,7 +93,8 @@ public class WXPayOrder extends HttpServlet {
 		if (resmap.containsKey("orderid"))
 			orderid = resmap.get("orderid");
 		// 清空map
-
+		
+		System.out.println("orderid:"+orderid+"--phone:"+phone+"--bikeid:"+bikeid);
 		String body = "elephant bike";
 		// String outTradeNo = DateTool.date2String(new Date());
 		String outTradeNo = orderid;

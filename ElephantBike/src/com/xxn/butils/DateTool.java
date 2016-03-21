@@ -1,8 +1,14 @@
 package com.xxn.butils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.xxn.entity.Bike;
 
 /**
  * 
@@ -54,7 +60,8 @@ public class DateTool {
 
 	public static int getT() {
 		int t = 1;
-		String dateStr = "2016-03-20 00:00:00";
+//		String dateStr = "2016-03-20 00:00:00";
+		String dateStr = getToday();
 		Date date = stringToDate(dateStr);
 		long millsec = new Date().getTime() - date.getTime();
 		int mins = (int) (millsec / 1000) / (60);
@@ -67,6 +74,28 @@ public class DateTool {
 			t = t % 8;
 		System.out.println("mod8:" + t);
 		return t;
+	}
+	
+	public static String getToday(){
+		String res = "";
+		String sql = "select time from t_time where id= 1";
+		Connection connection =  JdbcUtils_DBCP.getConnection();
+		ResultSet resultSet = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				String m = resultSet.getString("time");
+				res = m +" 00:00:00";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, preparedStatement, resultSet);
+		}
+		System.out.println(res);
+		return res;
 	}
 
 }

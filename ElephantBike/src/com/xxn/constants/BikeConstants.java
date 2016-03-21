@@ -2,7 +2,7 @@ package com.xxn.constants;
 
 public class BikeConstants {
 
-	public static final String APP_URL = "http://210.121.164.111/";
+	public static final String APP_URL = "http://120.25.197.43/";
 	
 	/**
 	 * sign key

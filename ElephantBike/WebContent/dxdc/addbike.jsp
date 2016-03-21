@@ -33,6 +33,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		var Request = new Object();
 		Request = GetRequest();
 		var id = Request['id'];
+		alert(id);
 		var name = decodeURI(Request['name']);
 		$("#id").val(id);
 		$("#name").val(name);
