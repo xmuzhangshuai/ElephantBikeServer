@@ -65,87 +65,122 @@ public class UserLogin extends HttpServlet {
 		IUserService iUserService = new UserService();
 		IOrderService iOrderService = new OrderService();
 		IWalletService iWalletService = new WalletService();
-		
 
 		String phone = request.getParameter("phone");
 		String islogin = request.getParameter("islogin");
 		String verify_code = request.getParameter("verify_code");
-
+		
 		String isfrozen = "0", isfinish = "0", ispay = "0";
-
+		String name = "", isvip = "0",college="";
 		// 登录情况分大两种 1.已经登录过 2.退出登录，清空缓存，第一次登录，卸载app等--需要验证码
-		if (NormalUtil.isStringLegal(phone)&&NormalUtil.isStringLegal(islogin)) {
-			User user = new User(phone, isfrozen, DateTool.dateToString(new Date()));
+		if (NormalUtil.isStringLegal(phone)
+				&& NormalUtil.isStringLegal(islogin)) {
+			User user = new User(phone, isfrozen,
+					DateTool.dateToString(new Date()));
 			// 电话号码不为空
 			if (islogin.equals("1")) {
 				// 已经登录---需要拿到3个变量
-				Map<String, String> queryisfrozen = new HashMap<>();
-				queryisfrozen.put("phone", phone);
-				if(iUserService.getURLExist(user) > 0 )isfrozen = "2";
-				else isfrozen = iUserService.getUserInfo("userstate", queryisfrozen);
-				
+				Map<String, String> valUserInfo = new HashMap<>();
+				Map<String, String> queryUserInfo = new HashMap<>();
+				// 需要get的信息
+				valUserInfo.put("isvip", "");
+				valUserInfo.put("name", "");
+				valUserInfo.put("userstate", "");
+				valUserInfo.put("college", "");
+				queryUserInfo.put("phone", phone);
+
+				Map<String, String> resMap = iUserService.getUserInfo(valUserInfo,
+						queryUserInfo);
+				if (resMap.containsKey("userstate"))
+					isfrozen = resMap.get("userstate");
+				if (resMap.containsKey("name"))
+					name = resMap.get("name");
+				if (resMap.containsKey("isvip"))
+					isvip = resMap.get("isvip");
+				if (resMap.containsKey("college"))
+					college = resMap.get("college");
 				Map<String, String> queryisfinish = new HashMap<>();
 				queryisfinish.put("phone", phone);
 				queryisfinish.put("finishtime", null);
-				if(iOrderService.getOrderCount(queryisfinish) > 0)
+				if (iOrderService.getOrderCount(queryisfinish) > 0)
 					isfinish = "1";
-				
+
 				Map<String, String> queryispay = new HashMap<>();
 				queryispay.put("phone", phone);
 				queryispay.put("paymode", null);
-				if(iOrderService.getOrderCount(queryispay)>0)
+				if (iOrderService.getOrderCount(queryispay) > 0)
 					ispay = "1";
-				
+
 				map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 				map.put("isfrozen", isfrozen);
 				map.put("isfinish", isfinish);
 				map.put("ispay", ispay);
+				map.put("name", name);
+				map.put("isvip", isvip);
+				map.put("college", college);
 				map.put("access_token", "dfeb3d35bc3543rdc234");
-			}
-			else {
+			} else {
 				// 先判断验证码是否正确
-				ServletContext application=this.getServletContext(); 
+				ServletContext application = this.getServletContext();
 				String yzm = (String) application.getAttribute(phone);
-				System.out.println("验证码:"+yzm);
+				System.out.println("验证码:" + yzm);
 				if (verify_code.equals(yzm)) {
 					// 先去判断是否已经有该用户
 					int res = iUserService.getUserExist(user);
 					if (res == 1) {
 						// 已经有该用户--则不写入新增用户表---获取用户状态 是否结束 是否付款
-						Map<String, String> queryisfrozen = new HashMap<>();
-						queryisfrozen.put("phone", phone);
-						if(iUserService.getURLExist(user) > 0 )isfrozen = "2";
-						else isfrozen = iUserService.getUserInfo("userstate", queryisfrozen);
+						Map<String, String> valUserInfo = new HashMap<>();
+						Map<String, String> queryUserInfo = new HashMap<>();
+						// 需要get的信息
+						valUserInfo.put("isvip", "");
+						valUserInfo.put("name", "");
+						valUserInfo.put("userstate", "");
+						valUserInfo.put("college", "");
 						
+						queryUserInfo.put("phone", phone);
+						Map<String, String> resMap = iUserService.getUserInfo(valUserInfo,
+								queryUserInfo);
+						if (resMap.containsKey("userstate"))
+							isfrozen = resMap.get("userstate");
+						if (resMap.containsKey("name"))
+							name = resMap.get("name");
+						if (resMap.containsKey("isvip"))
+							isvip = resMap.get("isvip");
+						if (resMap.containsKey("college"))
+							college = resMap.get("college");
 						Map<String, String> queryisfinish = new HashMap<>();
 						queryisfinish.put("phone", phone);
 						queryisfinish.put("finishtime", null);
-						if(iOrderService.getOrderCount(queryisfinish) > 0)
+						if (iOrderService.getOrderCount(queryisfinish) > 0)
 							isfinish = "1";
-						
+
 						Map<String, String> queryispay = new HashMap<>();
 						queryispay.put("phone", phone);
 						queryispay.put("paymode", null);
-						if(iOrderService.getOrderCount(queryispay)>0)
+						if (iOrderService.getOrderCount(queryispay) > 0)
 							ispay = "1";
-						
+
 						map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 						map.put("isfrozen", isfrozen);
 						map.put("isfinish", isfinish);
 						map.put("ispay", ispay);
+						map.put("name", name);
+						map.put("isvip", isvip);
+						map.put("college", college);
 						map.put("access_token", "dfeb3d35bc3543rdc234");
-						
+
 					} else if (res == 0) {
 						// 该用户未注册
 						Wallet wallet = new Wallet(phone, 0.0f, 0);
-						if (iUserService.addUser(user) > 0 && iWalletService.createWallet(wallet) > 0) {
+						if (iUserService.addUser(user) > 0
+								&& iWalletService.createWallet(wallet) > 0) {
 							// 注册写入成功 --创建个人钱包
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
-					        String joindate = sdf.format(new Date()); 
-							if(iUserService.getNewUserCount(joindate) == 0){
+							SimpleDateFormat sdf = new SimpleDateFormat(
+									"yyyy-MM-dd");
+							String joindate = sdf.format(new Date());
+							if (iUserService.getNewUserCount(joindate) == 0) {
 								iUserService.addNewUserCount(joindate);
-							}
-							else{
+							} else {
 								iUserService.updateNewUser(joindate);
 							}
 							System.out.println("注册写入成功--钱包创建成功");
@@ -153,8 +188,11 @@ public class UserLogin extends HttpServlet {
 							map.put("isfrozen", isfrozen);
 							map.put("isfinish", isfinish);
 							map.put("ispay", ispay);
+							map.put("name", name);
+							map.put("isvip", isvip);
+							map.put("college", college);
 							map.put("access_token", "dfeb3d35bc3543rdc234");
-						}else{
+						} else {
 							System.out.println("注册写入失败");
 							map.put(BikeConstants.STATUS, BikeConstants.FAIL);
 							map.put(BikeConstants.MESSAGE, "用户注册失败");
@@ -176,7 +214,6 @@ public class UserLogin extends HttpServlet {
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));
 		out.close();
-
 	}
 
 }

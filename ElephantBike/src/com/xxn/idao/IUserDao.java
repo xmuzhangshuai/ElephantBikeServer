@@ -13,7 +13,6 @@ public interface IUserDao {
 	 * @return
 	 */
 	public int getUserExist(User user);
-	
 	/**
 	 * 加入用户表
 	 * @param user
@@ -34,14 +33,13 @@ public interface IUserDao {
 	 * @param query
 	 * @return 
 	 */
-	public String getUserInfo(String val,Map query);
+	public Map<String, String> getUserInfo(Map val,Map query);
 	/**
 	 * 根据用户手机号码获取通过审核通过的证件URL
 	 * @param user
 	 * @return idcard,stucard 
 	 */
 	public Map<String, String> getCardURL(User user);
-	public int getURLExist(User user);
 	
 	// 获取条数
 	public int getUserCount(Map queryParams);
@@ -51,9 +49,17 @@ public interface IUserDao {
 			String order, Map queryParams);
 	
 	
+	
 	//新增用户数据表的操作
 	
 	public int getNewUserCount(String joindate);
 	public int addNewUserCount(String joindate);
 	public int updateNewUser(String joindate);
+	
+	
+	
+	/**
+	 * ----------------------------------------------------------------
+	 */
+	public int updateUser(Map val,Map query);
 }

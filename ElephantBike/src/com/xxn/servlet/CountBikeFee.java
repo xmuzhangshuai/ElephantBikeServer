@@ -20,8 +20,10 @@ import com.xxn.entity.Bike;
 import com.xxn.entity.Order;
 import com.xxn.iservice.IBikeService;
 import com.xxn.iservice.IOrderService;
+import com.xxn.iservice.IUserService;
 import com.xxn.service.BikeService;
 import com.xxn.service.OrderService;
+import com.xxn.service.UserService;
 
 /**
  * Servlet implementation class CountBikeFee ss
@@ -57,9 +59,11 @@ public class CountBikeFee extends HttpServlet {
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		System.out.println("/api/money/bikefee");
+		
 		Map<String, String> map = new HashMap<>();
 		IOrderService iOrderService = new OrderService();
 		IBikeService iBikeService = new BikeService();
+		IUserService iUserService = new UserService();
 		String phone = request.getParameter("phone");
 		String bikeid = request.getParameter("bikeid");
 		String isfinish = request.getParameter("isfinish");
@@ -79,7 +83,16 @@ public class CountBikeFee extends HttpServlet {
 				if (seconds % 60 != 0) {
 					mins += 1;
 				}
-				fee = NormalUtil.countFee(mins, 1);
+				Map<String, String> valisvip = new HashMap<>();
+				valisvip.put("isvip", "");
+				Map<String, String> queryphone = new HashMap<>();
+				queryphone.put("phone", phone);
+				String isvip = "0";
+				Map<String, String> resMap = iUserService.getUserInfo(valisvip, queryphone);
+				if(resMap.containsKey("isvip"))
+					isvip = resMap.get("isvip");
+				fee = NormalUtil.countFee(mins, isvip);
+				
 				// 计算使用时长
 				String usedtime = DateTool.calcUsedTime(seconds);
 

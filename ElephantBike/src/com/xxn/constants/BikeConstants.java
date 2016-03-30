@@ -45,9 +45,9 @@ public class BikeConstants {
 	 * 临时变量
 	 */
 	public static final String VERIFY_CODE = "123456";
-	public static final String UNLOCK_CODE = "1234";
-	public static final String RETURN_CODE = "456789";
-	public static final String RESTORE_CODE = "456789";
+	public static final String UNLOCK_CODE = "12345";
+	public static final String RETURN_CODE = "56789";
+	public static final String RESTORE_CODE = "56789";
 	
 	/**
 	 * 自行车分段 周期
@@ -59,15 +59,16 @@ public class BikeConstants {
 	/**
 	 * 丢车费用 200
 	 */
-	public static final int MISSFEE = 200;
+	public static final int MISSFEE = 300;
 	/**
 	 * 余额明细列表请求条数
 	 */
 	public static final int BAL_COUNT = 5;
 	/**
-	 * 用户状态 -1:冻结  0:普通用户  1:认证用户
+	 * 用户状态 -1:冻结  0:普通用户  1:认证用户 2:提交未验证 
 	 */
 	public static final String FROZEN = "-1";
 	public static final String NORMAL = "0";
 	public static final String CENTIFY= "1";
+	public static final String UNCENTIFY= "2";
 }

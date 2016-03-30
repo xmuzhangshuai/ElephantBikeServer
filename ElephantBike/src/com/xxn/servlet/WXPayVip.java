@@ -21,20 +21,18 @@ import com.xxn.butils.XMLUtil;
 import com.xxn.constants.BikeConstants;
 import com.xxn.entity.PayReqData;
 import com.xxn.entity.PayResData;
-import com.xxn.iservice.IOrderService;
-import com.xxn.service.OrderService;
 
 /**
- * Servlet implementation class WXPayOrder 请求生成支付订单
+ * Servlet implementation class WXRecharge 请求生成支付订单--会员充值功能
  */
-@WebServlet("/api/pay/wxpayorder")
-public class WXPayOrder extends HttpServlet {
+@WebServlet("/api/pay/wxpayvip")
+public class WXPayVip extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public WXPayOrder() {
+	public WXPayVip() {
 		super();
 	}
 
@@ -58,47 +56,29 @@ public class WXPayOrder extends HttpServlet {
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		System.out.println("/api/pay/wxpayorder");
-		IOrderService iOrderService = new OrderService();
 		Map<String, Object> resultMap = new HashMap<>();
 
 		String phone = request.getParameter("phone");
-		String bikeid = request.getParameter("bikeid");
-		String fee = request.getParameter("totalfee");
-		System.out.println("fee"+fee);
-		int totalFee = (int) (Float.parseFloat(fee)*100);
+		String value = request.getParameter("value");
+		System.out.println("value"+value);
+		int totalFee = (int) (Float.parseFloat(value)*100);
 		totalFee = 1;
-		String orderid = "",notify_url="";
-		if(null == bikeid || bikeid.isEmpty()){
-			//
-			orderid = phone +"-"+DateTool.date2String(new Date());
-			notify_url = BikeConstants.APP_URL
-					+ "/ElephantBike/api/pay/rechargeresponse";
-		}
-		else{
-			//订单支付功能
-			notify_url = BikeConstants.APP_URL
-					+ "/ElephantBike/api/pay/response";
-			Map<String, String> val = new HashMap<>();
-			Map<String, String> query = new HashMap<>();
-			Map<String, String> resmap = new HashMap<>();
-			val.put("orderid", "");
-			query.put("phone", phone);
-			query.put("bikeid", bikeid);
-			query.put("paymode", null);
-			resmap = iOrderService.getOrderInfo(val, query);
-			if (resmap.containsKey("orderid"))
-				orderid = resmap.get("orderid");
-			System.out.println("orderid:"+orderid+"--phone:"+phone+"--bikeid:"+bikeid);
-		}
+		
 		String url = BikeConstants.WX_PAY_ORDER;
 		String xmlString = "";
 		String key = BikeConstants.WX_KEY;
 		String appID = BikeConstants.WX_APP_ID;
 		String mchID = BikeConstants.WX_MCH_ID;
 		String certPassword = BikeConstants.WX_CERTPASSWORD;
+
+		String orderid = phone +"-"+DateTool.date2String(new Date());
+		// 清空map
 		String body = "elephant bike";
 		String outTradeNo = orderid;
+
 		String spBillCreateIP = "192.168.0.103";
+		String notify_url = BikeConstants.APP_URL
+				+ "/ElephantBike/api/pay/rechargeresponse";
 		String trade_type = "APP";
 		String sdbMchID = "";
 		String certLocalPath = "";

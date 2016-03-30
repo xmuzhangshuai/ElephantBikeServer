@@ -14,29 +14,28 @@ import javax.servlet.http.HttpServletResponse;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.NormalUtil;
 import com.xxn.constants.BikeConstants;
-import com.xxn.entity.User;
 import com.xxn.iservice.IUserService;
 import com.xxn.service.UserService;
 
 /**
- * Servlet implementation class Authentication
+ * Servlet implementation class GetUserVipDate
  */
 /**
  * 
-* @ClassName: Authentication 
-* @Description: 上传信息 进行身份认证 
+* @ClassName: GetUserVipDate 
+* @Description: TODO(这里用一句话描述这个类的作用) 
 * @author kunsen-lee
-* @date 2016年3月22日 下午3:46:28 
+* @date 2016年3月30日 下午8:39:02 
 *
  */
-@WebServlet("/api/user/authentication")
-public class Authentication extends HttpServlet {
+@WebServlet("/api/user/vipdate")
+public class GetUserVipDate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public Authentication() {
+	public GetUserVipDate() {
 		super();
 	}
 
@@ -56,41 +55,24 @@ public class Authentication extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		System.out.println("/api/user/authentication");
+		System.out.println("/api/user/frozen");
 		Map<String, String> map = new HashMap<>();
 		IUserService iUserService = new UserService();
-
-		String phone = request.getParameter("phone");
-		String stucardaddr = request.getParameter("stucard");
-		String college = request.getParameter("college");
-		String stunum = request.getParameter("stunum");
-		String name = request.getParameter("name");
-		System.out.println("name:"+name+"college:"+college);
-		//数据写入校验
-		if(null==stucardaddr)stucardaddr="";
-		if(null==college)college="";
-		if(null==stunum)stunum="";
-		if(null==name)name="";
 		
-		if (NormalUtil.isStringLegal(phone)) {
-				//参数均合法
-				User user = new User(phone, stunum, stucardaddr,BikeConstants.UNCENTIFY, college, name);
-				if(iUserService.completeUserInfo(user) > 0){
-					//信息提交成功后 将用户状态置为待认证状态2
-					iUserService.updateUserState(user);
-					map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-					map.put(BikeConstants.MESSAGE, "信息提交成功，请等待审核...");
-				}
-				else {
-					map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-					map.put(BikeConstants.MESSAGE, "信息提交失败，请重新上传...");
-				}
+		String phone = request.getParameter("phone");
+		if(NormalUtil.isStringLegal(phone)){
+			Map<String, String> val = new HashMap<>();
+			val.put("isvip","");
+			val.put("vipdate","");
+			Map<String, String> query = new HashMap<>();
+			query.put("phone", phone);
+			map = iUserService.getUserInfo(val, query);
+			map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 		}
 		else{
 			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-			map.put(BikeConstants.MESSAGE, "手机号码不合法");
+			map.put(BikeConstants.MESSAGE,"手机号码不合法");
 		}
-
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));
 		out.close();

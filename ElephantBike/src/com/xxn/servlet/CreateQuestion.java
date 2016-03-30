@@ -56,15 +56,14 @@ public class CreateQuestion extends HttpServlet {
 		String phone = request.getParameter("phone");
 		String bikeid = request.getParameter("bikeid");
 		String type = request.getParameter("type");
-		String description = request.getParameter("description");
-		String addr = request.getParameter("addr");
-		String evidence = request.getParameter("evidence");
-		if(null == description)description="";
-		if(null == addr)addr="";
-		if(null == evidence)evidence="";
+		String voiceurl = request.getParameter("voiceurl");
+		String ismissing = request.getParameter("ismissing");
+		if(ismissing.equals("1")){
+			//TODO 扣费
+			
+		}
 		
-		
-		Question question = new Question(phone, bikeid, type, description, addr, evidence);
+		Question question = new Question(phone, bikeid, type, voiceurl);
 		if(iQuestionService.addQuestion(question) > 0){
 			map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 			map.put(BikeConstants.MESSAGE, "问题提交成功,谢谢");

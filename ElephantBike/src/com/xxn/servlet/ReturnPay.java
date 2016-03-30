@@ -86,9 +86,8 @@ public class ReturnPay extends HttpServlet {
 				// 清空map
 				map.clear();
 			} else {
-				fee = 200;
+				fee = BikeConstants.MISSFEE;
 			}
-			System.out.println("fee"+fee);
 			if (fee > 0.0f) {
 				Wallet wallet1 = new Wallet(phone, -fee, 0);
 				Wallet wallet2 = new Wallet(phone, -fee,

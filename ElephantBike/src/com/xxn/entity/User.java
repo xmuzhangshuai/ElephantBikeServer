@@ -5,8 +5,8 @@ public class User {
 	private int id;
 	private String phone;
 	private String name;
-	//wxid字段作为学号
-	private String wxid;
+	//stunum字段作为学号
+	private String stunum;
 	private String idcardaddr;
 	private String stucardaddr;
 	private String userstate;
@@ -28,11 +28,11 @@ public class User {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public String getWxid() {
-		return wxid;
+	public String getStunum() {
+		return stunum;
 	}
-	public void setWxid(String wxid) {
-		this.wxid = wxid;
+	public void setStunum(String stunum) {
+		this.stunum = stunum;
 	}
 	public String getIdcardaddr() {
 		return idcardaddr;
@@ -70,7 +70,6 @@ public class User {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	
 	public String getVip() {
 		return vip;
 	}
@@ -95,6 +94,9 @@ public class User {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public User() {
+		super();
+	}
 	public User(String phone, String userstate) {
 		super();
 		this.phone = phone;
@@ -106,25 +108,23 @@ public class User {
 		this.userstate = userstate;
 		this.registerdate = registerdate;
 	}
-	public User(String phone, String wxid, String idcardaddr,
-			String stucardaddr, String userstate, String college,
-			String registerdate) {
+	public User(String phone, String stunum, String stucardaddr, String userstate,
+		 String college,String name) {
 		super();
 		this.phone = phone;
-		this.wxid = wxid;
-		this.idcardaddr = idcardaddr;
+		this.stunum = stunum;
 		this.stucardaddr = stucardaddr;
 		this.userstate = userstate;
 		this.college = college;
-		this.registerdate = registerdate;
+		this.name = name;
 	}
-	public User(int id, String phone, String wxid, String idcardaddr,
+	public User(int id, String phone, String stunum, String idcardaddr,
 			String stucardaddr, String userstate, String college,
 			String registerdate, String vip, String vipdate, float balance) {
 		super();
 		this.id = id;
 		this.phone = phone;
-		this.wxid = wxid;
+		this.stunum = stunum;
 		this.idcardaddr = idcardaddr;
 		this.stucardaddr = stucardaddr;
 		this.userstate = userstate;

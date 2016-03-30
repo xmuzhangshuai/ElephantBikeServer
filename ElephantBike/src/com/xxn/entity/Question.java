@@ -5,9 +5,7 @@ public class Question {
 	private String phone;
 	private String bikeid;
 	private String type;
-	private String description;
-	private String bikeaddr;
-	private String imgproof;
+	private String voiceproof;
 	public String getPhone() {
 		return phone;
 	}
@@ -26,33 +24,18 @@ public class Question {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public String getDescription() {
-		return description;
+	public String getVoiceproof() {
+		return voiceproof;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setVoiceproof(String voiceproof) {
+		this.voiceproof = voiceproof;
 	}
-	public String getBikeaddr() {
-		return bikeaddr;
-	}
-	public void setBikeaddr(String bikeaddr) {
-		this.bikeaddr = bikeaddr;
-	}
-	public String getImgproof() {
-		return imgproof;
-	}
-	public void setImgproof(String imgproof) {
-		this.imgproof = imgproof;
-	}
-	public Question(String phone, String bikeid, String type,
-			String description, String bikeaddr, String imgproof) {
+	public Question(String phone, String bikeid, String type,String voiceproof) {
 		super();
 		this.phone = phone;
 		this.bikeid = bikeid;
 		this.type = type;
-		this.description = description;
-		this.bikeaddr = bikeaddr;
-		this.imgproof = imgproof;
+		this.voiceproof = voiceproof;
 	}
 	
 }

@@ -4,28 +4,31 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.cloopen.rest.sdk.CCPRestSDK;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.NormalUtil;
 import com.xxn.constants.BikeConstants;
 
 /**
- * Servlet implementation class MatchRestoreCode
+ * Servlet implementation class VoiceSMS
  */
-@WebServlet("/api/pass/restorecode")
-public class MatchRestoreCode extends HttpServlet {
+@WebServlet("/VoiceSMS")
+public class VoiceSMS extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public MatchRestoreCode() {
+	public VoiceSMS() {
 		super();
 	}
 
@@ -44,34 +47,36 @@ public class MatchRestoreCode extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		System.out.println("/api/pass/returncode");
+		HashMap result = null;
 		Map<String, String> map = new HashMap<>();
+		CCPRestSDK restAPI = new CCPRestSDK();
+		restAPI.init("app.cloopen.com", "8883");
+		restAPI.setAccount(BikeConstants.YUN_ACCOUNT_SID,
+				BikeConstants.YUN_AUTH_TOKEN);
+		restAPI.setAppId(BikeConstants.YUN_APP_ID);
 
 		String phone = request.getParameter("phone");
-		String bikeid = request.getParameter("bikeid");
-		String pass = request.getParameter("pass");
-
-		if (NormalUtil.isStringLegal(phone) && NormalUtil.isStringLegal(bikeid)) {
-			// TODO 计算恢复密码 进行匹配
-			if (pass.equals(BikeConstants.RESTORE_CODE)) {
-				// 恢复密码正确
-				map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-				map.put("pass", BikeConstants.UNLOCK_CODE);
-			} else {
-				map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-				map.put(BikeConstants.MESSAGE, "恢复密码错误");
-			}
-		} else {
+		String randomNumer = NormalUtil.generateRandom();
+		result = restAPI.voiceVerify(randomNumer, phone, "18046175915", "3",
+				"状态通知回调地址", "zh", "第三方私有数据");
+		System.out.println("SDKTestVoiceVerify result=" + result);
+		if("000000".equals(result.get("statusCode"))){
+			//正常返回输出data包体信息(Map)
+			ServletContext application = this.getServletContext();
+			application.setAttribute(phone, randomNumer);
+			map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
+			map.put(BikeConstants.MESSAGE, "短信发送成功,请查收");
+		}else{
 			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-			map.put(BikeConstants.MESSAGE, "匹配恢复密码:手机号码为空或者单车编码为空");
+			map.put(BikeConstants.MESSAGE, "短信发送失败,请重新获取\n"+"错误码=" + result.get("statusCode") +" 错误信息= "+result.get("statusMsg"));
 		}
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));
 		out.close();
 	}
-
 }

@@ -23,7 +23,7 @@ public class UserService implements IUserService{
 	}
 
 	@Override
-	public String getUserInfo(String val, Map query) {
+	public Map<String, String> getUserInfo(Map val, Map query) {
 		IUserDao iUserDao = new UserDao();
 		return iUserDao.getUserInfo(val, query);
 	}
@@ -65,12 +65,6 @@ public class UserService implements IUserService{
 	}
 
 	@Override
-	public int getURLExist(User user) {
-		IUserDao iUserDao = new UserDao();
-		return iUserDao.getURLExist(user);
-	}
-
-	@Override
 	public int getUserCount(Map queryParams) {
 		IUserDao iUserDao = new UserDao();
 		return iUserDao.getUserCount(queryParams);
@@ -81,6 +75,12 @@ public class UserService implements IUserService{
 			String order, Map queryParams) {
 		IUserDao iUserDao = new UserDao();
 		return iUserDao.findForPage(start, end, sort, order, queryParams);
+	}
+
+	@Override
+	public int updateUser(Map val, Map query) {
+		IUserDao iUserDao = new UserDao();
+		return iUserDao.updateUser(val, query);
 	}
 
 	

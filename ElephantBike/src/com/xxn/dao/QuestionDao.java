@@ -13,7 +13,7 @@ public class QuestionDao implements IQuestionDao{
 	@Override
 	public int addQuestion(Question question) {
 		int result = 0;
-		String sql = "insert into q_question(phone,bikeid,type,description,bikeaddr,imgproof) "
+		String sql = "insert into q_question(phone,bikeid,type,voiceproof) "
 				+ "values(?,?,?,?,?,?)";
 		Connection connection =  JdbcUtils_DBCP.getConnection();
 		PreparedStatement pstmt = null;
@@ -22,9 +22,7 @@ public class QuestionDao implements IQuestionDao{
 			pstmt.setString(1, question.getPhone());
 			pstmt.setString(2, question.getBikeid());
 			pstmt.setString(3, question.getType());
-			pstmt.setString(4, question.getDescription());
-			pstmt.setString(5, question.getBikeaddr());
-			pstmt.setString(6, question.getImgproof());
+			pstmt.setString(4, question.getVoiceproof());
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

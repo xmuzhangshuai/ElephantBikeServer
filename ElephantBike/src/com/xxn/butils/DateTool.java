@@ -47,6 +47,31 @@ public class DateTool {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		return sdf.format(date);
 	}
+	
+	/**
+	 * 获取年月日的date
+	 * @param date
+	 * @return
+	 */
+	public static Date getYMDDate(Date date){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			return sdf.parse(sdf.format(date));
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	/**
+	 * date类型转成 年月日的类型
+	 * @param date
+	 * @return
+	 */
+	public static String dateToStringYMD(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		return sdf.format(date);
+	}
+	
 
 	public static String calcUsedTime(long seconds) {
 		int day = 0, hour = 0, mins = 0, sec = 0;

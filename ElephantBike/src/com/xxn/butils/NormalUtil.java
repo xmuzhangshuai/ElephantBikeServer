@@ -55,14 +55,15 @@ public class NormalUtil {
 	 * @param stage
 	 * @return
 	 */
-	public static float countFee(int mins, int stage) {
+	public static float countFee(int mins, String stage) {
 
 		float fee = 0.0f;
+		if(stage.equals("0"))fee=1.0f;
 		if(mins <= 60){
-			fee = 1.00f + 0.06f*mins;
+			fee = fee + 0.06f*mins;
 		}
 		if(mins > 60){
-			fee = 1.00f + 0.06f*60 +(mins-60)*0.02f;
+			fee = fee + 0.06f*60 +(mins-60)*0.02f;
 		}
 		return fee;
 		
