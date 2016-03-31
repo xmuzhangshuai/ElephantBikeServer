@@ -75,7 +75,6 @@ public class GetUnlockCode2 extends HttpServlet {
 			else {
 				canused = false;
 			}
-			
 			if(canused){
 				// TODO 根据bikeid获取解锁密码
 				pass = PassWordTool.getUnlockPass(bikeid);

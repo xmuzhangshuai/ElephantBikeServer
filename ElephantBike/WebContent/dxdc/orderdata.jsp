@@ -10,7 +10,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <base href="<%=basePath%>">
 
-<title>查看认证用户列表</title>
+<title>查看单车数据</title>
 <link rel="stylesheet" type="text/css"
 	href="<%=path%>/css/easyUI/themes/gray/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/css/easyUI/themes/icon.css">
@@ -39,9 +39,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     
 	function getData(queryParams){
 		$('#grid').datagrid({
-			url: '<%=basePath%>certiuser',
+			url: '<%=basePath%>getallorder',
 			sortName: 'id',
-			sortOrder: 'asc',
+			sortOrder: 'desc',
 			queryParams: queryParams,
 			nowrap: true, //换行属性
 			striped: true, //奇数偶数行颜色区分
@@ -52,27 +52,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    {field: 'ck', checkbox: true},          
 			]],
 			columns: [[
-				{field:'id',title:'用户ID',sortable:true,width:'5%',},
-				{field:'registerdate',title:'注册时间',sortable:true,width:'10%',},
-				{field:'phone',title:'手机号',sortable:true,width:'6%',
-					//如果要实现编辑功能，需要添加下面的属性
-					//editor: { type: 'validatebox',  }
-				},
-				{field:'college',title:'学校',sortable:true,width:'6%',
-				},
-				{field:'stunum',title:'学号',sortable:true,width:'10%',},
-				{field:'vip',title:'是否会员',sortable:true,width:'5%',
-				},
-				{field:'vipdate',title:'会员有效期',sortable:true,width:'10%',
-				},
-				{field:'balance',title:'账户余额',sortable:true,width:'10%',
-				},
-				{field:'ma',title:'操作',sortable:true,width:'10%',
-					formatter:function(value, row){//使用formatter格式化刷子
-						return "<a href='javascript:frozen("+row.phone+")'>冻结</a>";
-					}
-				},
-				
+				{field:'orderid',title:'订单编号',sortable:true,width:'10%',},
+				{field:'phone',title:'手机号',sortable:true,width:'5%',},
+				{field:'bikeid',title:'车辆编号',sortable:true,width:'6%',},
+				{field:'starttime',title:'开始时间',sortable:true,width:'8%',},
+				{field:'finishtime',title:'结束时间',sortable:true,width:'8%',},
+				{field:'usedtime',title:'使用时长',sortable:true,width:'6%',},
+				{field:'cost',title:'费用',sortable:true,width:'6%',},
+				{field:'paymode',title:'支付方式',sortable:true,width:'6%',},
+				{field:'finishlocation',title:'结束地点',sortable:true,width:'6%',},
 			]],
 			
 			pagination: true,
@@ -182,7 +170,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </head>
 
 <body bgcolor="#DDF3FF" class = "h2">
-<form name="searchform" method="post" action="" id ="searchform">
+<div style="margin: auto;">
+	<form name="searchform" method="post" action="" id ="searchform">
 	<strong>用户检索:</strong>
      	<select name="search_type" id="search_type" >
             <option value="-1">请选择搜索类型</option>
@@ -192,14 +181,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <input type="text" name="keyword" size=20 >
         <a id="submit_search">搜索</a>
 </form>
-
-<form name="batchform" method="post" action="" id ="batchform">
-	<strong>批量增加:</strong>
-        <input type="text" name="balance" id="balance"size=20 >
-        <a id="submit_add">批量充值</a>
-</form>
-
-<table id="grid"></table>
+	<table id="grid" style="margin-left: 2%;margin-top: 2%"></table>
+</div>
 </body>
 </html>
 

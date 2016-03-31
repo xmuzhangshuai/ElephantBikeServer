@@ -10,7 +10,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <base href="<%=basePath%>">
 
-<title>查看认证用户列表</title>
+<title>查看单车数据</title>
 <link rel="stylesheet" type="text/css"
 	href="<%=path%>/css/easyUI/themes/gray/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/css/easyUI/themes/icon.css">
@@ -52,27 +52,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    {field: 'ck', checkbox: true},          
 			]],
 			columns: [[
-				{field:'id',title:'用户ID',sortable:true,width:'5%',},
-				{field:'registerdate',title:'注册时间',sortable:true,width:'10%',},
-				{field:'phone',title:'手机号',sortable:true,width:'6%',
+				{field:'id',title:'单车ID',sortable:true,width:'5%',},
+				{field:'registerdate',title:'当日使用次数',sortable:true,width:'10%',},
+				{field:'phone',title:'历史使用次数',sortable:true,width:'6%',
 					//如果要实现编辑功能，需要添加下面的属性
 					//editor: { type: 'validatebox',  }
 				},
-				{field:'college',title:'学校',sortable:true,width:'6%',
+				{field:'college',title:'当日收入',sortable:true,width:'6%',
 				},
-				{field:'stunum',title:'学号',sortable:true,width:'10%',},
-				{field:'vip',title:'是否会员',sortable:true,width:'5%',
-				},
-				{field:'vipdate',title:'会员有效期',sortable:true,width:'10%',
-				},
-				{field:'balance',title:'账户余额',sortable:true,width:'10%',
-				},
-				{field:'ma',title:'操作',sortable:true,width:'10%',
-					formatter:function(value, row){//使用formatter格式化刷子
-						return "<a href='javascript:frozen("+row.phone+")'>冻结</a>";
-					}
-				},
-				
+				{field:'stunum',title:'最终编号',sortable:true,width:'10%',},
 			]],
 			
 			pagination: true,
@@ -192,14 +180,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <input type="text" name="keyword" size=20 >
         <a id="submit_search">搜索</a>
 </form>
-
-<form name="batchform" method="post" action="" id ="batchform">
-	<strong>批量增加:</strong>
-        <input type="text" name="balance" id="balance"size=20 >
-        <a id="submit_add">批量充值</a>
-</form>
-
-<table id="grid"></table>
+<div style="margin: auto;">
+	<table id="grid" style="margin-left: 2%;margin-top: 2%"></table>
+</div>
 </body>
 </html>
 

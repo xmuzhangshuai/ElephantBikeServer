@@ -285,7 +285,7 @@ public class UserDao implements IUserDao {
 			while (resultSet.next()) {
 				int id = resultSet.getInt("id");
 				String phone = resultSet.getString("phone");
-				String wxid = resultSet.getString("wxid");
+				String stunum = resultSet.getString("stunum");
 				String idcardaddr = resultSet.getString("idcardaddr");
 				String stucardaddr = resultSet.getString("stucardaddr");
 				String userstate = resultSet.getString("userstate");
@@ -295,7 +295,7 @@ public class UserDao implements IUserDao {
 				// 获取余额
 				IWalletDao iWalletDao = new WalletDao();
 				float balance = iWalletDao.getBalance(new Wallet(phone));
-				User user = new User(id, phone, wxid, idcardaddr, stucardaddr,
+				User user = new User(id, phone, stunum, idcardaddr, stucardaddr,
 						userstate, college, registerdate, vip, vipdate, balance);
 				resultList.add(user);
 			}

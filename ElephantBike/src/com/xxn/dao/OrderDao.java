@@ -4,14 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.xxn.butils.DateTool;
 import com.xxn.butils.JdbcUtils_DBCP;
 import com.xxn.entity.Order;
+import com.xxn.entity.User;
+import com.xxn.entity.Wallet;
 import com.xxn.idao.IOrderDao;
+import com.xxn.idao.IWalletDao;
 
 public class OrderDao implements IOrderDao{
 
@@ -211,5 +216,50 @@ public class OrderDao implements IOrderDao{
 		}
 		return result;
 	}
+
+	@Override
+	public List<Order> findForPage(int start, int end, String sort,
+			String order, Map queryParams) {
+		String sql = " select tmp.* from ( "
+				+ " select * from o_order where 1=1 ";
+		for (Object object : queryParams.keySet()) {
+			String key = object.toString();
+			String value = queryParams.get(key).toString();
+			sql += String.format(" and  %s like '%%%s%%' ", key, value);
+		}
+		sql += " order by " + sort + " " + order + " ) tmp limit " + start
+				+ " ," + end;
+
+		Connection connection = JdbcUtils_DBCP.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+		List<Order> resultList = new ArrayList<Order>();
+		try {
+			pstmt = connection.prepareStatement(sql);
+			resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String orderid = resultSet.getString("orderid");
+				String phone = resultSet.getString("phone");
+				String bikeid = resultSet.getString("bikeid");
+				String starttime = resultSet.getString("starttime");
+				String finishtime = resultSet.getString("finishtime");
+				String usedtime = resultSet.getString("usedtime");
+				float cost = resultSet.getFloat("cost");
+				String paymode = resultSet.getString("paymode");
+				String finishlocation = resultSet.getString("finishlocation");
+				String college = "";
+				Order o = new Order(id, orderid, phone, bikeid, starttime,
+						finishtime, usedtime, cost, paymode, finishlocation, college);
+				resultList.add(o);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, resultSet);
+		}
+		return resultList;
+	}
+	
 
 }

@@ -11,7 +11,8 @@ public class ActivityService implements IActivityService{
 
 	@Override
 	public int createActivty(Activity activity) {
-		return 0;
+		IActivityDao iActivityDao = new ActivityDao();
+		return iActivityDao.createActivty(activity);
 	}
 
 	@Override

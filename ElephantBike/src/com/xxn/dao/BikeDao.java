@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.xxn.butils.DateTool;
 import com.xxn.butils.JdbcUtils_DBCP;
 import com.xxn.entity.Bike;
 import com.xxn.idao.IBikeDao;
@@ -129,13 +131,14 @@ public class BikeDao implements IBikeDao{
 	@Override
 	public int updateBikeState(Bike bike) {
 		int result = 0;
-		String sql = "update b_bike set state = ? where bikeid = ?";
+		String sql = "update b_bike set state = ?,lastusedtime=? where bikeid = ?";
 		Connection connection =  JdbcUtils_DBCP.getConnection();
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setInt(1, bike.getState());
-			pstmt.setString(2, bike.getBikeid());
+			pstmt.setString(2, DateTool.dateToStringYMD(new Date()));
+			pstmt.setString(3, bike.getBikeid());
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

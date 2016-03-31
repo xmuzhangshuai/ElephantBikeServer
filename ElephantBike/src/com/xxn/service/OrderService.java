@@ -1,5 +1,6 @@
 package com.xxn.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.xxn.dao.OrderDao;
@@ -43,6 +44,13 @@ public class OrderService implements IOrderService {
 	public Map<String, String> getOrderInfo(Map<String, String> val, Map<String, String> query) {
 		IOrderDao iOrderDao = new OrderDao();
 		return iOrderDao.getOrderInfo(val, query);
+	}
+
+	@Override
+	public List<Order> findForPage(int start, int end, String sort,
+			String order, Map queryParams) {
+		IOrderDao iOrderDao = new OrderDao();
+		return iOrderDao.findForPage(start, end, sort, order, queryParams);
 	}
 
 

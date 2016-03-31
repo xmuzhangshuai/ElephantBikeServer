@@ -60,7 +60,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				},
 				{field:'college',title:'学校',sortable:true,width:'6%',
 				},
-				{field:'wxid',title:'学号',sortable:true,width:'10%',},
+				{field:'stunum',title:'学号',sortable:true,width:'10%',},
 				{field:'stucardaddr',title:'学生卡',sortable:true,width:'10%',
 					formatter:function(value, row){//使用formatter格式化刷子
 						var url = '<%=basePath%>';
@@ -68,10 +68,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						return '<img src='+url+value+' style=width:100% >';
 					},
 				},
-				{field:'userstate',title:'用户状态',sortable:true,width:'5%',
+				{field:'userstate',title:'用户状态',sortable:true,width:'8%',
 					formatter:function(value, rec){//使用formatter格式化刷子
 						if(value == 0)return "未认证";
-						if(value == -1)return "认证不通过";
+						if(value == -1)return "冻结";
+						if(value == 2)return "提交未审核";
 					}
 				},
 				{field:'ma',title:'操作',sortable:true,width:'10%',

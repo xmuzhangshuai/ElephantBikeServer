@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xxn.butils.FastJsonTool;
+import com.xxn.butils.NormalUtil;
 import com.xxn.constants.BikeConstants;
 import com.xxn.entity.Activity;
 import com.xxn.iservice.IActivityService;
@@ -50,19 +51,24 @@ public class GetHotTopic extends HttpServlet {
 		System.out.println("/api/act/topic");
 		Map<String, String> map = new HashMap<>();
 		IActivityService iActivityService = new ActivityService();
-		
-		Activity activity = new Activity(null, null, 0);
-		List<Activity> result = iActivityService.getHotActivty(activity);
-		if(result.size() > 0){
-			map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-			map.put("imageurl", result.get(0).getImageurl());
-			map.put("linkurl", result.get(0).getLinkurl());
+		String type = request.getParameter("type");
+		if(NormalUtil.isStringInteger(type)){
+			Activity activity = new Activity("", "", Integer.parseInt(type), 0);
+			List<Activity> result = iActivityService.getHotActivty(activity);
+			if(result.size() > 0){
+				map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
+				map.put("imageurl", result.get(0).getImageurl());
+				map.put("linkurl", result.get(0).getLinkurl());
+			}
+			else{
+				map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+				map.put(BikeConstants.MESSAGE, "暂无热点活动");
+			}
 		}
 		else{
 			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-			map.put(BikeConstants.MESSAGE, "暂无热点活动");
+			map.put(BikeConstants.MESSAGE, "type参数类型错误");
 		}
-		
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));
 		out.close();

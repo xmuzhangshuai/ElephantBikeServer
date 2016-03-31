@@ -94,6 +94,22 @@ public class Order {
 		this.usedtime = usedtime;
 		this.cost = cost;
 	}
+	public Order(int id, String orderid, String phone, String bikeid,
+			String starttime, String finishtime, String usedtime, float cost,
+			String paymode, String finishlocation, String college) {
+		super();
+		this.id = id;
+		this.orderid = orderid;
+		this.phone = phone;
+		this.bikeid = bikeid;
+		this.starttime = starttime;
+		this.finishtime = finishtime;
+		this.usedtime = usedtime;
+		this.cost = cost;
+		this.paymode = paymode;
+		this.finishlocation = finishlocation;
+		this.college = college;
+	}
 	
 	
 }

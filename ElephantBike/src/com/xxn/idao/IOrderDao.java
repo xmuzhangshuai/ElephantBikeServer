@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.xxn.entity.Order;
+import com.xxn.entity.User;
 
 public interface IOrderDao {
 	/**
@@ -18,7 +19,8 @@ public interface IOrderDao {
 	public int updateOrder(Map val,Map query);
 	
 	public int getOrderCount(Map<String, String> query);
-	
+	public List<Order> findForPage(int start, int end, String sort,
+			String order, Map queryParams);
 	/**
 	 * 获取未完成订单的单车编号
 	 * @param order

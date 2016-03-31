@@ -18,7 +18,22 @@ public class ActivityDao implements IActivityDao{
 
 	@Override
 	public int createActivty(Activity activity) {
-		return 0;
+		int result = 0;
+		String sql = "insert into h_hotactivity(imageurl,linkurl,type)values(?,?,?)";
+		Connection connection =  JdbcUtils_DBCP.getConnection();
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setString(1, activity.getImageurl());
+			pstmt.setString(2, activity.getLinkurl());
+			pstmt.setInt(3, activity.getType());
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, null);
+		}
+		return result;
 	}
 
 	@Override
@@ -26,12 +41,13 @@ public class ActivityDao implements IActivityDao{
 		List<Activity> reslist = new ArrayList<>();
 		Connection connection = null;
 		connection = JdbcUtils_DBCP.getConnection();
-		String sql = "select imageurl,linkurl from h_hotactivity where isunder = ? ";
+		String sql = "select imageurl,linkurl from h_hotactivity where isunder = ? and type=? order by id desc limit 0,1";
 		ResultSet resultSet = null;
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setInt(1, activity.getIsunder());
+			preparedStatement.setInt(2, activity.getType());
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				String imageurl = resultSet.getString(1);
