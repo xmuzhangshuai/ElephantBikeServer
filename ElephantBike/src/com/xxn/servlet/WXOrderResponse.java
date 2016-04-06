@@ -7,6 +7,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -87,6 +88,10 @@ public class WXOrderResponse extends HttpServlet {
 				if(_resPhone.containsKey("phone")){
 					phone = _resPhone.get("phone");
 				}
+				
+				ServletContext application = this.getServletContext();
+				application.setAttribute("query"+phone, xmlMap.get("transaction_id"));
+				
 				Wallet wallet2 = new Wallet(phone, -Float.parseFloat(total_fee),
 						DateTool.dateToString(new Date()));
 				
@@ -99,7 +104,6 @@ public class WXOrderResponse extends HttpServlet {
 				System.out.println(notityXml);
 			}
 		}
-		
 	}
 
 }

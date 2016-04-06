@@ -113,7 +113,27 @@ public class ReturnPay extends HttpServlet {
 
 				} else {
 					// 丢车-->先扣费，再写入丢车列表
-					// TODO
+					if (iWalletService.rechargeWallet(wallet1) > 0) {
+						val.clear();
+						val.put("finishtime", DateTool.dateToString(new Date()));
+						val.put("cost", fee+"");
+						val.put("paymode", paymode);
+						query.clear();
+						query.put("phone", phone);
+						
+						if (iWalletService.addWalletList(wallet2) > 0
+								&& iOrderService.updateOrder(val, query) > 0) {
+							map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
+							map.put(BikeConstants.MESSAGE, "支付成功");
+						} else {
+							map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+							map.put(BikeConstants.MESSAGE, "扣费成功，订单修改失败");
+						}
+					} else {
+						map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+						map.put(BikeConstants.MESSAGE, "扣费失败");
+					}
+					// TODO 写入丢车列表
 				}
 			} else {
 				map.put(BikeConstants.STATUS, BikeConstants.FAIL);

@@ -18,6 +18,7 @@ import com.xxn.butils.NormalUtil;
 import com.xxn.constants.BikeConstants;
 import com.xxn.entity.Bike;
 import com.xxn.entity.Order;
+import com.xxn.entity.User;
 import com.xxn.iservice.IBikeService;
 import com.xxn.iservice.IOrderService;
 import com.xxn.iservice.IUserService;
@@ -67,6 +68,7 @@ public class CountBikeFee extends HttpServlet {
 		String phone = request.getParameter("phone");
 		String bikeid = request.getParameter("bikeid");
 		String isfinish = request.getParameter("isfinish");
+		String isnatural = request.getParameter("isnatural");
 		int mins = 0;
 		float fee = 0.0f;
 		if (NormalUtil.isStringLegal(phone) && NormalUtil.isStringLegal(bikeid) && NormalUtil.isStringLegal(isfinish)) {
@@ -113,6 +115,13 @@ public class CountBikeFee extends HttpServlet {
 					query.put("finishtime", null);
 					Bike bike = new Bike(bikeid, 1, "", "");
 					if (iOrderService.updateOrder(val, query) > 0 && iBikeService.updateBikeState(bike) > 0) {
+						if(null != isnatural)
+							if(isnatural.equals("0")){
+								//做用户冻结操作
+								User user = new User(phone, "-1");
+								iUserService.updateUserState(user);
+								System.out.println("非正常还车冻结用户...");
+							}
 						map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 						map.put("fee", String.valueOf(fee));
 						map.put("time", usedtime);

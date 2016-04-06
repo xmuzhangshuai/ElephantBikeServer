@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -72,6 +73,8 @@ public class WXRechargeResponse extends HttpServlet {
 					Wallet wallet2 = new Wallet(phone, Float.parseFloat(total_fee),
 							DateTool.dateToString(new Date()));
 					iWalletService.addWalletList(wallet2);
+					ServletContext application = this.getServletContext();
+					application.setAttribute("query"+phone, xmlMap.get("transaction_id"));
 					
 					String res = "<xml><return_code><![CDATA[SUCCESS]]></return_code>"
 							+ "<return_msg><![CDATA[OK]]></return_msg></xml>";

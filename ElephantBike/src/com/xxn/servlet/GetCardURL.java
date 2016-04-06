@@ -21,6 +21,14 @@ import com.xxn.service.UserService;
 /**
  * Servlet implementation class GetCardURL
  */
+/**
+ * 
+* @ClassName: GetCardURL 
+* @Description: TODO没有缓存图片  获取地址 
+* @author kunsen-lee
+* @date 2016年4月1日 上午9:39:24 
+*
+ */
 @WebServlet("/api/user/cardurl")
 public class GetCardURL extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -55,7 +63,7 @@ public class GetCardURL extends HttpServlet {
 		if(NormalUtil.isStringLegal(phone)){
 			User user = new User(phone, "");
 			map = iUserService.getCardURL(user);
-			if(map.containsKey("idcard")){
+			if(map.containsKey("stucard")){
 				map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 			}
 			else{

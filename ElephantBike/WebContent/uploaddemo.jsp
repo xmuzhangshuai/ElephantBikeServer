@@ -12,7 +12,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </head>
 <body>
 	大象欢迎页测试成功
-	<form action="<%=basePath%>api/file/upload" method="post" enctype="multipart/form-data">
+	<form action="<%=basePath%>api/file/uploadvoice" method="post" enctype="multipart/form-data">
 		<input type="file" name="imgurl">
 		<input type="submit" value="上传">
 	</form>

@@ -14,7 +14,7 @@ public class QuestionDao implements IQuestionDao{
 	public int addQuestion(Question question) {
 		int result = 0;
 		String sql = "insert into q_question(phone,bikeid,type,voiceproof) "
-				+ "values(?,?,?,?,?,?)";
+				+ "values(?,?,?,?)";
 		Connection connection =  JdbcUtils_DBCP.getConnection();
 		PreparedStatement pstmt = null;
 		try {

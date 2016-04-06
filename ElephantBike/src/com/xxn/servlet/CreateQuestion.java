@@ -58,12 +58,17 @@ public class CreateQuestion extends HttpServlet {
 		String type = request.getParameter("type");
 		String voiceurl = request.getParameter("voiceurl");
 		String ismissing = request.getParameter("ismissing");
-		if(ismissing.equals("1")){
-			//TODO 扣费
-			
+		Question question = null;
+		if(null == ismissing){
+			question = new Question(phone, bikeid, type, voiceurl);
+		}
+		else{
+			if(ismissing.equals("1")){
+				//TODO 扣费
+				question = new Question(phone, bikeid, type, "");
+			}
 		}
 		
-		Question question = new Question(phone, bikeid, type, voiceurl);
 		if(iQuestionService.addQuestion(question) > 0){
 			map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 			map.put(BikeConstants.MESSAGE, "问题提交成功,谢谢");

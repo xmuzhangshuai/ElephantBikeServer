@@ -21,7 +21,7 @@ import com.xxn.constants.BikeConstants;
 /**
  * Servlet implementation class VoiceSMS
  */
-@WebServlet("/VoiceSMS")
+@WebServlet("/api/msg/voicesms")
 public class VoiceSMS extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

@@ -22,6 +22,7 @@ public class BikeConstants {
 	 * 微信支付
 	 */
 	public static final String WX_PAY_ORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+	public static final String WX_PAY_ORDER_QUERY = "https://api.mch.weixin.qq.com/pay/orderquery";
 	public static final String WX_KEY = "13190819011daxiangdanche12345678";
 	public static final String WX_APP_ID = "wx4a480f3f5a6c4c6c";
 	public static final String WX_MCH_ID = "1319081901";

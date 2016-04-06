@@ -17,4 +17,8 @@
     <filter-name>AjaxAccessFilter</filter-name>
     <url-pattern>/api/*</url-pattern>
   </filter-mapping>
+  <filter-mapping>
+    <filter-name>AjaxAccessFilter</filter-name>
+    <url-pattern>/allcollege</url-pattern>
+  </filter-mapping>
 </web-app>

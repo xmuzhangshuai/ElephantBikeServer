@@ -144,7 +144,7 @@ public class UserDao implements IUserDao {
 		Map<String, String> result = new HashMap<>();
 		Connection connection = null;
 		connection = JdbcUtils_DBCP.getConnection();
-		String sql = "select stucardaddr from u_users where phone=?";
+		String sql = "select stucardaddr,college,name,stunum from u_users where phone=?";
 		ResultSet resultSet = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -152,8 +152,14 @@ public class UserDao implements IUserDao {
 			pstmt.setString(1, user.getPhone());
 			resultSet = pstmt.executeQuery();
 			while (resultSet.next()) {
-				String stucard = resultSet.getString(1);
+				String stucard = resultSet.getString("stucardaddr");
+				String college = resultSet.getString("college");
+				String name = resultSet.getString("name");
+				String stunum = resultSet.getString("stunum");
 				result.put("stucard", stucard);
+				result.put("college", college);
+				result.put("name", name);
+				result.put("stunum", stunum);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
