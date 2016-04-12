@@ -10,6 +10,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,14 +30,22 @@ import com.xxn.service.UserService;
 /**
  * Servlet implementation class RSANotifyReceiver
  */
-@WebServlet("/api/pay/rsanotifyreceiver")
-public class RSANotifyReceiver extends HttpServlet {
+/**
+ * 
+* @ClassName: ALiVip 
+* @Description: 支付宝 开通会员 异步回调 
+* @author kunsen-lee
+* @date 2016年4月11日 下午12:06:54 
+*
+ */
+@WebServlet("/api/pay/alivip")
+public class ALiVip extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RSANotifyReceiver() {
+    public ALiVip() {
         super();
     }
 
@@ -119,6 +128,8 @@ public class RSANotifyReceiver extends HttpServlet {
         			query.put("phone", phone);
         			int updateresult = iUserService.updateUser(val, query);
         			if(updateresult ==1){
+        				ServletContext application = this.getServletContext();
+    					application.setAttribute(out_trade_no, out_trade_no);
         				out.print("success");
         	        	System.out.println("扣费成功-开通成功");
         			}

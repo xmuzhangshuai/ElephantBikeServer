@@ -10,7 +10,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <base href="<%=basePath%>">
 
-<title>查看认证用户列表</title>
+<title>问题列表</title>
 <link rel="stylesheet" type="text/css"
 	href="<%=path%>/css/easyUI/themes/gray/easyui.css">
 <link rel="stylesheet" type="text/css" href="<%=path%>/css/easyUI/themes/icon.css">
@@ -26,20 +26,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	}
 </style>
 
-
 <script>
 	var flag =1;//加载变量
     
     $(function(){
 		//获取数据的查询参数----过滤数据
 		var queryParams;
-		queryParams = {"userstate":"0"};
+		queryParams = {"userstate":"1"};
 		getData(queryParams);
 	});
     
 	function getData(queryParams){
 		$('#grid').datagrid({
-			url: '<%=basePath%>certiuser',
+			url: '<%=basePath%>getallquestion',
 			sortName: 'id',
 			sortOrder: 'asc',
 			queryParams: queryParams,
@@ -52,32 +51,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    {field: 'ck', checkbox: true},          
 			]],
 			columns: [[
-				{field:'id',title:'用户ID',sortable:true,width:'5%',},
-				{field:'registerdate',title:'注册时间',sortable:true,width:'10%',},
-				{field:'name',title:'姓名',sortable:true,width:'6%',},
-				{field:'phone',title:'手机号',sortable:true,width:'6%',},
-				{field:'college',title:'学校',sortable:true,width:'6%',},
-				{field:'stunum',title:'学号',sortable:true,width:'10%',},
-				{field:'stucardaddr',title:'学生卡',sortable:true,width:'20%',
+				{field:'phone',title:'手机号',sortable:true,width:'10%',
+					//如果要实现编辑功能，需要添加下面的属性
+					//editor: { type: 'validatebox',  }
+				},
+				{field:'bikeid',title:'单车编号',sortable:true,width:'6%',
+				},
+				{field:'type',title:'问题类型',sortable:true,width:'15%',},
+				{field:'voiceproof',title:'录音',sortable:true,width:'25%',
 					formatter:function(value, row){//使用formatter格式化刷子
 						var url = '<%=basePath%>';
 						url = url.replace('ElephantBike/','');
-						return '<img src='+url+value+' style=width:100%;height:200px >';
-					},
-				},
-				{field:'userstate',title:'用户状态',sortable:true,width:'8%',
-					formatter:function(value, rec){//使用formatter格式化刷子
-						if(value == 0)return "未认证";
-						if(value == -1)return "冻结";
-						if(value == 2)return "提交未审核";
+						return "<audio controls='controls'><source src='"+
+						url+row.voiceproof+"' type='audio/mpeg'></audio>";
 					}
 				},
-				{field:'ma',title:'操作',sortable:true,width:'10%',
+				{field:'ma',title:'操作',sortable:true,width:'5%',
 					formatter:function(value, row){//使用formatter格式化刷子
-						return "<a href='javascript:pass("+row.phone+")'>通过</a>";
+						return "<a href='javascript:frozen("+row.phone+")'>解冻</a>";
 					}
 				},
-				
 			]],
 			
 			pagination: true,
@@ -146,18 +139,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			$.messager.alert('警告','您没有选择','error');
 		}
 	};
-	//----------------------------------批量增加金额-------------------------------------
-	function pass(phone){
+	//---------------------------------解冻用户-------------------------------------
+	function frozen(phone){
 		 $.post("<%=basePath%>/api/user/frozen", {phone: phone,state:1},
 					function (data, textStatus){
 					if(data == '1'){
-						$.messager.alert('提示','认证成功','info');
+						$.messager.alert('提示','解冻成功','info');
 						$('#grid').datagrid('reload'); 
 						} 
 						else{
-						$.messager.alert('提示','认证失败','fail');
+						$.messager.alert('提示','解冻失败','fail');
 						}
 					}, "text");
+	}
+	//----------------------------------批量增加金额-------------------------------------
+	function _batch_add(){
+		
 	}
 	  //将表单数据转为json
     function form2Json(id) {
@@ -167,7 +164,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         for (var i = 0; i < arr.length; i++) {
             jsonStr += '"' + arr[i].name + '":"' + arr[i].value + '",';
         }
-        jsonStr += '"' + "userstate" + '":"' + "0" + '",';
+        jsonStr += '"' + "userstate" + '":"' + "1" + '",';
         jsonStr = jsonStr.substring(0, (jsonStr.length - 1));
         jsonStr += '}';
        // alert(jsonStr);

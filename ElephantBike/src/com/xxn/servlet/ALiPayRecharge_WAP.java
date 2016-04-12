@@ -14,58 +14,59 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
-import com.xxn.butils.DateTool;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.constants.ALiPayConfig;
 import com.xxn.constants.BikeConstants;
 
 /**
- * Servlet implementation class ALiPayOrder
+ * Servlet implementation class ALiPayRecharge
  */
-@WebServlet("/api/pay/alipayorder")
-public class ALiPayOrder extends HttpServlet {
+@WebServlet("/api/pay/alipayrecharge_wap")
+public class ALiPayRecharge_WAP extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public ALiPayRecharge_WAP() {
+        super();
+    }
 
 	/**
-	 * @see HttpServlet#HttpServlet()
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	public ALiPayOrder() {
-		super();
-	}
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
+		System.out.println("/api/pay/alipayrecharge");
+		
 		PrintWriter out = response.getWriter();
 		Map<String, Object> result = new HashMap<>();
 		
 		String phone = request.getParameter("phone");
 		String subject = request.getParameter("subject");
-		String body = request.getParameter("body");
-		String month = request.getParameter("month");
+//		String body = request.getParameter("body");
+		//充值金额
+		String rechargemoney = request.getParameter("totalfee");
+		System.out.println(phone+"-"+subject+"-"+rechargemoney);
 		
-		String service = "mobile.securitypay.pay";
+		String service = "alipay.wap.create.direct.pay.by.user";
 		String partner = ALiPayConfig.Partner;
 		String _input_charset = "utf-8";
-		String notify_url =BikeConstants.APP_URL+"/ElephantBike/api/pay/alivip";
-		String out_trade_no = phone+"_"+System.currentTimeMillis()+"_"+month;
+		String notify_url =BikeConstants.APP_URL+"/ElephantBike/api/pay/alirecharge";
+		String out_trade_no = phone+"_"+System.currentTimeMillis();
 		String payment_type = "1";
+		String show_url = "https://www.taobao.com/product/113714.html";
 		String seller_id = ALiPayConfig.Seller_ID;
+		//充值金额 TODO 
 		String total_fee = "0.01";
 		
 		Map<String, Object> obj = new HashMap<>();
@@ -78,7 +79,7 @@ public class ALiPayOrder extends HttpServlet {
 		obj.put("payment_type", payment_type);
 		obj.put("seller_id", seller_id);
 		obj.put("total_fee", total_fee);
-		obj.put("body", body);
+		obj.put("show_url", show_url);
 		String sign="",signData="";
 		
 		for (Object object : obj.keySet()) {

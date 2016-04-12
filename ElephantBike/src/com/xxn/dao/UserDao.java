@@ -291,18 +291,20 @@ public class UserDao implements IUserDao {
 			while (resultSet.next()) {
 				int id = resultSet.getInt("id");
 				String phone = resultSet.getString("phone");
+				String name = resultSet.getString("name");
 				String stunum = resultSet.getString("stunum");
 				String idcardaddr = resultSet.getString("idcardaddr");
 				String stucardaddr = resultSet.getString("stucardaddr");
 				String userstate = resultSet.getString("userstate");
 				String college = resultSet.getString("college");
 				String registerdate = resultSet.getString("registerdate");
-				String vip = "", vipdate = "";
+				String vip = resultSet.getString("isvip");
+				String vipdate = resultSet.getString("vipdate");
 				// 获取余额
 				IWalletDao iWalletDao = new WalletDao();
 				float balance = iWalletDao.getBalance(new Wallet(phone));
-				User user = new User(id, phone, stunum, idcardaddr, stucardaddr,
-						userstate, college, registerdate, vip, vipdate, balance);
+				User user = new User(id, phone, name, stunum, idcardaddr,
+						stucardaddr, userstate, college, registerdate, vip, vipdate, balance);
 				resultList.add(user);
 			}
 		} catch (SQLException e) {

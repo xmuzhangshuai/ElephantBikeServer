@@ -14,10 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.constants.BikeConstants;
 import com.xxn.entity.Question;
+import com.xxn.entity.User;
 import com.xxn.iservice.IOrderService;
 import com.xxn.iservice.IQuestionService;
+import com.xxn.iservice.IUserService;
 import com.xxn.service.OrderService;
 import com.xxn.service.QuestionService;
+import com.xxn.service.UserService;
 
 /**
  * Servlet implementation class CreateQuestion
@@ -52,6 +55,7 @@ public class CreateQuestion extends HttpServlet {
 		System.out.println("/api/question/ques");
 		Map<String, String> map = new HashMap<>();
 		IQuestionService iQuestionService = new QuestionService();
+		IUserService iUserService = new UserService();
 			
 		String phone = request.getParameter("phone");
 		String bikeid = request.getParameter("bikeid");
@@ -70,8 +74,17 @@ public class CreateQuestion extends HttpServlet {
 		}
 		
 		if(iQuestionService.addQuestion(question) > 0){
+			if(type.contains("密码"))
+			{
+				//TODO 冻结操作
+				User user = new User(phone, "-1");
+				if(iUserService.updateUserState(user)>0)
+					map.put(BikeConstants.MESSAGE, "问题提交成功,冻结成功");
+				else map.put(BikeConstants.MESSAGE, "问题提交成功,冻结失败");
+			}
+			else map.put(BikeConstants.MESSAGE, "问题提交成功");
+			
 			map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-			map.put(BikeConstants.MESSAGE, "问题提交成功,谢谢");
 		}
 		else{
 			map.put(BikeConstants.STATUS, BikeConstants.FAIL);

@@ -6,35 +6,37 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.tencent.WXPay;
+import com.tencent.common.RandomStringGenerator;
+import com.tencent.common.Signature;
 import com.xxn.butils.DateTool;
 import com.xxn.butils.FastJsonTool;
+import com.xxn.butils.HttpClientUtil;
+import com.xxn.butils.XMLUtil;
 import com.xxn.constants.BikeConstants;
-import com.xxn.entity.Bike;
-import com.xxn.entity.User;
-import com.xxn.iservice.IBikeService;
+import com.xxn.entity.PayReqData;
+import com.xxn.entity.PayResData;
 import com.xxn.iservice.IOrderService;
-import com.xxn.iservice.IUserService;
-import com.xxn.service.BikeService;
 import com.xxn.service.OrderService;
-import com.xxn.service.UserService;
 
 /**
- * Servlet implementation class MissBikeFee
+ * Servlet implementation class WXPayOrder 查询支付结果
  */
-@WebServlet("/api/bike/missbikefee")
-public class MissBikeFee extends HttpServlet {
+@WebServlet("/api/pay/alipayquery")
+public class AliPayOrderQuery extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public MissBikeFee() {
+	public AliPayOrderQuery() {
 		super();
 	}
 
@@ -57,39 +59,24 @@ public class MissBikeFee extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		System.out.println("/api/bike/missbikefee");
-		Map<String, String> map = new HashMap<>();
+		System.out.println("/api/pay/alipayquery");
+		Map<String, Object> map = new HashMap<>();
 
-		IOrderService iOrderService = new OrderService();
-		IBikeService iBikeService = new BikeService();
-		IUserService iUserService = new UserService();
-
-		String phone = request.getParameter("phone");
-		String bikeid = request.getParameter("bikeid");
-		System.out.println(phone+bikeid);
-		Map<String, String> val = new HashMap<>();
-
-		Date finish = new Date();
-		val.put("finishtime", DateTool.dateToString(finish));
-		val.put("cost", BikeConstants.MISSFEE + "");
-		Map<String, String> query = new HashMap<>();
-		query.put("phone", phone);
-		query.put("bikeid", bikeid);
-		query.put("finishtime", null);
-		Bike bike = new Bike(bikeid, 1, "", "");
-		if (iOrderService.updateOrder(val, query) > 0
-				&& iBikeService.updateBikeState(bike) > 0) {
-			// 做用户冻结操作
-//			User user = new User(phone, "-1");
-//			iUserService.updateUserState(user);
-//			System.out.println("非正常还车冻结用户...");
+		String trade_no = request.getParameter("out_trade_no");
+		
+		System.out.println("out_trade_no:"+trade_no);
+		
+		ServletContext application = this.getServletContext();
+		String out_trade_no = (String) application.getAttribute(trade_no);
+		if(out_trade_no.equals(trade_no)){
 			map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-			map.put("fee", String.valueOf(BikeConstants.MISSFEE));
-		} else {
-			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-			map.put(BikeConstants.MESSAGE, "订单修改失败");
+			map.put(BikeConstants.MESSAGE, "支付宝查询:支付成功");
 		}
-
+		else {
+			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+			map.put(BikeConstants.MESSAGE, "支付宝查询:支付失败");
+		}
+		
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));
 		out.close();

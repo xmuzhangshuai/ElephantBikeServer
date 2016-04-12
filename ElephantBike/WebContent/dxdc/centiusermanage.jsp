@@ -53,15 +53,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			]],
 			columns: [[
 				{field:'id',title:'用户ID',sortable:true,width:'5%',},
-				{field:'registerdate',title:'注册时间',sortable:true,width:'10%',},
+				{field:'name',title:'姓名',sortable:true,width:'5%',},
 				{field:'phone',title:'手机号',sortable:true,width:'6%',
 					//如果要实现编辑功能，需要添加下面的属性
 					//editor: { type: 'validatebox',  }
 				},
+				{field:'registerdate',title:'注册时间',sortable:true,width:'10%',},
 				{field:'college',title:'学校',sortable:true,width:'6%',
 				},
 				{field:'stunum',title:'学号',sortable:true,width:'10%',},
 				{field:'vip',title:'是否会员',sortable:true,width:'5%',
+					formatter:function(value, row){//使用formatter格式化刷子
+						if(value==1)return '是';
+						else return '否';
+					}
 				},
 				{field:'vipdate',title:'会员有效期',sortable:true,width:'10%',
 				},

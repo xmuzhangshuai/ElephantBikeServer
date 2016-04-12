@@ -28,7 +28,7 @@ public class OrderDao implements IOrderDao{
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = connection.prepareStatement(sql);
-			pstmt.setString(1, DateTool.date2String(new Date()));
+			pstmt.setString(1, order.getPhone()+"_"+DateTool.date2String(new Date()));
 			pstmt.setString(2, order.getPhone());
 			pstmt.setString(3, order.getBikeid());
 			pstmt.setString(4, order.getStarttime());

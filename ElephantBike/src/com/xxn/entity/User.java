@@ -134,5 +134,23 @@ public class User {
 		this.vipdate = vipdate;
 		this.balance = balance;
 	}
+	public User(int id, String phone, String name, String stunum,
+			String idcardaddr, String stucardaddr, String userstate,
+			String college, String registerdate, String vip, String vipdate,
+			float balance) {
+		super();
+		this.id = id;
+		this.phone = phone;
+		this.name = name;
+		this.stunum = stunum;
+		this.idcardaddr = idcardaddr;
+		this.stucardaddr = stucardaddr;
+		this.userstate = userstate;
+		this.college = college;
+		this.registerdate = registerdate;
+		this.vip = vip;
+		this.vipdate = vipdate;
+		this.balance = balance;
+	}
 	
 }

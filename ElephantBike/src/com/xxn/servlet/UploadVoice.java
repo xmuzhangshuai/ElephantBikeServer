@@ -83,11 +83,11 @@ public class UploadVoice extends HttpServlet {
 						map.put(BikeConstants.STATUS, BikeConstants.FAIL);
 						map.put(BikeConstants.MESSAGE, "录音文件上传失败");
 					} else {
-						String imgurl_name = ""
+						String imgurl_name = "/"
 								+ new Date(System.currentTimeMillis())
 								+ (new Random().nextInt(900) + 100) + "."
 								+ image_file.getFileExt();
-						imgurl = imgurl + "/voice";
+//						imgurl = imgurl + "/voice";
 						image_file.saveAs(imgurl + imgurl_name);
 						map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 						map.put("url", BikeConstants.WEB_IMAGR_URL + "voice/"

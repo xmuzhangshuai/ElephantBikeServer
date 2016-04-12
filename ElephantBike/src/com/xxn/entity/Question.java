@@ -30,6 +30,9 @@ public class Question {
 	public void setVoiceproof(String voiceproof) {
 		this.voiceproof = voiceproof;
 	}
+	public Question() {
+		super();
+	}
 	public Question(String phone, String bikeid, String type,String voiceproof) {
 		super();
 		this.phone = phone;
@@ -37,5 +40,13 @@ public class Question {
 		this.type = type;
 		this.voiceproof = voiceproof;
 	}
-	
+	public Question(int id, String phone, String bikeid, String type,
+			String voiceproof) {
+		super();
+		this.id = id;
+		this.phone = phone;
+		this.bikeid = bikeid;
+		this.type = type;
+		this.voiceproof = voiceproof;
+	}
 }

@@ -72,6 +72,11 @@ $(function(){
         <li><cite></cite><a href="./settime.jsp" target="rightFrame">时间设置</a>
       </ul>
     </dd>  
+    <dd><div class="title"><span></span>问题管理</div>
+      <ul class="menuson">
+        <li><cite></cite><a href="question.jsp" target="rightFrame">问题列表</a>
+      </ul>
+    </dd>
     <dd><div class="title"><span></span>内容管理</div>
       <ul class="menuson">
         <li><cite></cite><a href="helps.jsp" target="rightFrame">帮助内容管理</a>

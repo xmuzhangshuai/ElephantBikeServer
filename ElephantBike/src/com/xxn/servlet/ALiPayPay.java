@@ -18,18 +18,28 @@ import com.xxn.butils.DateTool;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.constants.ALiPayConfig;
 import com.xxn.constants.BikeConstants;
+import com.xxn.iservice.IOrderService;
+import com.xxn.service.OrderService;
 
 /**
  * Servlet implementation class ALiPayOrder
  */
-@WebServlet("/api/pay/alipayorder")
-public class ALiPayOrder extends HttpServlet {
+/**
+ * 
+* @ClassName: ALiPayPay 
+* @Description: 客户端订单支付 
+* @author kunsen-lee
+* @date 2016年4月11日 下午12:30:41 
+*
+ */
+@WebServlet("/api/pay/alipaypay")
+public class ALiPayPay extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ALiPayOrder() {
+	public ALiPayPay() {
 		super();
 	}
 
@@ -53,19 +63,35 @@ public class ALiPayOrder extends HttpServlet {
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		Map<String, Object> result = new HashMap<>();
+		IOrderService iOrderService = new OrderService();
 		
 		String phone = request.getParameter("phone");
+		String bikeid = request.getParameter("bikeid");
 		String subject = request.getParameter("subject");
 		String body = request.getParameter("body");
-		String month = request.getParameter("month");
+		//由客户端获取到的支付费用
+		String fee = request.getParameter("totalfee");
+		
+		String out_trade_no ="";
+		Map<String, String> val = new HashMap<>();
+		Map<String, String> query = new HashMap<>();
+		Map<String, String> resmap = new HashMap<>();
+		val.put("orderid", "");
+		query.put("phone", phone);
+		query.put("bikeid", bikeid);
+		query.put("paymode", null);
+		resmap = iOrderService.getOrderInfo(val, query);
+		if (resmap.containsKey("orderid"))
+			out_trade_no = resmap.get("orderid");
+		System.out.println("out_trade_no:"+out_trade_no+"--phone:"+phone+"--bikeid:"+bikeid);
 		
 		String service = "mobile.securitypay.pay";
 		String partner = ALiPayConfig.Partner;
 		String _input_charset = "utf-8";
-		String notify_url =BikeConstants.APP_URL+"/ElephantBike/api/pay/alivip";
-		String out_trade_no = phone+"_"+System.currentTimeMillis()+"_"+month;
+		String notify_url =BikeConstants.APP_URL+"/ElephantBike/api/pay/alipay";
 		String payment_type = "1";
 		String seller_id = ALiPayConfig.Seller_ID;
+		
 		String total_fee = "0.01";
 		
 		Map<String, Object> obj = new HashMap<>();
