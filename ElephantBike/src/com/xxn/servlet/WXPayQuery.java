@@ -30,13 +30,13 @@ import com.xxn.service.OrderService;
  * Servlet implementation class WXPayOrder 查询支付结果
  */
 @WebServlet("/api/pay/wxorderquery")
-public class WXPayOrderQuery extends HttpServlet {
+public class WXPayQuery extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public WXPayOrderQuery() {
+	public WXPayQuery() {
 		super();
 	}
 
@@ -62,7 +62,8 @@ public class WXPayOrderQuery extends HttpServlet {
 		System.out.println("/api/pay/wxorderquery");
 		Map<String, Object> resultMap = new HashMap<>();
 
-		String phone = request.getParameter("phone");
+		String orderid = request.getParameter("out_trade_no");
+		System.out.println(orderid);
 		
 		String url = BikeConstants.WX_PAY_ORDER_QUERY;
 		String xmlString = "";
@@ -75,7 +76,7 @@ public class WXPayOrderQuery extends HttpServlet {
 		String nonce_str=RandomStringGenerator.getRandomStringByLength(32);
 		
 		ServletContext application = this.getServletContext();
-		String transaction_id = (String) application.getAttribute("query"+phone);
+		String out_trade_no = (String) application.getAttribute(orderid);
 		
 		WXPay.initSDKConfiguration(key, appID, mchID, sdbMchID, certLocalPath,
 				certPassword);
@@ -83,7 +84,7 @@ public class WXPayOrderQuery extends HttpServlet {
 		Map<String, Object> query = new HashMap<>();
 		query.put("appid", appID);
 		query.put("mch_id", mchID);
-		query.put("transaction_id", transaction_id);
+		query.put("out_trade_no", out_trade_no);
 		query.put("nonce_str", nonce_str);
 		String sign = Signature.getSign(query);
 		query.put("sign", sign);
@@ -93,7 +94,7 @@ public class WXPayOrderQuery extends HttpServlet {
 		resultMap = XMLUtil.xmltoMap(result);
 		if(resultMap.get("result_code").equals("SUCCESS")&&resultMap.get("return_code").equals("SUCCESS")){
 			resultMap.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-			application.setAttribute("query"+phone, null);
+			application.setAttribute(orderid, null);
 		}
 		else{
 			resultMap.put(BikeConstants.STATUS, BikeConstants.FAIL);

@@ -13,24 +13,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xxn.butils.DateTool;
-import com.xxn.butils.FastJsonTool;
-import com.xxn.butils.NormalUtil;
-import com.xxn.constants.BikeConstants;
-import com.xxn.entity.Wallet;
-import com.xxn.iservice.IWalletService;
-import com.xxn.service.WalletService;
+import com.xxn.entity.Message;
+import com.xxn.iservice.IMessageService;
+import com.xxn.iservice.IUserService;
+import com.xxn.service.MessageService;
+import com.xxn.service.UserService;
 
 /**
- * Servlet implementation class BUserBatchBalance
+ * Servlet implementation class BGetUserByStunum
  */
-@WebServlet("/batchbalance")
-public class BUserBatchBalance extends HttpServlet {
+@WebServlet("/getuserbystunum")
+public class BGetUserByStunum extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BUserBatchBalance() {
+    public BGetUserByStunum() {
         super();
     }
 
@@ -49,32 +48,16 @@ public class BUserBatchBalance extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		Map<String, String> map = new HashMap<>();
-		String resString = "0";
-		IWalletService iWalletService = new WalletService();
-
-		String value = request.getParameter("val");
-		String ids = request.getParameter("ids");
-		String[] idArray = ids.split(",");
-		System.out.println(ids);
-		if(NormalUtil.isStringLegal(value)&&NormalUtil.isStringFloat(value)){
-			float val = Float.parseFloat(value);
-			if(val > 0.0f){
-				int result = iWalletService.batchRecharge(val,idArray);
-				if(result > 0)
-					resString = "1";
-				else resString = "批量充值失败";
-			}
-			else{
-				resString = "充值金额不合法";
-			}
-		}
-		else{
-			resString = "充值金额不合法";
-		}
-		System.out.println(resString);
-		out.print(resString);
-		out.close();
+		System.out.println("/getuserbystunum");
+		IUserService iUserService = new UserService();
+		
+		String stunum = request.getParameter("stunum");
+		int count = iUserService.getUserExistByStunum(stunum);
+		if(count > 0)
+			out.print(1);
+		else 
+			out.print(0); 
+		
 	}
 
 }

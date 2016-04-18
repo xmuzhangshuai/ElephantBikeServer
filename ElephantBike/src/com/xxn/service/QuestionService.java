@@ -28,5 +28,11 @@ public class QuestionService implements IQuestionService{
 		IQuestionDao iQuestionDao = new QuestionDao(); 
 		return iQuestionDao.findForPage(start, end, sort, order, queryParams);
 	}
+
+	@Override
+	public int dealQuestion(String id) {
+		IQuestionDao iQuestionDao = new QuestionDao(); 
+		return iQuestionDao.dealQuestion(id);
+	}
 	
 }

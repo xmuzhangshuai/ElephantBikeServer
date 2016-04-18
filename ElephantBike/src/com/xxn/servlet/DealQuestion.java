@@ -14,23 +14,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.xxn.butils.DateTool;
 import com.xxn.butils.FastJsonTool;
-import com.xxn.butils.NormalUtil;
 import com.xxn.constants.BikeConstants;
-import com.xxn.entity.Wallet;
-import com.xxn.iservice.IWalletService;
-import com.xxn.service.WalletService;
+import com.xxn.entity.Question;
+import com.xxn.entity.User;
+import com.xxn.iservice.IQuestionService;
+import com.xxn.iservice.IUserService;
+import com.xxn.service.QuestionService;
+import com.xxn.service.UserService;
 
 /**
- * Servlet implementation class BUserBatchBalance
+ * Servlet implementation class DealQuestion
  */
-@WebServlet("/batchbalance")
-public class BUserBatchBalance extends HttpServlet {
+@WebServlet("/api/question/dealquestion")
+public class DealQuestion extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BUserBatchBalance() {
+    public DealQuestion() {
         super();
     }
 
@@ -46,34 +48,16 @@ public class BUserBatchBalance extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
+		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		Map<String, String> map = new HashMap<>();
-		String resString = "0";
-		IWalletService iWalletService = new WalletService();
-
-		String value = request.getParameter("val");
-		String ids = request.getParameter("ids");
-		String[] idArray = ids.split(",");
-		System.out.println(ids);
-		if(NormalUtil.isStringLegal(value)&&NormalUtil.isStringFloat(value)){
-			float val = Float.parseFloat(value);
-			if(val > 0.0f){
-				int result = iWalletService.batchRecharge(val,idArray);
-				if(result > 0)
-					resString = "1";
-				else resString = "批量充值失败";
-			}
-			else{
-				resString = "充值金额不合法";
-			}
-		}
-		else{
-			resString = "充值金额不合法";
-		}
-		System.out.println(resString);
-		out.print(resString);
+		IQuestionService iQuestionService = new QuestionService();
+			
+		String id = request.getParameter("id");
+		if(iQuestionService.dealQuestion(id) > 0)
+			out.print(1);
+		else  out.print(-1);
 		out.close();
 	}
 

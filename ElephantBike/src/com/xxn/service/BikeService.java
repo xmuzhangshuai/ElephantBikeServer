@@ -32,7 +32,7 @@ public class BikeService implements IBikeService{
 	}
 
 	@Override
-	public boolean isCanUsed(Bike bike) {
+	public int isCanUsed(Bike bike) {
 		//false为该车未被占用
 		IBikeDao iBikeDao = new BikeDao();
 		return iBikeDao.isCanUsed(bike);

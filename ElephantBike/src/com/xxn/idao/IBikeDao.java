@@ -38,6 +38,6 @@ public interface IBikeDao {
 	 * @param bike
 	 * @return
 	 */
-	public boolean isCanUsed(Bike bike);
+	public int isCanUsed(Bike bike);
 	
 }

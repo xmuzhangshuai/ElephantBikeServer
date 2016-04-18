@@ -32,7 +32,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     $(function(){
 		//获取数据的查询参数----过滤数据
 		var queryParams;
-		queryParams = {"userstate":"1"};
+		queryParams = {"issolved":"0"};
 		getData(queryParams);
 	});
     
@@ -66,9 +66,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						url+row.voiceproof+"' type='audio/mpeg'></audio>";
 					}
 				},
+				{field:'createtime',title:'提交时间',sortable:true,width:'15%',
+				},
 				{field:'ma',title:'操作',sortable:true,width:'5%',
 					formatter:function(value, row){//使用formatter格式化刷子
-						return "<a href='javascript:frozen("+row.phone+")'>解冻</a>";
+						if(row.needfrozen==1)
+							return "<a href='javascript:frozen("+row.phone+","+row.id+")'>解冻</a>";
+						else return "<a href='javascript:deal("+row.id+")'>处理</a>";
 					}
 				},
 			]],
@@ -139,8 +143,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			$.messager.alert('警告','您没有选择','error');
 		}
 	};
+	
+	
+	
 	//---------------------------------解冻用户-------------------------------------
-	function frozen(phone){
+	function frozen(phone,id){
 		 $.post("<%=basePath%>/api/user/frozen", {phone: phone,state:1},
 					function (data, textStatus){
 					if(data == '1'){
@@ -151,7 +158,31 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						$.messager.alert('提示','解冻失败','fail');
 						}
 					}, "text");
+		 $.post("<%=basePath%>/api/question/dealquestion", {id: id},
+					function (data, textStatus){
+					if(data == '1'){
+						$.messager.alert('提示','处理问题成功','info');
+						$('#grid').datagrid('reload'); 
+						} 
+						else{
+						$.messager.alert('提示','处理问题失败','fail');
+						}
+					}, "text");
 	}
+	//------------------------------------问题解决-------------------------------------
+	function deal(id){
+		 $.post("<%=basePath%>/api/question/dealquestion", {id: id},
+					function (data, textStatus){
+					if(data == '1'){
+						$.messager.alert('提示','处理问题成功','info');
+						$('#grid').datagrid('reload'); 
+						} 
+						else{
+						$.messager.alert('提示','处理问题失败','fail');
+						}
+					}, "text");
+	}
+	
 	//----------------------------------批量增加金额-------------------------------------
 	function _batch_add(){
 		
@@ -179,22 +210,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </head>
 
 <body bgcolor="#DDF3FF" class = "h2">
-<form name="searchform" method="post" action="" id ="searchform">
-	<strong>用户检索:</strong>
-     	<select name="search_type" id="search_type" >
-            <option value="-1">请选择搜索类型</option>
-            <option value="phone" >手机号</option>
-            <option value="college">学校</option>
-        </select>
-        <input type="text" name="keyword" size=20 >
-        <a id="submit_search">搜索</a>
-</form>
 
-<form name="batchform" method="post" action="" id ="batchform">
-	<strong>批量增加:</strong>
-        <input type="text" name="balance" id="balance"size=20 >
-        <a id="submit_add">批量充值</a>
-</form>
 
 <table id="grid"></table>
 </body>

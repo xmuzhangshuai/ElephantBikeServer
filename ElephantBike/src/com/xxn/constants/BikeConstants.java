@@ -66,10 +66,11 @@ public class BikeConstants {
 	 */
 	public static final int BAL_COUNT = 5;
 	/**
-	 * 用户状态 -1:冻结  0:普通用户  1:认证用户 2:提交未验证 
+	 * 用户状态 -1:冻结  0:普通用户  1:认证用户 2:提交未验证 3:异常被冻结
 	 */
 	public static final String FROZEN = "-1";
 	public static final String NORMAL = "0";
 	public static final String CENTIFY= "1";
 	public static final String UNCENTIFY= "2";
+	public static final String UNNORMAL= "3";
 }

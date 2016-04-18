@@ -106,5 +106,4 @@ public class ALiPayRecharge_WAP extends HttpServlet {
 		out.print(FastJsonTool.createJsonString(result));
 		out.close();
 	}
-
 }

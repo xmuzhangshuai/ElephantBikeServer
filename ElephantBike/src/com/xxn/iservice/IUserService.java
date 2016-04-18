@@ -7,6 +7,7 @@ import com.xxn.entity.User;
 
 public interface IUserService {
 	public int getUserExist(User user);
+	public int getUserExistByStunum(String stunum);
 	public int addUser(User user);
 	public Map<String, String> getUserInfo(Map val,Map query);
 	public int updateUserState(User user);

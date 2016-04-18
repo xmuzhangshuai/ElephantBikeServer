@@ -58,8 +58,9 @@ $(function(){
 
     <dd><div class="title"><span></span>用户管理</div>
       <ul class="menuson">
-        <li><cite></cite><a href="centiusermanage.jsp" target="rightFrame">用户列表</a>
-        <li><cite></cite><a href="uncentiusermanage.jsp" target="rightFrame">身份认证审核</a>
+        <li><cite></cite><a href="centiusermanage.jsp" target="rightFrame">已认证列表</a>
+        <li><cite></cite><a href="uncentiusermanage.jsp" target="rightFrame">待认证列表</a>
+        <li><cite></cite><a href="frozenuser.jsp" target="rightFrame">冻结列表</a>
       </ul>
     </dd>   
     <dd><div class="title"><span></span>车辆管理</div>
@@ -74,7 +75,8 @@ $(function(){
     </dd>  
     <dd><div class="title"><span></span>问题管理</div>
       <ul class="menuson">
-        <li><cite></cite><a href="question.jsp" target="rightFrame">问题列表</a>
+        <li><cite></cite><a href="question.jsp" target="rightFrame">未解决问题列表</a>
+        <li><cite></cite><a href="dealedquestion.jsp" target="rightFrame">已解决问题列表</a>
       </ul>
     </dd>
     <dd><div class="title"><span></span>内容管理</div>

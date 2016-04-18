@@ -22,13 +22,13 @@ import com.xxn.service.WalletService;
  * Servlet implementation class WXOrderResponse
  */
 @WebServlet("/api/pay/rechargeresponse")
-public class WXRechargeResponse extends HttpServlet {
+public class WXPayRechargeResponse extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public WXRechargeResponse() {
+	public WXPayRechargeResponse() {
 		super();
 	}
 
@@ -66,16 +66,13 @@ public class WXRechargeResponse extends HttpServlet {
 			if(xmlMap.get("return_code").equals("SUCCESS")){
 				String orderid = xmlMap.get("out_trade_no").toString();
 				String total_fee = xmlMap.get("total_fee").toString();
-				String phone = orderid.split("-")[0];
+				String phone = orderid.split("_")[0];
+				System.out.println(orderid+"--"+phone+"--"+total_fee);
 				//两步操作，写入钱包余额和明细表
-				Wallet wallet = new Wallet(phone, Float.parseFloat(total_fee), 0);
+				Wallet wallet = new Wallet(phone, Float.parseFloat(total_fee)/100, 0);
 				if(iWalletService.rechargeWallet(wallet) > 0){
-					Wallet wallet2 = new Wallet(phone, Float.parseFloat(total_fee),
-							DateTool.dateToString(new Date()));
-					iWalletService.addWalletList(wallet2);
 					ServletContext application = this.getServletContext();
-					application.setAttribute("query"+phone, xmlMap.get("transaction_id"));
-					
+					application.setAttribute(orderid, orderid);
 					String res = "<xml><return_code><![CDATA[SUCCESS]]></return_code>"
 							+ "<return_msg><![CDATA[OK]]></return_msg></xml>";
 					out.write(res);

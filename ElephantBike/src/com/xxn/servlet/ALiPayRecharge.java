@@ -66,7 +66,7 @@ public class ALiPayRecharge extends HttpServlet {
 		String payment_type = "1";
 		String seller_id = ALiPayConfig.Seller_ID;
 		//充值金额 TODO 
-		String total_fee = "0.01";
+		String total_fee = rechargemoney;
 		
 		Map<String, Object> obj = new HashMap<>();
 		obj.put("service", service);

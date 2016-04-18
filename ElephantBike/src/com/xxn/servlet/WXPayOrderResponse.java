@@ -3,7 +3,6 @@ package com.xxn.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,13 +25,13 @@ import com.xxn.service.WalletService;
  * Servlet implementation class WXOrderResponse
  */
 @WebServlet("/api/pay/response")
-public class WXOrderResponse extends HttpServlet {
+public class WXPayOrderResponse extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public WXOrderResponse() {
+	public WXPayOrderResponse() {
 		super();
 	}
 
@@ -52,7 +51,6 @@ public class WXOrderResponse extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		Map<String, String> map = new HashMap<>();
 		IOrderService iOrderService = new OrderService();
 		IWalletService iWalletService = new WalletService();
 		String inputLine = "";
@@ -90,9 +88,9 @@ public class WXOrderResponse extends HttpServlet {
 				}
 				
 				ServletContext application = this.getServletContext();
-				application.setAttribute("query"+phone, xmlMap.get("transaction_id"));
+				application.setAttribute(orderid, orderid);
 				
-				Wallet wallet2 = new Wallet(phone, -Float.parseFloat(total_fee),
+				Wallet wallet2 = new Wallet(phone, -Float.parseFloat(total_fee)/100,
 						DateTool.dateToString(new Date()));
 				
 				if(iOrderService.updateOrder(val, query) > 0){

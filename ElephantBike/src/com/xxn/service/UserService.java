@@ -83,6 +83,12 @@ public class UserService implements IUserService{
 		return iUserDao.updateUser(val, query);
 	}
 
+	@Override
+	public int getUserExistByStunum(String stunum) {
+		IUserDao iUserDao = new UserDao();
+		return iUserDao.getUserExistByStunum(stunum);
+	}
+
 	
 
 }

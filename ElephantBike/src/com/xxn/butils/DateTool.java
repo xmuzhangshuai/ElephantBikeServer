@@ -75,23 +75,30 @@ public class DateTool {
 
 	public static String calcUsedTime(long seconds) {
 		int day = 0, hour = 0, mins = 0, sec = 0;
-
+		
 		day = (int) (seconds / (60 * 60 * 24));
 		hour = (int) ((seconds - day * 60 * 60 * 24) / (60 * 60));
 		mins = (int) ((seconds - day * 60 * 60 * 24 - hour * 60 * 60) / 60);
 		sec = (int) ((seconds - day * 60 * 60 * 24 - hour * 60 * 60 - mins * 60));
-		return day + ":" + hour + ":" + mins + ":" + sec;
+
+		
+		String d=""+day,h=""+hour,m=""+mins,s=""+sec;
+		if(day<10)d="0"+day;
+		if(hour<10)h="0"+hour;
+		if(mins<10)m="0"+mins;
+		if(sec<10)s="0"+sec;
+		return d + ":" + h + ":" + m + ":" + s;
 	}
 
 	public static int getT() {
 		int t = 1;
-//		String dateStr = "2016-03-20 00:00:00";
-		String dateStr = getToday();
+		String dateStr = "2016-04-13 00:00:00";
+//		String dateStr = getToday();
 		Date date = stringToDate(dateStr);
 		long millsec = new Date().getTime() - date.getTime();
 		int mins = (int) (millsec / 1000) / (60);
 		System.out.println("mins" + mins);
-		t = t + mins / 40;
+		t = t + mins / 30;
 		System.out.println("t:" + t);
 		if (t % 8 == 0)
 			t = 8;

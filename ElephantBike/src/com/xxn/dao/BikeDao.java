@@ -103,8 +103,8 @@ public class BikeDao implements IBikeDao{
 	}
 
 	@Override
-	public boolean isCanUsed(Bike bike) {
-		int count = 0 ;
+	public int isCanUsed(Bike bike) {
+		int count = -1 ;
 		Connection connection = null;
 		connection = JdbcUtils_DBCP.getConnection();
 		String sql = "select state from b_bike where bikeid = ? ";
@@ -122,10 +122,7 @@ public class BikeDao implements IBikeDao{
 		} finally {
 			JdbcUtils_DBCP.release(connection, preparedStatement, resultSet);
 		}
-		System.out.println(sql);
-		System.out.println(count);
-		if(count > 0)return true;
-		else return false;
+		return count;
 	}
 
 	@Override

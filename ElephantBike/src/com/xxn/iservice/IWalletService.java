@@ -8,7 +8,7 @@ import com.xxn.entity.Wallet;
 public interface IWalletService {
 	public int createWallet(Wallet wallet);
 	public int rechargeWallet(Wallet wallet);
-	public int batchRecharge(float val);
+	public int batchRecharge(float val,String[] userids);
 	public float getBalance(Wallet wallet);
 	
 	//明细表

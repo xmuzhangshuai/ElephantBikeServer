@@ -5,9 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.xxn.butils.DateTool;
 import com.xxn.butils.JdbcUtils_DBCP;
 import com.xxn.entity.Order;
 import com.xxn.entity.Question;
@@ -18,8 +20,8 @@ public class QuestionDao implements IQuestionDao{
 	@Override
 	public int addQuestion(Question question) {
 		int result = 0;
-		String sql = "insert into q_question(phone,bikeid,type,voiceproof) "
-				+ "values(?,?,?,?)";
+		String sql = "insert into q_question(phone,bikeid,type,voiceproof,issolved,createtime,needfrozen) "
+				+ "values(?,?,?,?,?,?,?)";
 		Connection connection =  JdbcUtils_DBCP.getConnection();
 		PreparedStatement pstmt = null;
 		try {
@@ -28,6 +30,9 @@ public class QuestionDao implements IQuestionDao{
 			pstmt.setString(2, question.getBikeid());
 			pstmt.setString(3, question.getType());
 			pstmt.setString(4, question.getVoiceproof());
+			pstmt.setInt(5, question.getIssolved());
+			pstmt.setString(6, question.getCreatetime());
+			pstmt.setString(7, question.getNeedfrozen());
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -95,7 +100,12 @@ public class QuestionDao implements IQuestionDao{
 				String bikeid =  resultSet.getString("bikeid");
 				String type =  resultSet.getString("type");
 				String voiceproof = resultSet.getString("voiceproof");
-				Question question = new Question(id, phone, bikeid, type, voiceproof);
+				int issolved = resultSet.getInt("issolved");
+				String createtime = resultSet.getString("createtime");
+				String needfrozen = resultSet.getString("needfrozen");
+				String dealtime = resultSet.getString("dealtime");
+				Question question = new Question(id, phone, bikeid, type, voiceproof,
+						issolved, createtime, needfrozen,dealtime);
 				resultList.add(question);
 			}
 		} catch (SQLException e) {
@@ -104,6 +114,26 @@ public class QuestionDao implements IQuestionDao{
 			JdbcUtils_DBCP.release(connection, pstmt, resultSet);
 		}
 		return resultList;
+	}
+
+	@Override
+	public int dealQuestion(String id) {
+		int result = 0;
+		String sql = "update q_question set issolved= ?,dealtime=? where id =?";
+		Connection connection =  JdbcUtils_DBCP.getConnection();
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setInt(1, 1);
+			pstmt.setString(2, DateTool.dateToString(new Date()));
+			pstmt.setString(3, id);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, null);
+		}
+		return result;
 	}
 
 }

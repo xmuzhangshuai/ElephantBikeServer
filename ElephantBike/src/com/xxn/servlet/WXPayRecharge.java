@@ -2,6 +2,7 @@ package com.xxn.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,26 +14,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.tencent.WXPay;
 import com.tencent.common.Signature;
+import com.xxn.butils.DateTool;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.HttpClientUtil;
 import com.xxn.butils.XMLUtil;
 import com.xxn.constants.BikeConstants;
 import com.xxn.entity.PayReqData;
 import com.xxn.entity.PayResData;
-import com.xxn.iservice.IOrderService;
-import com.xxn.service.OrderService;
 
 /**
- * Servlet implementation class WXPayOrder 请求生成支付订单
+ * Servlet implementation class WXPayOrder 请求生成充值订单
  */
-@WebServlet("/api/pay/wxpayorder")
-public class WXPayOrder extends HttpServlet {
+@WebServlet("/api/pay/wxpayrecharge")
+public class WXPayRecharge extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public WXPayOrder() {
+	public WXPayRecharge() {
 		super();
 	}
 
@@ -55,46 +55,32 @@ public class WXPayOrder extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		System.out.println("/api/pay/wxpayorder");
-		IOrderService iOrderService = new OrderService();
+		System.out.println("/api/pay/wxpayrecharge");
 		Map<String, Object> resultMap = new HashMap<>();
 
 		String phone = request.getParameter("phone");
-		String bikeid = request.getParameter("bikeid");
-		String orderid = "", notify_url = "",fee="";
-		int totalFee = 0;
-		// 订单支付功能
-		notify_url = BikeConstants.APP_URL + "/ElephantBike/api/pay/response";
-		Map<String, String> val = new HashMap<>();
-		Map<String, String> query = new HashMap<>();
-		Map<String, String> resmap = new HashMap<>();
-		val.put("cost", "");
-		val.put("orderid", "");
-		query.put("phone", phone);
-		query.put("bikeid", bikeid);
-		query.put("paymode", null);
-		resmap = iOrderService.getOrderInfo(val, query);
-		if (resmap.containsKey("orderid"))
-		{
-			orderid = resmap.get("orderid");
-			fee = resmap.get("cost");
-			totalFee = (int) (Float.parseFloat(fee) * 100);
-		}
-		System.out.println("orderid:" + orderid + "--phone:" + phone
-				+ "--bikeid:" + bikeid+"--fee:"+totalFee);
+		String fee = request.getParameter("totalfee");
+		int totalFee = (int) (Float.parseFloat(fee) * 100);
+		String orderid = "", notify_url = "";
+		orderid = phone + "_" + DateTool.date2String(new Date());
+		
+		notify_url = BikeConstants.APP_URL
+				+ "ElephantBike/api/pay/rechargeresponse";
+		
+		System.out.println("fee:"+totalFee+"--orderid:"+orderid + "--notify_url:" + notify_url);
+		
 		String url = BikeConstants.WX_PAY_ORDER;
 		String xmlString = "";
 		String key = BikeConstants.WX_KEY;
 		String appID = BikeConstants.WX_APP_ID;
 		String mchID = BikeConstants.WX_MCH_ID;
 		String certPassword = BikeConstants.WX_CERTPASSWORD;
-		String body = "elephantbike order";
+		String body = "elephantbike recharge";
 		String outTradeNo = orderid;
 		String spBillCreateIP = "192.168.0.123";
 		String trade_type = "APP";
 		String sdbMchID = "";
 		String certLocalPath = "";
-
 		WXPay.initSDKConfiguration(key, appID, mchID, sdbMchID, certLocalPath,
 				certPassword);
 		PayReqData data = new PayReqData(notify_url, body, outTradeNo,
@@ -102,7 +88,9 @@ public class WXPayOrder extends HttpServlet {
 
 		Map<String, Object> map = data.toMap();
 		xmlString = XMLUtil.maptoXml(map);
+		xmlString = new String(xmlString.getBytes("UTF-8"), "ISO-8859-1");
 		String result = new HttpClientUtil().doPost(url, xmlString);
+//		System.out.println(result);
 		// 拿到返回结果
 		Map<String, Object> res = XMLUtil.xmltoMap(result);
 		String signRes = "";

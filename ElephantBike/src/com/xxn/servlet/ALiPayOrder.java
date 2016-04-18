@@ -66,41 +66,53 @@ public class ALiPayOrder extends HttpServlet {
 		String out_trade_no = phone+"_"+System.currentTimeMillis()+"_"+month;
 		String payment_type = "1";
 		String seller_id = ALiPayConfig.Seller_ID;
-		String total_fee = "0.01";
 		
-		Map<String, Object> obj = new HashMap<>();
-		obj.put("service", service);
-		obj.put("partner", partner);
-		obj.put("_input_charset", _input_charset);
-		obj.put("notify_url", notify_url);
-		obj.put("out_trade_no", out_trade_no);
-		obj.put("subject", subject);
-		obj.put("payment_type", payment_type);
-		obj.put("seller_id", seller_id);
-		obj.put("total_fee", total_fee);
-		obj.put("body", body);
-		String sign="",signData="";
-		
-		for (Object object : obj.keySet()) {
-			String key = object.toString();
-			String value = obj.get(key).toString();
-			signData += String.format("%s=\"%s\"", key, value);
-			signData +="&";
+		float total_fee = 0.0f;
+		if(month.equals("1")||month.equals("3")||month.equals("6")||month.equals("12")){
+			if(month.equals("1"))total_fee = 3.00f;
+			if(month.equals("3"))total_fee = 7.00f;
+			if(month.equals("6"))total_fee = 11.00f;
+			if(month.equals("12"))total_fee = 18.00f;
+			
+			Map<String, Object> obj = new HashMap<>();
+			obj.put("service", service);
+			obj.put("partner", partner);
+			obj.put("_input_charset", _input_charset);
+			obj.put("notify_url", notify_url);
+			obj.put("out_trade_no", out_trade_no);
+			obj.put("subject", subject);
+			obj.put("payment_type", payment_type);
+			obj.put("seller_id", seller_id);
+			obj.put("total_fee", total_fee);
+			obj.put("body", body);
+			String sign="",signData="";
+			
+			for (Object object : obj.keySet()) {
+				String key = object.toString();
+				String value = obj.get(key).toString();
+				signData += String.format("%s=\"%s\"", key, value);
+				signData +="&";
+			}
+			signData = signData.substring(0,signData.length()-1);
+			
+			try {
+				sign = AlipaySignature.rsaSign(signData, ALiPayConfig.privateKey, "utf-8");
+			} catch (AlipayApiException e) {
+				e.printStackTrace();
+			}
+			sign = URLEncoder.encode(sign,"utf-8");
+			String sign_type = "RSA";
+			
+			result.put("param", signData);
+			result.put("sign", sign);
+			result.put("sign_type", sign_type);
+			result.put("out_trade_no", out_trade_no);
 		}
-		signData = signData.substring(0,signData.length()-1);
-		
-		try {
-			sign = AlipaySignature.rsaSign(signData, ALiPayConfig.privateKey, "utf-8");
-		} catch (AlipayApiException e) {
-			e.printStackTrace();
+		else{
+			result.put(BikeConstants.STATUS, BikeConstants.FAIL);
+			result.put(BikeConstants.MESSAGE, "充值月数不在规定内");
 		}
-		sign = URLEncoder.encode(sign,"utf-8");
-		String sign_type = "RSA";
 		
-		result.put("param", signData);
-		result.put("sign", sign);
-		result.put("sign_type", sign_type);
-		result.put("out_trade_no", out_trade_no);
 		System.out.println(FastJsonTool.createJsonString(result));
 		out.print(FastJsonTool.createJsonString(result));
 		out.close();

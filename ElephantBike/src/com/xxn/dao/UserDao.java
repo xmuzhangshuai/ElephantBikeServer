@@ -237,10 +237,11 @@ public class UserDao implements IUserDao {
 			String key = object.toString();
 			String value = queryParams.get(key).toString();
 			if (key.equals("userstate"))
-				if (value.equals("1"))
+				if (value.equals("1")||value.equals("3")||value.equals("-1"))
 					sql += String.format(" and  %s ='%s' ", key, value);
 				else
-					sql += String.format(" and  %s <>1 ", key);
+//					sql += String.format(" and  (%s =0 or %s =2) ", key,key);
+					sql += String.format(" and  %s =2 ", key);
 			else
 				sql += String.format(" and  %s like '%%%s%%' ", key, value);
 		}
@@ -271,10 +272,9 @@ public class UserDao implements IUserDao {
 			String key = object.toString();
 			String value = queryParams.get(key).toString();
 			if (key.equals("userstate"))
-				if (value.equals("1"))
+				if (value.equals("1")||value.equals("3")||value.equals("-1"))
 					sql += String.format(" and  %s ='%s' ", key, value);
-				else
-					sql += String.format(" and  %s <>1 ", key);
+				else sql += String.format(" and %s =2 ", key);
 			else
 				sql += String.format(" and  %s like '%%%s%%' ", key, value);
 		}
@@ -350,6 +350,30 @@ public class UserDao implements IUserDao {
 			JdbcUtils_DBCP.release(connection, pstmt, null);
 		}
 		return result;
+	}
+
+	@Override
+	public int getUserExistByStunum(String stunum) {
+		int number = 0;
+		Connection connection = null;
+		connection = JdbcUtils_DBCP.getConnection();
+		String sql = "select count(*) from u_users where stunum = ? and userstate=1";
+		ResultSet resultSet = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, stunum);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				number = resultSet.getInt(1);
+			}
+			return number;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, preparedStatement, resultSet);
+		}
+		return number;
 	}
 
 }

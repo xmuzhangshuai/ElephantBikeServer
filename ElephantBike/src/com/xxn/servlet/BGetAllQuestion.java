@@ -67,6 +67,11 @@ public class BGetAllQuestion extends HttpServlet {
 		if (null == orderStr)
 			orderStr = "desc";
 		// 相关的条件限制
+		
+		String issolved = request.getParameter("issolved");
+		System.out.println("issolved:"+issolved);
+		queryParams.put("issolved", issolved);
+		
 		String keyword=request.getParameter("keyword");
 		String type=request.getParameter("search_type");
 		if(NormalUtil.isStringLegal(type)){

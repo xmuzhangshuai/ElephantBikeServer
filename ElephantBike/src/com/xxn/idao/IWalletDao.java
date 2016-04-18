@@ -22,7 +22,7 @@ public interface IWalletDao {
 	 * 批量增加
 	 * @return
 	 */
-	public int batchRecharge(float val);
+	public int batchRecharge(float val,String[] userids);
 	/**
 	 * 获取用户余额
 	 * @param wallet

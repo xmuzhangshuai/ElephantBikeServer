@@ -74,7 +74,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				},
 				{field:'ma',title:'操作',sortable:true,width:'10%',
 					formatter:function(value, row){//使用formatter格式化刷子
-						return "<a href='javascript:pass("+row.phone+")'>通过</a>";
+						return "<a href='javascript:pass("+row.phone+","+row.stunum+")'>通过</a>"+"&nbsp;&nbsp;&nbsp;"+
+						"<a href='javascript:unpass("+row.phone+")'>不通过</a>";
 					}
 				},
 				
@@ -146,16 +147,53 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			$.messager.alert('警告','您没有选择','error');
 		}
 	};
-	//----------------------------------批量增加金额-------------------------------------
-	function pass(phone){
-		 $.post("<%=basePath%>/api/user/frozen", {phone: phone,state:1},
+	//----------------------------------通过-------------------------------------
+	function pass(phone,stunum){
+		 $.post("<%=basePath%>/getuserbystunum", {stunum:stunum},
 					function (data, textStatus){
 					if(data == '1'){
-						$.messager.alert('提示','认证成功','info');
+						$.messager.confirm("操作警告", "已经存在该学号用户，是否继续通过", function(data2){
+							if(data2){
+								 $.post("<%=basePath%>/api/user/frozen", {phone: phone,stunum:stunum,state:1},
+											function (data, textStatus){
+											if(data == '1'){
+												$.messager.alert('提示','认证成功','info');
+												$('#grid').datagrid('reload'); 
+												} 
+												else{
+												$.messager.alert('提示','认证失败','fail');
+												}
+											}, "text");
+								//原来代码结束位置
+							}
+						});
+						$('#grid').datagrid('reload'); 
+					} 
+					else{
+						 $.post("<%=basePath%>/api/user/frozen", {phone: phone,stunum:stunum,state:1},
+									function (data, textStatus){
+									if(data == '1'){
+										$.messager.alert('提示','认证成功','info');
+										$('#grid').datagrid('reload'); 
+										} 
+										else{
+										$.messager.alert('提示','认证失败','fail');
+										}
+									}, "text");
+					}
+		 }, "text");
+		
+	}
+	//-------------------------------------不通过----------------------------------
+	function unpass(phone){
+		 $.post("<%=basePath%>/api/user/frozen", {phone: phone,state:0},
+					function (data, textStatus){
+					if(data == '1'){
+						$.messager.alert('提示','操作成功','info');
 						$('#grid').datagrid('reload'); 
 						} 
 						else{
-						$.messager.alert('提示','认证失败','fail');
+						$.messager.alert('提示','操作失败','fail');
 						}
 					}, "text");
 	}
@@ -193,11 +231,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <a id="submit_search">搜索</a>
 </form>
 
-<form name="batchform" method="post" action="" id ="batchform">
-	<strong>批量增加:</strong>
-        <input type="text" name="balance" id="balance"size=20 >
-        <a id="submit_add">批量充值</a>
-</form>
 
 <table id="grid"></table>
 </body>

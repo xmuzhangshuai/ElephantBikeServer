@@ -60,7 +60,7 @@ public class GetUnlockCode2 extends HttpServlet {
 		System.out.println("/api/pass/unlockcode2");
 
 		Map<String, String> map = new HashMap<>();
-		boolean canused = false;
+		int  canused = -1;
 		IOrderService iOrderService = new OrderService();
 		IBikeService iBikeService = new BikeService();
 		String bikeid = request.getParameter("bikeid");
@@ -70,12 +70,8 @@ public class GetUnlockCode2 extends HttpServlet {
 		if (NormalUtil.isStringLegal(bikeid) && NormalUtil.isStringLegal(phone)) {
 			//TODO 判断单车是否在使用-->在使用的话是否是同一个人
 			Bike bike = new Bike(bikeid, 0, "", "");
-			if(iBikeService.isCanUsed(bike))
-				canused = true;
-			else {
-				canused = false;
-			}
-			if(canused){
+			canused = iBikeService.isCanUsed(bike);
+			if(canused > 0){
 				// TODO 根据bikeid获取解锁密码
 				pass = PassWordTool.getUnlockPass(bikeid);
 
@@ -92,8 +88,14 @@ public class GetUnlockCode2 extends HttpServlet {
 				}
 			}
 			else{
-				map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-				map.put(BikeConstants.MESSAGE,"该车处于使用中...");
+				if(canused == 0){
+					map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+					map.put(BikeConstants.MESSAGE,"该车处于使用中...");
+				}
+				if(canused == -1){
+					map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+					map.put(BikeConstants.MESSAGE,"请扫描正确条形码");
+				}
 			}
 			
 		} else {

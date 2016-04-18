@@ -12,4 +12,6 @@ public interface IQuestionDao {
 	public List<Question> findForPage(int start, int end, String sort,
 			String order, Map queryParams);
 	
+	public int dealQuestion(String id);
+	
 }

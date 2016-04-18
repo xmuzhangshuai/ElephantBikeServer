@@ -18,11 +18,14 @@ import com.xxn.butils.DateTool;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.NormalUtil;
 import com.xxn.constants.BikeConstants;
+import com.xxn.entity.Message;
 import com.xxn.entity.User;
 import com.xxn.entity.Wallet;
+import com.xxn.iservice.IMessageService;
 import com.xxn.iservice.IOrderService;
 import com.xxn.iservice.IUserService;
 import com.xxn.iservice.IWalletService;
+import com.xxn.service.MessageService;
 import com.xxn.service.OrderService;
 import com.xxn.service.UserService;
 import com.xxn.service.WalletService;
@@ -61,11 +64,12 @@ public class UserLogin extends HttpServlet {
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		System.out.println("/api/user/login");
-		Map<String, String> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 		IUserService iUserService = new UserService();
 		IOrderService iOrderService = new OrderService();
 		IWalletService iWalletService = new WalletService();
-
+		IMessageService iMessageService = new MessageService();
+		
 		String phone = request.getParameter("phone");
 		String islogin = request.getParameter("islogin");
 		String verify_code = request.getParameter("verify_code");
@@ -78,6 +82,9 @@ public class UserLogin extends HttpServlet {
 			User user = new User(phone, isfrozen,
 					DateTool.dateToString(new Date()));
 			// 电话号码不为空
+			Message message = new Message(phone, "", "",1);
+			int messagecount = iMessageService.getUnreadMessageCount(message);
+			
 			if (islogin.equals("1")) {
 				// 已经登录---需要拿到3个变量
 				Map<String, String> valUserInfo = new HashMap<>();
@@ -118,6 +125,7 @@ public class UserLogin extends HttpServlet {
 				map.put("name", name);
 				map.put("isvip", isvip);
 				map.put("college", college);
+				map.put("ismessage", messagecount);
 				map.put("access_token", "dfeb3d35bc3543rdc234");
 			} else {
 				// 先判断验证码是否正确
@@ -167,6 +175,7 @@ public class UserLogin extends HttpServlet {
 						map.put("name", name);
 						map.put("isvip", isvip);
 						map.put("college", college);
+						map.put("ismessage", messagecount);
 						map.put("access_token", "dfeb3d35bc3543rdc234");
 
 					} else if (res == 0) {
@@ -191,6 +200,7 @@ public class UserLogin extends HttpServlet {
 							map.put("name", name);
 							map.put("isvip", isvip);
 							map.put("college", college);
+							map.put("ismessage", messagecount);
 							map.put("access_token", "dfeb3d35bc3543rdc234");
 						} else {
 							System.out.println("注册写入失败");

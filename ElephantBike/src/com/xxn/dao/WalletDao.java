@@ -129,20 +129,22 @@ public class WalletDao implements IWalletDao{
 	}
 
 	@Override
-	public int batchRecharge(float val) {
+	public int batchRecharge(float val,String[] userids) {
 		int result = 0;
-		String sql = "update w_wallet set balance = balance+?";
 		Connection connection =  JdbcUtils_DBCP.getConnection();
 		PreparedStatement pstmt = null;
-		try {
-			pstmt = connection.prepareStatement(sql);
-			pstmt.setFloat(1, val);
-			result = pstmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			JdbcUtils_DBCP.release(connection, pstmt, null);
+		for (String userid : userids) {
+			String sql = "update w_wallet set balance = balance+? where id=?";
+			try {
+				pstmt = connection.prepareStatement(sql);
+				pstmt.setFloat(1, val);
+				pstmt.setString(2, userid);
+				result = pstmt.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} 
 		}
+		JdbcUtils_DBCP.release(connection, pstmt, null);
 		return result;
 	}
 

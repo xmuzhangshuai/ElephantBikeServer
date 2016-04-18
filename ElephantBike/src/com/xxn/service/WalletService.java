@@ -41,9 +41,9 @@ public class WalletService implements IWalletService{
 	}
 
 	@Override
-	public int batchRecharge(float val) {
+	public int batchRecharge(float val,String[] userids) {
 		IWalletDao iWalletDao = new WalletDao();
-		return iWalletDao.batchRecharge(val);
+		return iWalletDao.batchRecharge(val,userids);
 	}
 
 }

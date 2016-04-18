@@ -33,7 +33,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     $(function(){
 		//获取数据的查询参数----过滤数据
 		var queryParams;
-		queryParams = {"userstate":"1"};
+		queryParams = {"userstate":"-1"};
 		getData(queryParams);
 	});
     
@@ -74,7 +74,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				},
 				{field:'ma',title:'操作',sortable:true,width:'10%',
 					formatter:function(value, row){//使用formatter格式化刷子
-						return "<a href='javascript:frozen("+row.phone+")'>冻结</a>";
+						return "<a href='javascript:frozen("+row.phone+")'>解冻</a>";
 					}
 				},
 				
@@ -108,30 +108,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		//批量增加金额
 		$("#submit_add").linkbutton({ iconCls: 'icon-add', plain: true })
 	    .click(function () {
-	    	
 	        //执行增加金额
-	    	var rows = $('#grid').datagrid('getSelections');
-	    	if(rows.length <= 0){
-				$.messager.alert('警告','您没有选择','error');
-			}
-			else if(rows.length >= 1){
-				var id = [];
-				for(var i = 0; i < rows.length; ++i)
-				{
-					id[i] = rows[i].id;
-				}
-				var balance = $('#balance').val();
-		        $.post("<%=basePath%>batchbalance", {val: balance,ids: id.toString()},
-						function (data, textStatus){
-						if(data == '1'){
-							$.messager.alert('提示','批量增加成功','info');
-							$('#grid').datagrid('reload'); 
-							} 
-							else{
-							$.messager.alert('提示',data,'fail');
-							}
-						}, "text");
-			}
+	    	var balance = $('#balance').val();
+	        $.post("<%=basePath%>batchbalance", {val: balance},
+					function (data, textStatus){
+					if(data == '1'){
+						$.messager.alert('提示','批量增加成功','info');
+						$('#grid').datagrid('reload'); 
+						} 
+						else{
+						$.messager.alert('提示',data,'fail');
+						}
+					}, "text");
 	        $('#balance').val("");
 	    });
 	};
@@ -160,15 +148,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	};
 	//----------------------------------批量增加金额-------------------------------------
 	function frozen(phone){
-		 $.post("<%=basePath%>/api/user/frozen", {phone: phone,state:-1},
+		 $.post("<%=basePath%>/api/user/frozen", {phone: phone,state:1},
 					function (data, textStatus){
 			 		 ajaxobj=eval("("+data+")");  
 					if(ajaxobj.status == 'success'){
-						$.messager.alert('提示','冻结成功','info');
+						$.messager.alert('提示','解冻成功','info');
 						$('#grid').datagrid('reload'); 
 						} 
 						else{
-						$.messager.alert('提示','冻结失败','fail');
+						$.messager.alert('提示','解冻失败','fail');
 						}
 					}, "text");
 	}
@@ -199,22 +187,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </head>
 
 <body bgcolor="#DDF3FF" class = "h2">
-<form name="searchform" method="post" action="" id ="searchform">
-	<strong>用户检索:</strong>
-     	<select name="search_type" id="search_type" >
-            <option value="-1">请选择搜索类型</option>
-            <option value="phone" >手机号</option>
-            <option value="college">学校</option>
-        </select>
-        <input type="text" name="keyword" size=20 >
-        <a id="submit_search">搜索</a>
-</form>
-
-<form name="batchform" method="post" action="" id ="batchform">
-	<strong>批量增加:</strong>
-        <input type="text" name="balance" id="balance"size=20 >
-        <a id="submit_add">批量充值</a>
-</form>
 
 <table id="grid"></table>
 </body>

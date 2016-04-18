@@ -10,4 +10,5 @@ public interface IQuestionService {
 	public int getQuestionCount(Map<String, String> query);
 	public List<Question> findForPage(int start, int end, String sort,
 			String order, Map queryParams);
+	public int dealQuestion(String id);
 }

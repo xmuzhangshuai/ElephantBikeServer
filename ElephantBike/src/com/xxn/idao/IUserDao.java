@@ -13,6 +13,7 @@ public interface IUserDao {
 	 * @return
 	 */
 	public int getUserExist(User user);
+	public int getUserExistByStunum(String stunum);
 	/**
 	 * 加入用户表
 	 * @param user

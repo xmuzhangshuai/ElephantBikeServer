@@ -29,7 +29,6 @@ public class AjaxAccessFilter implements Filter {
 		response.setContentType("text/html;charset=UTF-8");
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		filterChain.doFilter(request, response); // 让目标资源执行，放行
-		System.out.println("filter之后");
 	}
 
 	@Override

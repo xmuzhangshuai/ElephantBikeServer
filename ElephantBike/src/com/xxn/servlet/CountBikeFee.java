@@ -81,10 +81,10 @@ public class CountBikeFee extends HttpServlet {
 				long seconds = (finish.getTime() - start.getTime()) / 1000;
 
 				// 根据秒数计算分钟数，获取费用
-				mins = (int) (seconds / 60);
-				if (seconds % 60 != 0) {
-					mins += 1;
-				}
+				mins = (int) (seconds / 60) + 1 ;
+//				if (seconds % 60 != 0) {
+//					mins += 1;
+//				}
 				Map<String, String> valisvip = new HashMap<>();
 				valisvip.put("isvip", "");
 				Map<String, String> queryphone = new HashMap<>();

@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
-import com.xxn.butils.DateTool;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.constants.ALiPayConfig;
 import com.xxn.constants.BikeConstants;
@@ -71,19 +70,23 @@ public class ALiPayPay extends HttpServlet {
 		String body = request.getParameter("body");
 		//由客户端获取到的支付费用
 		String fee = request.getParameter("totalfee");
+		//TODO 自己拿
 		
 		String out_trade_no ="";
 		Map<String, String> val = new HashMap<>();
 		Map<String, String> query = new HashMap<>();
 		Map<String, String> resmap = new HashMap<>();
 		val.put("orderid", "");
+		val.put("cost", "");
 		query.put("phone", phone);
 		query.put("bikeid", bikeid);
 		query.put("paymode", null);
 		resmap = iOrderService.getOrderInfo(val, query);
 		if (resmap.containsKey("orderid"))
 			out_trade_no = resmap.get("orderid");
-		System.out.println("out_trade_no:"+out_trade_no+"--phone:"+phone+"--bikeid:"+bikeid);
+		if (resmap.containsKey("cost"))
+			fee = resmap.get("cost");
+		System.out.println("out_trade_no:"+out_trade_no+"--phone:"+phone+"--bikeid:"+bikeid+"--fee:"+fee);
 		
 		String service = "mobile.securitypay.pay";
 		String partner = ALiPayConfig.Partner;
@@ -92,7 +95,7 @@ public class ALiPayPay extends HttpServlet {
 		String payment_type = "1";
 		String seller_id = ALiPayConfig.Seller_ID;
 		
-		String total_fee = "0.01";
+		String total_fee = fee;
 		
 		Map<String, Object> obj = new HashMap<>();
 		obj.put("service", service);
