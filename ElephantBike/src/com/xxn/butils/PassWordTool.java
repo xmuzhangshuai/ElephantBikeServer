@@ -26,21 +26,21 @@ public class PassWordTool {
 		}
 	}
 	
-	public static String getReturnPass(String bikeid){
-		Bike bike = new Bike(bikeid,"", 0, 0);
-		int t = DateTool.getT();
-		Bike resBike = iBikeService.getBikeMN(bike);
-		if(resBike!=null){
-			int n = resBike.getN();
-			int length = bikeid.length();
-			String z = bikeid.substring(length-2, length);
-			String serverpass = PassDemo.getReturnPass(n, Integer.parseInt(z), t);
-			return serverpass;
-		}
-		else{
-			System.out.println("查找不到该编号的单车");
-			return "";
-		}
-	}
+//	public static String getReturnPass(String bikeid){
+//		Bike bike = new Bike(bikeid,"", 0, 0);
+//		int t = DateTool.getT();
+//		Bike resBike = iBikeService.getBikeMN(bike);
+//		if(resBike!=null){
+//			int n = resBike.getN();
+//			int length = bikeid.length();
+//			String z = bikeid.substring(length-2, length);
+//			String serverpass = PassDemo.getReturnPass(n, Integer.parseInt(z), t);
+//			return serverpass;
+//		}
+//		else{
+//			System.out.println("查找不到该编号的单车");
+//			return "";
+//		}
+//	}
 	
 }

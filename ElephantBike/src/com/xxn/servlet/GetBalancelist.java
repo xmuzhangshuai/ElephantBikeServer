@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -56,9 +57,18 @@ public class GetBalancelist extends HttpServlet {
 		Map<String, Object> map = new HashMap<>();
 		IWalletService iWalletService = new WalletService();
 
-		String phone = request.getParameter("phone");
 		int count = 0;
-		
+		String phone = request.getParameter("phone");
+
+		// ServletContext application = this.getServletContext();
+		// String access_token = request.getParameter("access_token");
+		// String servertoken = (String) application.getAttribute("token" +
+		// phone);
+		// System.out.println("phone:"+phone);
+		// System.out.println("access_token:"+access_token);
+		// System.out.println("servertoken:"+servertoken);
+		// if (null != access_token && null != servertoken &&
+		// servertoken.equals(access_token)) {
 		if (NormalUtil.isStringLegal(phone)) {
 			Wallet wallet = new Wallet(phone, 0.0f, "");
 			List<Map<String, Object>> list = iWalletService.getBalancelist(
@@ -74,6 +84,10 @@ public class GetBalancelist extends HttpServlet {
 			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
 			map.put(BikeConstants.MESSAGE, "手机号码不合法");
 		}
+		// } else {
+		// map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+		// map.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
+		// }
 
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));

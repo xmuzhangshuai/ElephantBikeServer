@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -61,7 +62,16 @@ public class WXPayOrder extends HttpServlet {
 
 		String phone = request.getParameter("phone");
 		String bikeid = request.getParameter("bikeid");
-		String orderid = "", notify_url = "",fee="";
+		// ServletContext application = this.getServletContext();
+		// String access_token = request.getParameter("access_token");
+		// String servertoken = (String) application.getAttribute("token" +
+		// phone);
+		// System.out.println("phone:"+phone);
+		// System.out.println("access_token:"+access_token);
+		// System.out.println("servertoken:"+servertoken);
+		// if (null != access_token && null != servertoken &&
+		// servertoken.equals(access_token)) {
+		String orderid = "", notify_url = "", fee = "";
 		int totalFee = 0;
 		// 订单支付功能
 		notify_url = BikeConstants.APP_URL + "/ElephantBike/api/pay/response";
@@ -74,14 +84,13 @@ public class WXPayOrder extends HttpServlet {
 		query.put("bikeid", bikeid);
 		query.put("paymode", null);
 		resmap = iOrderService.getOrderInfo(val, query);
-		if (resmap.containsKey("orderid"))
-		{
+		if (resmap.containsKey("orderid")) {
 			orderid = resmap.get("orderid");
 			fee = resmap.get("cost");
 			totalFee = (int) (Float.parseFloat(fee) * 100);
 		}
 		System.out.println("orderid:" + orderid + "--phone:" + phone
-				+ "--bikeid:" + bikeid+"--fee:"+totalFee);
+				+ "--bikeid:" + bikeid + "--fee:" + totalFee);
 		String url = BikeConstants.WX_PAY_ORDER;
 		String xmlString = "";
 		String key = BikeConstants.WX_KEY;
@@ -135,6 +144,10 @@ public class WXPayOrder extends HttpServlet {
 			resultMap.put(BikeConstants.STATUS, BikeConstants.FAIL);
 			resultMap.put(BikeConstants.MESSAGE, res + "\n" + result);
 		}
+		// } else {
+		// resultMap.put(BikeConstants.STATUS, BikeConstants.FAIL);
+		// resultMap.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
+		// }
 		System.out.println(FastJsonTool.createJsonString(resultMap));
 		out.print(FastJsonTool.createJsonString(resultMap));
 		out.close();

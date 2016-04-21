@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -63,10 +64,20 @@ public class ReturnPay extends HttpServlet {
 		IWalletService iWalletService = new WalletService();
 
 		String phone = request.getParameter("phone");
+		// ServletContext application = this.getServletContext();
+		// String access_token = request.getParameter("access_token");
+		// String servertoken = (String) application.getAttribute("token" +
+		// phone);
+		// System.out.println("phone:"+phone);
+		// System.out.println("access_token:"+access_token);
+		// System.out.println("servertoken:"+servertoken);
+		// if (null != access_token && null != servertoken
+		// && servertoken.equals(access_token)) {
 		String bikeid = request.getParameter("bikeid");
 		String paymode = request.getParameter("paymode");
 		String ismissing = request.getParameter("ismissing");
-		System.out.println("paymode:"+paymode+"--phone:"+phone+"--bikeid:"+bikeid);
+		System.out.println("paymode:" + paymode + "--phone:" + phone
+				+ "--bikeid:" + bikeid);
 		// ismissing = "0";
 		if (NormalUtil.isStringLegal(phone)
 				&& NormalUtil.isStringLegal(ismissing)
@@ -116,11 +127,11 @@ public class ReturnPay extends HttpServlet {
 					if (iWalletService.rechargeWallet(wallet1) > 0) {
 						val.clear();
 						val.put("finishtime", DateTool.dateToString(new Date()));
-						val.put("cost", fee+"");
+						val.put("cost", fee + "");
 						val.put("paymode", paymode);
 						query.clear();
 						query.put("phone", phone);
-						
+
 						if (iWalletService.addWalletList(wallet2) > 0
 								&& iOrderService.updateOrder(val, query) > 0) {
 							map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
@@ -143,7 +154,10 @@ public class ReturnPay extends HttpServlet {
 			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
 			map.put(BikeConstants.MESSAGE, "参数不合法");
 		}
-
+		// } else {
+		// map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+		// map.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
+		// }
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));
 		out.close();

@@ -33,9 +33,9 @@ public class PassDemo {
 		int _g_length = _g.length();
 		String _h = h + "";
 		int _h_length = _h.length();
-		System.out.println("n"+n+"--t"+t+"--g"+g+"--h"+h);
+//		System.out.println("n"+n+"--t"+t+"--g"+g+"--h"+h);
 		String res = g % 6 + ""+_h.charAt(_h_length - 2)+ _g.charAt(_g_length - 3) + _h.charAt(_h_length - 1)+ _g.charAt(_g_length - 1) + "";
-		System.out.println(res);
+//		System.out.println(res);
 		return res;
 	}
 

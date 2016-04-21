@@ -68,9 +68,9 @@ $(function(){
         <li><cite></cite><a href="myInfo.jsp" target="rightFrame">单车列表</a>
         <li><cite></cite><a href="choosecollege.jsp" target="rightFrame">添加单车</a>
         <li><cite></cite><a href="map.jsp" target="rightFrame">添加学校</a>
-        <li><cite></cite><a href="../qrcode.jsp" target="rightFrame">生成二维码</a>
+      <!--   <li><cite></cite><a href="../qrcode.jsp" target="rightFrame">生成二维码</a>
         <li><cite></cite><a href="./unlock.jsp" target="rightFrame">解锁密码</a>
-        <li><cite></cite><a href="./settime.jsp" target="rightFrame">时间设置</a>
+        <li><cite></cite><a href="./settime.jsp" target="rightFrame">时间设置</a> -->
       </ul>
     </dd>  
     <dd><div class="title"><span></span>问题管理</div>
@@ -89,7 +89,10 @@ $(function(){
       </ul>
     </dd>  
     
-     <dd><div class="title"><span></span><a href="myInfo.jsp" target="rightFrame">系统设置</a></div>
+     <dd><div class="title"><span></span>系统设置</div>
+      <ul class="menuson">
+        <li><cite></cite><a href="clear.jsp" target="rightFrame">一键清空数据表</a>
+      </ul>
     </dd>  
     </dl>
     

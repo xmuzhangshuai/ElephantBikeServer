@@ -90,14 +90,14 @@ public class WXPayOrderResponse extends HttpServlet {
 				ServletContext application = this.getServletContext();
 				application.setAttribute(orderid, orderid);
 				
-				Wallet wallet2 = new Wallet(phone, -Float.parseFloat(total_fee)/100,
-						DateTool.dateToString(new Date()));
+//				Wallet wallet2 = new Wallet(phone, -Float.parseFloat(total_fee)/100,
+//						DateTool.dateToString(new Date()));
 				
 				if(iOrderService.updateOrder(val, query) > 0){
 					String res = "<xml><return_code><![CDATA[SUCCESS]]></return_code>"
 							+ "<return_msg><![CDATA[OK]]></return_msg></xml>";
 					out.write(res);
-					iWalletService.addWalletList(wallet2);
+//					iWalletService.addWalletList(wallet2);
 				}
 				System.out.println(notityXml);
 			}

@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.xxn.entity.Bike;
 
@@ -72,6 +74,20 @@ public class DateTool {
 		return sdf.format(date);
 	}
 	
+	
+	public static boolean compareDate(String value){
+		value = value +" 23:59:59";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = null;
+		try {
+			date = sdf.parse(value);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		if(date.getTime()-new Date().getTime() > 0)
+			return true;
+		else return false;
+	}
 
 	public static String calcUsedTime(long seconds) {
 		int day = 0, hour = 0, mins = 0, sec = 0;
@@ -82,30 +98,50 @@ public class DateTool {
 		sec = (int) ((seconds - day * 60 * 60 * 24 - hour * 60 * 60 - mins * 60));
 
 		
-		String d=""+day,h=""+hour,m=""+mins,s=""+sec;
-		if(day<10)d="0"+day;
-		if(hour<10)h="0"+hour;
-		if(mins<10)m="0"+mins;
-		if(sec<10)s="0"+sec;
+		String d = "" + day, h = "" + hour, m = "" + mins, s = "" + sec;
+		if (day < 10)
+			d = "0" + day;
+		if (hour < 10)
+			h = "0" + hour;
+		if (mins < 10)
+			m = "0" + mins;
+		if (sec < 10)
+			s = "0" +sec;
 		return d + ":" + h + ":" + m + ":" + s;
 	}
 
-	public static int getT() {
-		int t = 1;
+	public static List<Integer> getT() {
+		List<Integer> result = new ArrayList<>();
+		int t = 1,t2=1;
 		String dateStr = "2016-04-13 00:00:00";
 //		String dateStr = getToday();
 		Date date = stringToDate(dateStr);
 		long millsec = new Date().getTime() - date.getTime();
 		int mins = (int) (millsec / 1000) / (60);
-		System.out.println("mins" + mins);
+//		System.out.println("mins" + mins);
 		t = t + mins / 30;
-		System.out.println("t:" + t);
+//		System.out.println("t:" + t);
 		if (t % 8 == 0)
 			t = 8;
 		else
 			t = t % 8;
-		System.out.println("mod8:" + t);
-		return t;
+//		System.out.println("mod8:" + t);
+		result.add(t);
+		//----------错时验证-------
+		
+		if(mins % 30 >= 15)
+		{
+			t2 = t + 1;
+			if(t2==8)t2 = 1;
+		}
+		if(mins % 30 < 15)
+		{
+			t2 = t - 1;
+			if(t2==0)t2 = 8;
+		}
+		System.out.println("原生t:"+t+"--备用t:"+t2);
+		result.add(t2);
+		return result;
 	}
 	
 	public static String getToday(){

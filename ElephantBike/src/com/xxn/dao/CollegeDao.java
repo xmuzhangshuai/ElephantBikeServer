@@ -16,13 +16,14 @@ public class CollegeDao implements ICollegeDao{
 	@Override
 	public int addArea(College college) {
 		int result = 0;
-		String sql = "insert into c_college(latlng,college) values(?,?)";
+		String sql = "insert into c_college(latlng,college,collegeid) values(?,?,?)";
 		Connection connection =  JdbcUtils_DBCP.getConnection();
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setString(1, college.getlatlng());
 			pstmt.setString(2, college.getName());
+			pstmt.setString(3, college.getCollegeid());
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -73,6 +74,28 @@ public class CollegeDao implements ICollegeDao{
 				String collegeid = resultSet.getString(2);
 				College college = new College("", name, collegeid);
 				res.add(college);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, preparedStatement, resultSet);
+		}
+		return res;
+	}
+
+	@Override
+	public List<String> getAllAddr() {
+		List<String> res = new ArrayList<>();
+		Connection connection = JdbcUtils_DBCP.getConnection();
+		String sql = "select latlng from c_college";
+		ResultSet resultSet = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				String latlng = resultSet.getString(1);
+				res.add(latlng);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -3,6 +3,7 @@ package com.xxn.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -59,14 +60,18 @@ public class MatchReturnCode2 extends HttpServlet {
 		
 		if(NormalUtil.isStringLegal(phone)&&NormalUtil.isStringLegal(bikeid)){
 			Bike bike = new Bike(bikeid,"", 0, 0);
-			int t = DateTool.getT();
+			//错时验证两个t
+			List<Integer> tlist = DateTool.getT();
+			
 			Bike resBike = iBikeService.getBikeMN(bike);
 			if(resBike!=null){
 				int n = resBike.getN();
 				int length = bikeid.length();
 				String z = bikeid.substring(length-2, length);
-				String serverpass = PassDemo.getReturnPass(n, Integer.parseInt(z), t);
-				System.out.println("服务器密码:"+serverpass);
+				String serverpass = PassDemo.getReturnPass(n, Integer.parseInt(z), tlist.get(0));
+				String _serverpass = PassDemo.getReturnPass(n, Integer.parseInt(z), tlist.get(1));
+				
+				System.out.println("服务器密码:"+serverpass+"--备用密码:"+_serverpass);
 				
 				//135位和上一次的相同，提示不让还车，必须恢复单车
 				String lasspass = resBike.getLastpass();
@@ -79,7 +84,7 @@ public class MatchReturnCode2 extends HttpServlet {
 						map.put(BikeConstants.MESSAGE, "你已经有了新的解锁密码，请先恢复单车，不能直接执行还车操作");
 					}
 					else{
-						if(serverpass.equals(clientpass)){
+						if(serverpass.equals(clientpass)||_serverpass.equals(clientpass)){
 							int result = iBikeService.addBikeMN(bike);
 							if(result == 1){
 								if(true){
@@ -100,7 +105,7 @@ public class MatchReturnCode2 extends HttpServlet {
 					}
 				}
 				else{
-					if(serverpass.equals(clientpass)){
+					if(serverpass.equals(clientpass)||_serverpass.equals(clientpass)){
 						int result = iBikeService.addBikeMN(bike);
 						if(result == 1){
 							map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);

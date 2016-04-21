@@ -65,10 +65,11 @@ public class BAddUserMessage extends HttpServlet {
 		
 		if (NormalUtil.isStringLegal(phone)) {
 			
+			String title = "审核通过通知";
 			String createtime = DateTool.dateToString(new Date());
 			String content = "你已经通过审核";
 			int state = 1;
-			Message message = new Message(phone, createtime, content, state);
+			Message message = new Message(phone, title,createtime, content, state);
 			int result = iMessageService.createUserMessage(message);
 			if(result > 0){
 				map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);

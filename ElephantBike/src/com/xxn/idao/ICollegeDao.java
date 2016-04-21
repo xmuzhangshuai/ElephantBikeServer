@@ -17,6 +17,8 @@ public interface ICollegeDao {
 	 * @return
 	 */
 	public List<String> getAddrByCollege(College college);
+	public List<String> getAllAddr();
+	
 	
 	public List<College> getDistinctName();
 }

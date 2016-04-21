@@ -15,10 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.xxn.butils.DateTool;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.constants.BikeConstants;
+import com.xxn.entity.Bike;
 import com.xxn.entity.Question;
 import com.xxn.entity.User;
+import com.xxn.iservice.IBikeService;
 import com.xxn.iservice.IQuestionService;
 import com.xxn.iservice.IUserService;
+import com.xxn.service.BikeService;
 import com.xxn.service.QuestionService;
 import com.xxn.service.UserService;
 
@@ -53,11 +56,21 @@ public class DealQuestion extends HttpServlet {
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		IQuestionService iQuestionService = new QuestionService();
-			
+		
+		IBikeService iBikeService = new BikeService();
 		String id = request.getParameter("id");
-		if(iQuestionService.dealQuestion(id) > 0)
+		String bikeid = request.getParameter("bikeid");
+		if(iQuestionService.dealQuestion(id) > 0 )
+		{
+			if(null != bikeid){
+				Bike bike = new Bike(bikeid, 1, "", "");
+				iBikeService.updateBikeState(bike);
+			}
 			out.print(1);
-		else  out.print(-1);
+		}
+		else{
+			out.print(-1);
+		}  
 		out.close();
 	}
 

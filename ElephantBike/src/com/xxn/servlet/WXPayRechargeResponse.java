@@ -71,6 +71,9 @@ public class WXPayRechargeResponse extends HttpServlet {
 				//两步操作，写入钱包余额和明细表
 				Wallet wallet = new Wallet(phone, Float.parseFloat(total_fee)/100, 0);
 				if(iWalletService.rechargeWallet(wallet) > 0){
+					Wallet wallet2 = new Wallet(phone, Float.parseFloat(total_fee)/100,
+							DateTool.dateToString(new Date()));
+					iWalletService.addWalletList(wallet2);
 					ServletContext application = this.getServletContext();
 					application.setAttribute(orderid, orderid);
 					String res = "<xml><return_code><![CDATA[SUCCESS]]></return_code>"

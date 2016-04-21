@@ -11,6 +11,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<link href="<%=basePath%>/css/admin.css" rel="stylesheet" type="text/css" />
 <style type="text/css">
 body,html {
 	width: 100%;
@@ -21,7 +22,7 @@ body,html {
 
 #allmap {
 	width: 100%;
-	height: 500px;
+	height: 80%;
 	overflow: hidden;
 }
 
@@ -72,7 +73,7 @@ li {
 	
 <title>鼠标绘制工具</title>
 </head>
-<body>
+<body onload="drawCollege()">
 	<div id="allmap" style="overflow: hidden; zoom: 1; position: relative;">
 		<div id="map"
 			style="height: 100%; -webkit-transition: all 0.5s ease-in-out; transition: all 0.5s ease-in-out;"></div>
@@ -80,15 +81,24 @@ li {
 			<input type="hidden" id="points" name="points">
 		</div>
 	</div>
-	<div id="result">
-		<input type="button" value="确认" onclick="addArea()" /> 
-		<input type="button" value="清除所有覆盖物" onclick="clearAll()" />
+	<div class="module_content" style="float: left;margin-left: 3%">
+		<label>定位区域</label> 
+		<input type="text" name="locationname" id="locationname">
+		<input type="button" value="定位" class="alt_btn" onclick="locationAddr()" /> 
+		<br/><br/>
+		<label>学校名称</label> 
+		<input type="text" name="name" id="name">
+		<label>学校编号</label> 
+		<input type="text" name="collegeid" id="collegeid" maxlength="2">
+		<input type="button" value="确认" class="alt_btn" onclick="addArea()" /> 
+		<input type="button" value="清除所有覆盖物" class="alt_btn" onclick="clearAll()" />
 	</div>
+
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<script type="text/javascript">
 		// 百度地图API功能
 		var map = new BMap.Map('map');
-		var poi = new BMap.Point(118.113123, 24.441949);
+		var poi = new BMap.Point(118.112225,24.447508);
 		map.centerAndZoom(poi, 16);
 		map.enableScrollWheelZoom();
 		var overlays = [];
@@ -116,7 +126,8 @@ li {
 			strokeOpacity : 0.8, //边线透明度，取值范围0 - 1。
 			fillOpacity : 0.6, //填充的透明度，取值范围0 - 1。
 			strokeStyle : 'solid' //边线的样式，solid或dashed。
-		}
+		};
+		
 		//实例化鼠标绘制工具
 		var drawingManager = new BMapLib.DrawingManager(map, {
 			isOpen : false, //是否开启绘制模式
@@ -141,15 +152,73 @@ li {
 		}
 		//将选中的区域划入
 		function addArea() {
-			var a = document.getElementById("points").value;
-			$.post("<%=basePath%>map", {data: a},
+			var id = document.getElementById("collegeid").value;
+			var name = document.getElementById("name").value;
+			var addr = document.getElementById("points").value;
+			if(name==""){
+				alert("学校名称为空");
+				return ;
+			}
+			if(id==""){
+				alert("学校编号为空");
+				return ;
+			}
+			if(addr==""){
+				alert("没有绘制学校区域");
+				return ;
+			}
+			$.post("<%=basePath%>map", {data: addr,name:name,collegeid:id},
 					function (data, textStatus){
-					if(data == 'true'){
-						} 
+					if(data == '1'){
+						alert('添加学校成功');
+						window.location.reload();
+					} 
 					else{
-						}
-					}, "text");
+						alert('添加学校失败');
+					}
+			}, "text");
 		}
+		
+		function drawCollege(){
+			$.post("<%=basePath%>allcollegeaddr",function (data, textStatus){
+				ajaxobj=eval("("+data+")");  
+				if(ajaxobj.status == 'success'){
+					alladdr = eval(ajaxobj.college);
+					for(var i=0;i<alladdr.length;i++)
+					{
+						addr = eval(alladdr[i]);
+						var arrayObj = [];
+						for(var j=0;j<addr.length;j++)
+						{
+							var ppp = new BMap.Point(addr[j].lng,addr[j].lat);
+							arrayObj[j] = ppp;
+						}
+						var polygon = new BMap.Polygon(arrayObj, {strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5});  //创建多边形
+						map.addOverlay(polygon);           
+						//增加多边形
+					}
+				} 
+				else{
+					alert("绘制高校区域失败，请刷新重试");
+				}
+			}, "text");	
+		}
+		
+		function locationAddr(){
+			var name = document.getElementById("locationname").value;
+			map.centerAndZoom(name,15);      // 初始化地图,用城市名设置地图中心点
+		};
+		
+		$(document).ready(function(){
+			$('#locationname').bind('keyup', function(event) {
+		        if (event.keyCode == "13") {
+		            //回车执行查询
+		            //$('#search_button').click();
+		            locationAddr();
+		        }
+		    });
+			
+		});
 	</script>
 </body>
 </html>

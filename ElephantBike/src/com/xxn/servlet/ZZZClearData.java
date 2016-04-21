@@ -1,7 +1,6 @@
 package com.xxn.servlet;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,19 +8,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.xxn.butils.PassWordTool;
+import org.apache.jasper.tagplugins.jstl.core.Out;
+
+import com.xxn.dao.WebToolDao;
 
 /**
- * Servlet implementation class BGetReturnPass
+ * Servlet implementation class ZZZClearData
  */
-@WebServlet("/breturn")
-public class BGetReturnPass extends HttpServlet {
+@WebServlet("/cleardata")
+public class ZZZClearData extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BGetReturnPass() {
+    public ZZZClearData() {
         super();
     }
 
@@ -36,14 +37,10 @@ public class BGetReturnPass extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("utf-8");
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html;Charset=UTF-8");
-		PrintWriter out = response.getWriter();
-		String bikeid = request.getParameter("bikeid");
-//		String pass = PassWordTool.getReturnPass(bikeid);
-//		out.print(pass);
-//		System.out.println("returnpass:"+pass);
+		WebToolDao webToolDao = new WebToolDao();
+		int result = webToolDao.clearData();
+		System.out.println("result:"+result);
+		response.getWriter().print(result);
 	}
 
 }

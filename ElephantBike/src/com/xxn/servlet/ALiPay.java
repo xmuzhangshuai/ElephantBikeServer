@@ -85,14 +85,14 @@ public class ALiPay extends HttpServlet {
         			ServletContext application = this.getServletContext();
 					application.setAttribute(out_trade_no, out_trade_no);
     				
-    				Wallet wallet2 = new Wallet(phone, -Float.parseFloat(total_fee),
-    						DateTool.dateToString(new Date()));
+//    				Wallet wallet2 = new Wallet(phone, -Float.parseFloat(total_fee),
+//    						DateTool.dateToString(new Date()));
     				Map<String, String> val = new HashMap<>();
     				Map<String, String> query = new HashMap<>();
     				val.put("paymode", "支付宝支付");
     				query.put("orderid", out_trade_no);
     				if(iOrderService.updateOrder(val, query) > 0){
-    					iWalletService.addWalletList(wallet2);
+    					//iWalletService.addWalletList(wallet2);
     					System.out.println("扣费成功-订单修改成功");
     					out.print("success");
     				}

@@ -71,7 +71,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				{field:'ma',title:'操作',sortable:true,width:'5%',
 					formatter:function(value, row){//使用formatter格式化刷子
 						if(row.needfrozen==1)
-							return "<a href='javascript:frozen("+row.phone+","+row.id+")'>解冻</a>";
+							return "<a href='javascript:frozen("+row.phone+","+row.id+","+row.bikeid+")'>解冻</a>";
 						else return "<a href='javascript:deal("+row.id+")'>处理</a>";
 					}
 				},
@@ -147,7 +147,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	
 	//---------------------------------解冻用户-------------------------------------
-	function frozen(phone,id){
+	function frozen(phone,id,bikeid){
 		 $.post("<%=basePath%>/api/user/frozen", {phone: phone,state:1},
 					function (data, textStatus){
 					if(data == '1'){
@@ -158,7 +158,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						$.messager.alert('提示','解冻失败','fail');
 						}
 					}, "text");
-		 $.post("<%=basePath%>/api/question/dealquestion", {id: id},
+		 $.post("<%=basePath%>/api/question/dealquestion", {id: id,bikeid:bikeid},
 					function (data, textStatus){
 					if(data == '1'){
 						$.messager.alert('提示','处理问题成功','info');
@@ -168,6 +168,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						$.messager.alert('提示','处理问题失败','fail');
 						}
 					}, "text");
+		 
 	}
 	//------------------------------------问题解决-------------------------------------
 	function deal(id){

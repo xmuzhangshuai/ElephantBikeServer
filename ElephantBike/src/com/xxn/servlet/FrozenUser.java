@@ -69,24 +69,26 @@ public class FrozenUser extends HttpServlet {
 					map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 					map.put(BikeConstants.MESSAGE, "冻结用户成功");
 					
+					String title = "冻结通知";
 					String createtime = DateTool.dateToString(new Date());
 					String content = "你已经被冻结";
-					Message message = new Message(phone, createtime, content, 1);
+					Message message = new Message(phone,title, createtime, content, 1);
 					iMessageService.createUserMessage(message);
 				}
 				if(state.equals(BikeConstants.CENTIFY)){
-					
+					String title = "审核通过通知";
 					String createtime = DateTool.dateToString(new Date());
 					String content = "你已经通过认证";
-					Message message = new Message(phone, createtime, content, 1);
+					Message message = new Message(phone,title,createtime, content, 1);
 					iMessageService.createUserMessage(message);
 					out.print(1);
 				}
 				if(state.equals(BikeConstants.NORMAL)){
 //					map.put(BikeConstants.MESSAGE, "用户认证成功");
+					String title = "审核不通过通知";
 					String createtime = DateTool.dateToString(new Date());
 					String content = "你审核不通过";
-					Message message = new Message(phone, createtime, content, 1);
+					Message message = new Message(phone, title, createtime, content, 1);
 					iMessageService.createUserMessage(message);
 					out.print(1);
 				}

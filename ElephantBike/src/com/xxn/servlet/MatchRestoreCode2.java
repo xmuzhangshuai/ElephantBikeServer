@@ -3,6 +3,7 @@ package com.xxn.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -65,22 +66,33 @@ public class MatchRestoreCode2 extends HttpServlet {
 			// 计算恢复密码 进行匹配
 			Bike bike = new Bike(bikeid,"", 0, 0);
 			String clientpass = request.getParameter("pass");
-			int t = DateTool.getT();
+			
+			//获取两个时间t
+			List<Integer> tlist = DateTool.getT();
+			
 			Bike resBike = iBikeService.getBikeMN(bike);
 			if(resBike!=null){
 				int n = resBike.getN();
 				int length = bikeid.length();
 				String z = bikeid.substring(length-2, length);
-				String serverpass = PassDemo.getReturnPass(n, Integer.parseInt(z), t);
+				String serverpass = PassDemo.getReturnPass(n, Integer.parseInt(z), tlist.get(0));
+				String _serverpass = PassDemo.getReturnPass(n, Integer.parseInt(z), tlist.get(1));
 				System.out.println("服务器密码:"+serverpass);
-				if(serverpass.equals(clientpass)){
+				if(serverpass.equals(clientpass)||_serverpass.equals(clientpass)){
 					//设置密码，写入数据库
-					bike.setLastpass(serverpass);
+					if(serverpass.equals(clientpass))
+					{
+						bike.setLastpass(serverpass);
+						System.out.println("使用正常密码");
+					}
+					if(_serverpass.equals(clientpass))
+					{
+						bike.setLastpass(_serverpass);
+						System.out.println("使用备案密码");
+					}
+					
 					int result = iBikeService.addBikeMN(bike);
 					if(result == 1){
-//						out.println("z"+z+"\n serverpass:"+serverpass);
-//						out.println("---恢复密码正确------m , n 各加1 ---已经记录这一次还车密码---成功");
-//						out.println("提供的解锁密码是:"+unlockpass);
 						String unlockpass = PassDemo.getUnlockPass(resBike.getM()+1, Integer.parseInt(z));
 						map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 						map.put("pass", unlockpass);

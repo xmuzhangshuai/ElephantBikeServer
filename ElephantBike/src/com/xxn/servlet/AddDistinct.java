@@ -50,22 +50,22 @@ public class AddDistinct extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		System.out.println("map");
 		Map<String, String> map = new HashMap<>();
 		ICollegeService iCollegeService = new CollegeService();
 		String latlng = request.getParameter("data");
+		String name = request.getParameter("name");
+		String collegeid = request.getParameter("collegeid");
+		
 		if(NormalUtil.isStringLegal(latlng)){
 			//合法经纬度
-			College college = new College(latlng, "厦门大学");
+			College college = new College(latlng, name, collegeid);
 			if(iCollegeService.addArea(college) > 0){
-				System.out.println("添加区域成功");
+				out.print(1);
+			}
+			else {
+				out.print(-1);
 			}
 		}
-		
-//		List<Map<String, Object>> map = FastJsonTool.getObjectMap(a);
-//		Map<String, Object> aa = new HashMap<>();
-//		map.add(aa);
-//		System.out.println(map);
 	}
 
 }

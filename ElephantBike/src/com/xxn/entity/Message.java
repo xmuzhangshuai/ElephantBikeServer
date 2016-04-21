@@ -3,6 +3,7 @@ package com.xxn.entity;
 public class Message {
 	private int id;
 	private String phone;
+	private String title;
 	private String createtime;
 	private String content;
 	private int state;
@@ -17,6 +18,12 @@ public class Message {
 	}
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	public String getCreatetime() {
 		return createtime;
@@ -36,18 +43,20 @@ public class Message {
 	public void setState(int state) {
 		this.state = state;
 	}
-	public Message(int id, String phone, String createtime, String content,
+	public Message(int id, String phone,String title, String createtime, String content,
 			int state) {
 		super();
 		this.id = id;
 		this.phone = phone;
+		this.title = title;
 		this.createtime = createtime;
 		this.content = content;
 		this.state = state;
 	}
-	public Message(String phone, String createtime, String content, int state) {
+	public Message(String phone, String title, String createtime, String content, int state) {
 		super();
 		this.phone = phone;
+		this.title = title;
 		this.createtime = createtime;
 		this.content = content;
 		this.state = state;

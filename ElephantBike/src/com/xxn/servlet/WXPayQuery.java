@@ -94,7 +94,8 @@ public class WXPayQuery extends HttpServlet {
 		resultMap = XMLUtil.xmltoMap(result);
 		if(resultMap.get("result_code").equals("SUCCESS")&&resultMap.get("return_code").equals("SUCCESS")){
 			resultMap.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-			application.setAttribute(orderid, null);
+			application.removeAttribute(orderid);
+//			application.setAttribute(orderid, null);
 		}
 		else{
 			resultMap.put(BikeConstants.STATUS, BikeConstants.FAIL);

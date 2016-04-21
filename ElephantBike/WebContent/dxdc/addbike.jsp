@@ -33,12 +33,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		var Request = new Object();
 		Request = GetRequest();
 		var id = Request['id'];
-		alert(id);
 		var name = decodeURI(Request['name']);
 		$("#id").val(id);
 		$("#name").val(name);
 	}
-	
 	
 </script>
  
@@ -47,6 +45,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 $(document).ready(function(){
 	getcollegeinfo();
 });
+
+function keyPress() {  
+    var keyCode = event.keyCode;  
+    if ((keyCode >= 48 && keyCode <= 57))  
+   {  
+        event.returnValue = true;  
+    } else {  
+          event.returnValue = false;  
+   }  
+}  
 
 </script>
 
@@ -58,9 +66,10 @@ $(document).ready(function(){
 		</header>
 		<div class="module_content">
 			<fieldset>
+				<label>单车前两位编号</label> 
+				<input type="text" name="id" id="id" readonly="readonly">
 				<label>单车后四位编号</label> 
-				<input type="text" name="b_id" id="b_id">
-				<input type="text" name="id" id="id" style="display:none">
+				<input type="text" name="b_id" id="b_id" maxlength="4"onkeypress="keyPress()">
 				<input type="text" name="name" id="name" style="display:none">
 			</fieldset>
 			<div class="clear"></div>

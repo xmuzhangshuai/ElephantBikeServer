@@ -51,10 +51,11 @@ public class MessageDao implements IMessageDao{
 			while (resultSet.next()) {
 				int id = resultSet.getInt("id");
 				String phone = resultSet.getString("phone");
+				String title = resultSet.getString("title");
 				String createtime = resultSet.getString("createtime");
 				String content = resultSet.getString("content");
 				int state = resultSet.getInt("state");
-				Message m = new Message(id, phone, createtime, content, state);
+				Message m = new Message(id, phone, title, createtime, content, state);
 				resultList.add(m);
 			}
 		} catch (SQLException e) {
@@ -68,15 +69,16 @@ public class MessageDao implements IMessageDao{
 	@Override
 	public int createUserMessage(Message message) {
 		int result = 0;
-		String sql = "insert into m_message(phone,createtime,content,state)values(?,?,?,?)";
+		String sql = "insert into m_message(phone,title,createtime,content,state)values(?,?,?,?,?)";
 		Connection connection =  JdbcUtils_DBCP.getConnection();
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = connection.prepareStatement(sql);
 			pstmt.setString(1, message.getPhone());
-			pstmt.setString(2, message.getCreatetime());
-			pstmt.setString(3, message.getContent());
-			pstmt.setInt(4, message.getState());
+			pstmt.setString(2, message.getTitle());
+			pstmt.setString(3, message.getCreatetime());
+			pstmt.setString(4, message.getContent());
+			pstmt.setInt(5, message.getState());
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -41,6 +41,7 @@ public class BikeConstants {
 	public static final String SUCCESS = "success";
 	public static final String FAIL = "fail";
 	public static final String MESSAGE = "message";
+	public static final String INVALID_TOKEN = "invalid token";
 	
 	/**
 	 * 临时变量

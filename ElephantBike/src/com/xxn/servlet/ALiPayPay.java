@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,11 +26,11 @@ import com.xxn.service.OrderService;
  */
 /**
  * 
-* @ClassName: ALiPayPay 
-* @Description: 客户端订单支付 
-* @author kunsen-lee
-* @date 2016年4月11日 下午12:30:41 
-*
+ * @ClassName: ALiPayPay
+ * @Description: 客户端订单支付
+ * @author kunsen-lee
+ * @date 2016年4月11日 下午12:30:41
+ * 
  */
 @WebServlet("/api/pay/alipaypay")
 public class ALiPayPay extends HttpServlet {
@@ -61,18 +62,27 @@ public class ALiPayPay extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
+
 		Map<String, Object> result = new HashMap<>();
 		IOrderService iOrderService = new OrderService();
-		
+
 		String phone = request.getParameter("phone");
 		String bikeid = request.getParameter("bikeid");
 		String subject = request.getParameter("subject");
 		String body = request.getParameter("body");
-		//由客户端获取到的支付费用
+		// 由客户端获取到的支付费用
 		String fee = request.getParameter("totalfee");
-		//TODO 自己拿
-		
-		String out_trade_no ="";
+
+		// ServletContext application = this.getServletContext();
+		// String access_token = request.getParameter("access_token");
+		// String servertoken = (String) application.getAttribute("token" +
+		// phone);
+		// System.out.println("phone:"+phone);
+		// System.out.println("access_token:"+access_token);
+		// System.out.println("servertoken:"+servertoken);
+		// if (null != access_token && null != servertoken &&
+		// servertoken.equals(access_token)) {
+		String out_trade_no = "";
 		Map<String, String> val = new HashMap<>();
 		Map<String, String> query = new HashMap<>();
 		Map<String, String> resmap = new HashMap<>();
@@ -86,17 +96,19 @@ public class ALiPayPay extends HttpServlet {
 			out_trade_no = resmap.get("orderid");
 		if (resmap.containsKey("cost"))
 			fee = resmap.get("cost");
-		System.out.println("out_trade_no:"+out_trade_no+"--phone:"+phone+"--bikeid:"+bikeid+"--fee:"+fee);
-		
+		System.out.println("out_trade_no:" + out_trade_no + "--phone:" + phone
+				+ "--bikeid:" + bikeid + "--fee:" + fee);
+
 		String service = "mobile.securitypay.pay";
 		String partner = ALiPayConfig.Partner;
 		String _input_charset = "utf-8";
-		String notify_url =BikeConstants.APP_URL+"/ElephantBike/api/pay/alipay";
+		String notify_url = BikeConstants.APP_URL
+				+ "/ElephantBike/api/pay/alipay";
 		String payment_type = "1";
 		String seller_id = ALiPayConfig.Seller_ID;
-		
+
 		String total_fee = fee;
-		
+
 		Map<String, Object> obj = new HashMap<>();
 		obj.put("service", service);
 		obj.put("partner", partner);
@@ -108,28 +120,35 @@ public class ALiPayPay extends HttpServlet {
 		obj.put("seller_id", seller_id);
 		obj.put("total_fee", total_fee);
 		obj.put("body", body);
-		String sign="",signData="";
-		
+		String sign = "", signData = "";
+
 		for (Object object : obj.keySet()) {
 			String key = object.toString();
 			String value = obj.get(key).toString();
 			signData += String.format("%s=\"%s\"", key, value);
-			signData +="&";
+			signData += "&";
 		}
-		signData = signData.substring(0,signData.length()-1);
-		
+		signData = signData.substring(0, signData.length() - 1);
+
 		try {
-			sign = AlipaySignature.rsaSign(signData, ALiPayConfig.privateKey, "utf-8");
+			sign = AlipaySignature.rsaSign(signData, ALiPayConfig.privateKey,
+					"utf-8");
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}
-		sign = URLEncoder.encode(sign,"utf-8");
+		sign = URLEncoder.encode(sign, "utf-8");
 		String sign_type = "RSA";
-		
+
+		result.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 		result.put("param", signData);
 		result.put("sign", sign);
 		result.put("sign_type", sign_type);
 		result.put("out_trade_no", out_trade_no);
+		// } else {
+		// result.put(BikeConstants.STATUS, BikeConstants.FAIL);
+		// result.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
+		// }
+
 		System.out.println(FastJsonTool.createJsonString(result));
 		out.print(FastJsonTool.createJsonString(result));
 		out.close();
