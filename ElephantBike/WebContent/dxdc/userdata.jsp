@@ -39,8 +39,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     
 	function getData(queryParams){
 		$('#grid').datagrid({
-			url: '<%=basePath%>certiuser',
-			sortName: 'id',
+			url: '<%=basePath%>getuserdata',
+			sortName: 'tel',
 			sortOrder: 'asc',
 			queryParams: queryParams,
 			nowrap: true, //换行属性
@@ -52,15 +52,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    {field: 'ck', checkbox: true},          
 			]],
 			columns: [[
-				{field:'id',title:'用户手机',sortable:true,width:'5%',},
-				{field:'registerdate',title:'当日使用使用次数',sortable:true,width:'10%',},
-				{field:'phone',title:'历史使用次数',sortable:true,width:'6%',
+				{field:'tel',title:'用户手机',sortable:true,width:'5%',},
+				{field:'today',title:'当日使用使用次数',sortable:true,width:'10%',},
+				{field:'history',title:'历史使用次数',sortable:true,width:'6%',
 					//如果要实现编辑功能，需要添加下面的属性
 					//editor: { type: 'validatebox',  }
 				},
-				{field:'college',title:'当日支出',sortable:true,width:'6%',
+				{field:'todaymoney',title:'当日支出',sortable:true,width:'6%',
 				},
-				{field:'stunum',title:'历史支出',sortable:true,width:'10%',},
+				{field:'historymoney',title:'历史支出',sortable:true,width:'10%',},
 			]],
 			
 			pagination: true,

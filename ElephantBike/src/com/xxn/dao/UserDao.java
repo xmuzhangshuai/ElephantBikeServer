@@ -5,12 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.xxn.butils.DateTool;
 import com.xxn.butils.JdbcUtils_DBCP;
 import com.xxn.entity.User;
+import com.xxn.entity.UserData;
 import com.xxn.entity.Wallet;
 import com.xxn.idao.IUserDao;
 import com.xxn.idao.IWalletDao;
@@ -237,10 +240,11 @@ public class UserDao implements IUserDao {
 			String key = object.toString();
 			String value = queryParams.get(key).toString();
 			if (key.equals("userstate"))
-				if (value.equals("1")||value.equals("3")||value.equals("-1"))
+				if (value.equals("1") || value.equals("3")
+						|| value.equals("-1"))
 					sql += String.format(" and  %s ='%s' ", key, value);
 				else
-//					sql += String.format(" and  (%s =0 or %s =2) ", key,key);
+					// sql += String.format(" and  (%s =0 or %s =2) ", key,key);
 					sql += String.format(" and  %s =2 ", key);
 			else
 				sql += String.format(" and  %s like '%%%s%%' ", key, value);
@@ -272,9 +276,11 @@ public class UserDao implements IUserDao {
 			String key = object.toString();
 			String value = queryParams.get(key).toString();
 			if (key.equals("userstate"))
-				if (value.equals("1")||value.equals("3")||value.equals("-1"))
+				if (value.equals("1") || value.equals("3")
+						|| value.equals("-1"))
 					sql += String.format(" and  %s ='%s' ", key, value);
-				else sql += String.format(" and %s =2 ", key);
+				else
+					sql += String.format(" and %s =2 ", key);
 			else
 				sql += String.format(" and  %s like '%%%s%%' ", key, value);
 		}
@@ -304,7 +310,8 @@ public class UserDao implements IUserDao {
 				IWalletDao iWalletDao = new WalletDao();
 				float balance = iWalletDao.getBalance(new Wallet(phone));
 				User user = new User(id, phone, name, stunum, idcardaddr,
-						stucardaddr, userstate, college, registerdate, vip, vipdate, balance);
+						stucardaddr, userstate, college, registerdate, vip,
+						vipdate, balance);
 				resultList.add(user);
 			}
 		} catch (SQLException e) {
@@ -374,6 +381,90 @@ public class UserDao implements IUserDao {
 			JdbcUtils_DBCP.release(connection, preparedStatement, resultSet);
 		}
 		return number;
+	}
+
+	@Override
+	public int getUserDataCount(Map queryParams) {
+		int count = 0;
+		String sql = "select count(*) from (select phone as tel from u_users ) as aa "
+				+ "left join ( select phone,count(*) as today from wl_walletlist where phone in (select phone from u_users) and fee_time > ? and fee<0 group by phone)as bb on tel=bb.phone "
+				+ "left join ( select phone,count(*) as history from wl_walletlist where phone in (select phone from u_users) and fee_time < ? and fee<0 group by phone)as cc on tel=cc.phone "
+				+ "left join ( select phone,sum(fee) as todaymoney from wl_walletlist where phone in (select phone from u_users) and fee_time > ? and fee<0 group by phone)as dd on tel=dd.phone "
+				+ "left join ( select phone,sum(fee) as historymoney from wl_walletlist where phone in (select phone from u_users) and fee_time < ? and fee<0 group by phone)as ff on tel=ff.phone"
+				+ " where 1 = 1";
+		for (Object object : queryParams.keySet()) {
+			String key = object.toString();
+			String value = queryParams.get(key).toString();
+			sql += String.format(" and  %s like '%%%s%%' ", key, value);
+		}
+		Connection connection = JdbcUtils_DBCP.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+		try {
+			pstmt = connection.prepareStatement(sql);
+			String today = DateTool.dateToStringYMD(new Date());
+			pstmt.setString(1, today);
+			pstmt.setString(2, today);
+			pstmt.setString(3, today);
+			pstmt.setString(4, today);
+			resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				count = resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, resultSet);
+		}
+		return count;
+	}
+
+	@Override
+	public List<UserData> getUserData(int start, int end, String sort,
+			String order, Map queryParams) {
+		String sql = " select tel,today,history,todaymoney,historymoney from "
+				+ "(select phone as tel from u_users ) as aa "
+				+ "left join ( select phone,count(*) as today from wl_walletlist "
+				+ "where phone in (select phone from u_users) and fee_time > ? and fee<0 group by phone)as bb on tel=bb.phone "
+				+ "left join ( select phone,count(*) as history from wl_walletlist where phone in (select phone from u_users) and fee_time < ? and fee<0 group by phone)as cc on tel=cc.phone "
+				+ "left join ( select phone,sum(fee) as todaymoney from wl_walletlist where phone in (select phone from u_users) and fee_time > ? and fee<0 group by phone)as dd on tel=dd.phone "
+				+ "left join ( select phone,sum(fee) as historymoney from wl_walletlist where phone in (select phone from u_users) and fee_time < ? and fee<0 group by phone)as ff on tel=ff.phone "
+				+ "where 1=1 ";
+		for (Object object : queryParams.keySet()) {
+			String key = object.toString();
+			String value = queryParams.get(key).toString();
+			sql += String.format(" and  %s like '%%%s%%' ", key, value);
+		}
+		sql += " order by " + sort + " " + order + "  limit " + start
+				+ " ," + end;
+
+		Connection connection = JdbcUtils_DBCP.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+		List<UserData> resultList = new ArrayList<UserData>();
+		try {
+			pstmt = connection.prepareStatement(sql);
+			String todayStr = DateTool.dateToStringYMD(new Date());
+			pstmt.setString(1, todayStr);
+			pstmt.setString(2, todayStr);
+			pstmt.setString(3, todayStr);
+			pstmt.setString(4, todayStr);
+			resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				String tel = resultSet.getString("tel");
+				int today = resultSet.getInt("today");
+				int history = resultSet.getInt("history");
+				float todaymoney = resultSet.getFloat("todaymoney");
+				float historymoney = resultSet.getFloat("historymoney");
+				UserData userData = new UserData(tel, today, history, todaymoney, historymoney);
+				resultList.add(userData);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, resultSet);
+		}
+		return resultList;
 	}
 
 }

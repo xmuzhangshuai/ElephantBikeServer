@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.xxn.dao.UserDao;
 import com.xxn.entity.User;
+import com.xxn.entity.UserData;
 import com.xxn.idao.IUserDao;
 import com.xxn.iservice.IUserService;
 
@@ -87,6 +88,19 @@ public class UserService implements IUserService{
 	public int getUserExistByStunum(String stunum) {
 		IUserDao iUserDao = new UserDao();
 		return iUserDao.getUserExistByStunum(stunum);
+	}
+
+	@Override
+	public int getUserDataCount(Map queryParams) {
+		IUserDao iUserDao = new UserDao();
+		return iUserDao.getUserDataCount(queryParams);
+	}
+
+	@Override
+	public List<UserData> getUserData(int start, int end, String sort,
+			String order, Map queryParams) {
+		IUserDao iUserDao = new UserDao();
+		return iUserDao.getUserData(start, end, sort, order, queryParams);
 	}
 
 	

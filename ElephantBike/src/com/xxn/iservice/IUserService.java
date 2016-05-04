@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.xxn.entity.User;
+import com.xxn.entity.UserData;
 
 public interface IUserService {
 	public int getUserExist(User user);
@@ -24,5 +25,13 @@ public interface IUserService {
 	public int getNewUserCount(String joindate);
 	public int addNewUserCount(String joindate);
 	public int updateNewUser(String joindate);
+	
+	/**
+	 * 管理员后台数据分析
+	 */
+	public int getUserDataCount(Map queryParams);
+
+	public List<UserData> getUserData(int start, int end, String sort,
+			String order, Map queryParams);
 	
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.xxn.entity.Order;
+import com.xxn.entity.BikeData;
 import com.xxn.entity.User;
 
 public interface IOrderDao {
@@ -36,4 +37,9 @@ public interface IOrderDao {
 	 */
 	public Map<String, String> getOrderInfo(Map<String,String> val,Map<String,String> query);
 	
+	
+	public List<BikeData> getBikeData(int start, int end, String sort,
+			String order, Map queryParams);
+	
+	public int getBikeDataCount(Map queryParams);
 }

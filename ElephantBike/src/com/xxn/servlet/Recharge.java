@@ -23,6 +23,14 @@ import com.xxn.service.WalletService;
 /**
  * Servlet implementation class Recharge
  */
+/**
+ * 充值测试工具，作废***********
+* @ClassName: Recharge 
+* @Description: TODO(这里用一句话描述这个类的作用) 
+* @author kunsen-lee
+* @date 2016年4月28日 上午10:42:37 
+*
+ */
 @WebServlet("/api/money/recharge")
 public class Recharge extends HttpServlet {
 	private static final long serialVersionUID = 1L;

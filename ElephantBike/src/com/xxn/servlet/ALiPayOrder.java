@@ -18,6 +18,9 @@ import com.alipay.api.internal.util.AlipaySignature;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.constants.ALiPayConfig;
 import com.xxn.constants.BikeConstants;
+import com.xxn.entity.Token;
+import com.xxn.iservice.ITokenService;
+import com.xxn.service.TokenService;
 
 /**
  * Servlet implementation class ALiPayOrder
@@ -55,83 +58,86 @@ public class ALiPayOrder extends HttpServlet {
 		Map<String, Object> result = new HashMap<>();
 
 		String phone = request.getParameter("phone");
-		// ServletContext application = this.getServletContext();
-		// String access_token = request.getParameter("access_token");
-		// String servertoken = (String) application.getAttribute("token" +
-		// phone);
-		// System.out.println("phone:"+phone);
-		// System.out.println("access_token:"+access_token);
-		// System.out.println("servertoken:"+servertoken);
-		// if (null != access_token && null != servertoken &&
-		// servertoken.equals(access_token)) {
-		String subject = request.getParameter("subject");
-		String body = request.getParameter("body");
-		String month = request.getParameter("month");
+		ServletContext application = this.getServletContext();
+		String access_token = request.getParameter("access_token");
+		String servertoken = (String) application.getAttribute("token" + phone);
+		if (null == servertoken) {
+			ITokenService iTokenService = new TokenService();
+			Token token = new Token(phone, "", "");
+			servertoken = iTokenService.getToken(token);
+		}
+		System.out.println("phone:" + phone);
+		System.out.println("access_token:" + access_token);
+		System.out.println("servertoken:" + servertoken);
+		if (null != access_token && servertoken.equals(access_token)) {
+			String subject = request.getParameter("subject");
+			String body = request.getParameter("body");
+			String month = request.getParameter("month");
 
-		String service = "mobile.securitypay.pay";
-		String partner = ALiPayConfig.Partner;
-		String _input_charset = "utf-8";
-		String notify_url = BikeConstants.APP_URL
-				+ "/ElephantBike/api/pay/alivip";
-		String out_trade_no = phone + "_" + System.currentTimeMillis() + "_"
-				+ month;
-		String payment_type = "1";
-		String seller_id = ALiPayConfig.Seller_ID;
+			String service = "mobile.securitypay.pay";
+			String partner = ALiPayConfig.Partner;
+			String _input_charset = "utf-8";
+			String notify_url = BikeConstants.APP_URL
+					+ "/ElephantBike/api/pay/alivip";
+			String out_trade_no = phone + "_" + System.currentTimeMillis()
+					+ "_" + month;
+			String payment_type = "1";
+			String seller_id = ALiPayConfig.Seller_ID;
 
-		float total_fee = 0.0f;
-		if (month.equals("1") || month.equals("3") || month.equals("6")
-				|| month.equals("12")) {
-			if (month.equals("1"))
-				total_fee = 3.00f;
-			if (month.equals("3"))
-				total_fee = 7.00f;
-			if (month.equals("6"))
-				total_fee = 11.00f;
-			if (month.equals("12"))
-				total_fee = 18.00f;
+			float total_fee = 0.0f;
+			if (month.equals("1") || month.equals("3") || month.equals("6")
+					|| month.equals("12")) {
+				if (month.equals("1"))
+					total_fee = 3.00f;
+				if (month.equals("3"))
+					total_fee = 7.00f;
+				if (month.equals("6"))
+					total_fee = 11.00f;
+				if (month.equals("12"))
+					total_fee = 18.00f;
 
-			Map<String, Object> obj = new HashMap<>();
-			obj.put("service", service);
-			obj.put("partner", partner);
-			obj.put("_input_charset", _input_charset);
-			obj.put("notify_url", notify_url);
-			obj.put("out_trade_no", out_trade_no);
-			obj.put("subject", subject);
-			obj.put("payment_type", payment_type);
-			obj.put("seller_id", seller_id);
-			obj.put("total_fee", total_fee);
-			obj.put("body", body);
-			String sign = "", signData = "";
+				Map<String, Object> obj = new HashMap<>();
+				obj.put("service", service);
+				obj.put("partner", partner);
+				obj.put("_input_charset", _input_charset);
+				obj.put("notify_url", notify_url);
+				obj.put("out_trade_no", out_trade_no);
+				obj.put("subject", subject);
+				obj.put("payment_type", payment_type);
+				obj.put("seller_id", seller_id);
+				obj.put("total_fee", total_fee);
+				obj.put("body", body);
+				String sign = "", signData = "";
 
-			for (Object object : obj.keySet()) {
-				String key = object.toString();
-				String value = obj.get(key).toString();
-				signData += String.format("%s=\"%s\"", key, value);
-				signData += "&";
+				for (Object object : obj.keySet()) {
+					String key = object.toString();
+					String value = obj.get(key).toString();
+					signData += String.format("%s=\"%s\"", key, value);
+					signData += "&";
+				}
+				signData = signData.substring(0, signData.length() - 1);
+
+				try {
+					sign = AlipaySignature.rsaSign(signData,
+							ALiPayConfig.privateKey, "utf-8");
+				} catch (AlipayApiException e) {
+					e.printStackTrace();
+				}
+				sign = URLEncoder.encode(sign, "utf-8");
+				String sign_type = "RSA";
+
+				result.put("param", signData);
+				result.put("sign", sign);
+				result.put("sign_type", sign_type);
+				result.put("out_trade_no", out_trade_no);
+			} else {
+				result.put(BikeConstants.STATUS, BikeConstants.FAIL);
+				result.put(BikeConstants.MESSAGE, "充值月数不在规定内");
 			}
-			signData = signData.substring(0, signData.length() - 1);
-
-			try {
-				sign = AlipaySignature.rsaSign(signData,
-						ALiPayConfig.privateKey, "utf-8");
-			} catch (AlipayApiException e) {
-				e.printStackTrace();
-			}
-			sign = URLEncoder.encode(sign, "utf-8");
-			String sign_type = "RSA";
-
-			result.put("param", signData);
-			result.put("sign", sign);
-			result.put("sign_type", sign_type);
-			result.put("out_trade_no", out_trade_no);
 		} else {
 			result.put(BikeConstants.STATUS, BikeConstants.FAIL);
-			result.put(BikeConstants.MESSAGE, "充值月数不在规定内");
+			result.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
 		}
-		// } else {
-		// result.put(BikeConstants.STATUS, BikeConstants.FAIL);
-		// result.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
-		// }
 
 		System.out.println(FastJsonTool.createJsonString(result));
 		out.print(FastJsonTool.createJsonString(result));

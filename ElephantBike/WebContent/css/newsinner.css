@@ -1,0 +1,6 @@
+@charset "utf-8";
+.clear{clear: both;}
+#middle{padding-bottom: 30px;height: auto;}
+#middletotal{height: auto;margin: 0 auto;margin-top: 10px;}
+#midinnertitle{width: 100%;font-size: 18px;font-family: "微软雅黑";font-weight: 800;color: #666666;text-align: center;}
+#midinnercontent{line-height:30px;margin-top: 8px;width: 100%;height: auto;margin-bottom: 30px;font-size: 13px;font-family:"微软雅黑";color: #666666; }

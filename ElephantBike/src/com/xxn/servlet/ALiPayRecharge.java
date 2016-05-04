@@ -18,6 +18,9 @@ import com.alipay.api.internal.util.AlipaySignature;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.constants.ALiPayConfig;
 import com.xxn.constants.BikeConstants;
+import com.xxn.entity.Token;
+import com.xxn.iservice.ITokenService;
+import com.xxn.service.TokenService;
 
 /**
  * Servlet implementation class ALiPayRecharge
@@ -57,13 +60,18 @@ public class ALiPayRecharge extends HttpServlet {
 		Map<String, Object> result = new HashMap<>();
 
 		String phone = request.getParameter("phone");
-//		ServletContext application = this.getServletContext();
-//		String access_token = request.getParameter("access_token");
-//		String servertoken = (String) application.getAttribute("token" + phone);
-//		System.out.println("phone:"+phone);
-//		System.out.println("access_token:"+access_token);
-//		System.out.println("servertoken:"+servertoken);
-//		if (null != access_token && null != servertoken && servertoken.equals(access_token)) {
+		ServletContext application = this.getServletContext();
+		String access_token = request.getParameter("access_token");
+		String servertoken = (String) application.getAttribute("token" + phone);
+		if (null == servertoken) {
+			ITokenService iTokenService = new TokenService();
+			Token token = new Token(phone, "", "");
+			servertoken = iTokenService.getToken(token);
+		}
+		System.out.println("phone:" + phone);
+		System.out.println("access_token:" + access_token);
+		System.out.println("servertoken:" + servertoken);
+		if (null != access_token && servertoken.equals(access_token)) {
 			String subject = request.getParameter("subject");
 			String body = request.getParameter("body");
 			// 充值金额
@@ -116,10 +124,10 @@ public class ALiPayRecharge extends HttpServlet {
 			result.put("sign", sign);
 			result.put("sign_type", sign_type);
 			result.put("out_trade_no", out_trade_no);
-		// } else {
-		// result.put(BikeConstants.STATUS, BikeConstants.FAIL);
-		// result.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
-		// }
+		} else {
+			result.put(BikeConstants.STATUS, BikeConstants.FAIL);
+			result.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
+		}
 		System.out.println(FastJsonTool.createJsonString(result));
 		out.print(FastJsonTool.createJsonString(result));
 		out.close();

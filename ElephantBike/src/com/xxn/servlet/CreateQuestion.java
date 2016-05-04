@@ -17,10 +17,13 @@ import com.xxn.butils.DateTool;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.constants.BikeConstants;
 import com.xxn.entity.Question;
+import com.xxn.entity.Token;
 import com.xxn.entity.User;
 import com.xxn.iservice.IQuestionService;
+import com.xxn.iservice.ITokenService;
 import com.xxn.iservice.IUserService;
 import com.xxn.service.QuestionService;
+import com.xxn.service.TokenService;
 import com.xxn.service.UserService;
 
 /**
@@ -63,13 +66,18 @@ public class CreateQuestion extends HttpServlet {
 		IUserService iUserService = new UserService();
 
 		String phone = request.getParameter("phone");
-//		ServletContext application = this.getServletContext();
-//		String access_token = request.getParameter("access_token");
-//		String servertoken = (String) application.getAttribute("token" + phone);
-//		System.out.println("phone:"+phone);
-//		System.out.println("access_token:"+access_token);
-//		System.out.println("servertoken:"+servertoken);
-//		if (null != access_token && null != servertoken && servertoken.equals(access_token)) {
+		ServletContext application = this.getServletContext();
+		String access_token = request.getParameter("access_token");
+		String servertoken = (String) application.getAttribute("token" + phone);
+		if (null == servertoken) {
+			ITokenService iTokenService = new TokenService();
+			Token token = new Token(phone, "", "");
+			servertoken = iTokenService.getToken(token);
+		}
+		System.out.println("phone:" + phone);
+		System.out.println("access_token:" + access_token);
+		System.out.println("servertoken:" + servertoken);
+		if (null != access_token && servertoken.equals(access_token)) {
 			String bikeid = request.getParameter("bikeid");
 			String type = request.getParameter("type");
 			String voiceurl = request.getParameter("voiceurl");
@@ -106,10 +114,10 @@ public class CreateQuestion extends HttpServlet {
 				map.put(BikeConstants.STATUS, BikeConstants.FAIL);
 				map.put(BikeConstants.MESSAGE, "参数不符合，请看api");
 			}
-		// } else {
-		// map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-		// map.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
-		// }
+		} else {
+			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+			map.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
+		}
 
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));

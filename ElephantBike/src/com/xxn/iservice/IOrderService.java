@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.xxn.entity.Order;
+import com.xxn.entity.BikeData;
 
 public interface IOrderService {
 	
@@ -21,4 +22,10 @@ public interface IOrderService {
 	 * @return
 	 */
 	public Map<String, String> getOrderInfo(Map<String, String> val,Map<String, String> query);
+	
+	
+	public List<BikeData> getBikeData(int start, int end, String sort,
+			String order, Map queryParams);
+	public int getBikeDataCount(Map queryParams);
+	
 }

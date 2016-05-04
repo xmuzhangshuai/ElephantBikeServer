@@ -150,7 +150,7 @@ public class UserLogin extends HttpServlet {
 				map.put("isvip", isvip);
 				map.put("college", college);
 				map.put("ismessage", messagecount);
-				map.put("access_token", token);
+				map.put("access_token", tokenString);
 			} else {
 				// 先判断验证码是否正确
 				String yzm = (String) application.getAttribute(phone);
@@ -207,7 +207,7 @@ public class UserLogin extends HttpServlet {
 						map.put("isvip", isvip);
 						map.put("college", college);
 						map.put("ismessage", messagecount);
-						map.put("access_token", token);
+						map.put("access_token", tokenString);
 
 					} else if (res == 0) {
 						// 该用户未注册
@@ -235,7 +235,7 @@ public class UserLogin extends HttpServlet {
 							map.put("isvip", isvip);
 							map.put("college", college);
 							map.put("ismessage", messagecount);
-							map.put("access_token", token);
+							map.put("access_token", tokenString);
 						} else {
 							System.out.println("注册写入失败");
 							map.put(BikeConstants.STATUS, BikeConstants.FAIL);

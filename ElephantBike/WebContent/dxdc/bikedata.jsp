@@ -39,8 +39,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     
 	function getData(queryParams){
 		$('#grid').datagrid({
-			url: '<%=basePath%>certiuser',
-			sortName: 'id',
+			url: '<%=basePath%>getbikedata',
+			sortName: 'bid',
 			sortOrder: 'asc',
 			queryParams: queryParams,
 			nowrap: true, //换行属性
@@ -52,15 +52,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    {field: 'ck', checkbox: true},          
 			]],
 			columns: [[
-				{field:'id',title:'单车ID',sortable:true,width:'5%',},
-				{field:'registerdate',title:'当日使用次数',sortable:true,width:'10%',},
-				{field:'phone',title:'历史使用次数',sortable:true,width:'6%',
+				{field:'bid',title:'单车ID',sortable:true,width:'5%',},
+				{field:'today',title:'当日使用次数',sortable:true,width:'10%',},
+				{field:'history',title:'历史使用次数',sortable:true,width:'6%',
 					//如果要实现编辑功能，需要添加下面的属性
 					//editor: { type: 'validatebox',  }
 				},
-				{field:'college',title:'当日收入',sortable:true,width:'6%',
+				{field:'money',title:'当日收入',sortable:true,width:'6%',
 				},
-				{field:'stunum',title:'最终编号',sortable:true,width:'10%',},
+				//{field:'orderid',title:'最终编号',sortable:true,width:'10%',},
 			]],
 			
 			pagination: true,

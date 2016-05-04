@@ -18,8 +18,11 @@ import com.alipay.api.internal.util.AlipaySignature;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.constants.ALiPayConfig;
 import com.xxn.constants.BikeConstants;
+import com.xxn.entity.Token;
 import com.xxn.iservice.IOrderService;
+import com.xxn.iservice.ITokenService;
 import com.xxn.service.OrderService;
+import com.xxn.service.TokenService;
 
 /**
  * Servlet implementation class ALiPayOrder
@@ -73,81 +76,84 @@ public class ALiPayPay extends HttpServlet {
 		// 由客户端获取到的支付费用
 		String fee = request.getParameter("totalfee");
 
-		// ServletContext application = this.getServletContext();
-		// String access_token = request.getParameter("access_token");
-		// String servertoken = (String) application.getAttribute("token" +
-		// phone);
-		// System.out.println("phone:"+phone);
-		// System.out.println("access_token:"+access_token);
-		// System.out.println("servertoken:"+servertoken);
-		// if (null != access_token && null != servertoken &&
-		// servertoken.equals(access_token)) {
-		String out_trade_no = "";
-		Map<String, String> val = new HashMap<>();
-		Map<String, String> query = new HashMap<>();
-		Map<String, String> resmap = new HashMap<>();
-		val.put("orderid", "");
-		val.put("cost", "");
-		query.put("phone", phone);
-		query.put("bikeid", bikeid);
-		query.put("paymode", null);
-		resmap = iOrderService.getOrderInfo(val, query);
-		if (resmap.containsKey("orderid"))
-			out_trade_no = resmap.get("orderid");
-		if (resmap.containsKey("cost"))
-			fee = resmap.get("cost");
-		System.out.println("out_trade_no:" + out_trade_no + "--phone:" + phone
-				+ "--bikeid:" + bikeid + "--fee:" + fee);
-
-		String service = "mobile.securitypay.pay";
-		String partner = ALiPayConfig.Partner;
-		String _input_charset = "utf-8";
-		String notify_url = BikeConstants.APP_URL
-				+ "/ElephantBike/api/pay/alipay";
-		String payment_type = "1";
-		String seller_id = ALiPayConfig.Seller_ID;
-
-		String total_fee = fee;
-
-		Map<String, Object> obj = new HashMap<>();
-		obj.put("service", service);
-		obj.put("partner", partner);
-		obj.put("_input_charset", _input_charset);
-		obj.put("notify_url", notify_url);
-		obj.put("out_trade_no", out_trade_no);
-		obj.put("subject", subject);
-		obj.put("payment_type", payment_type);
-		obj.put("seller_id", seller_id);
-		obj.put("total_fee", total_fee);
-		obj.put("body", body);
-		String sign = "", signData = "";
-
-		for (Object object : obj.keySet()) {
-			String key = object.toString();
-			String value = obj.get(key).toString();
-			signData += String.format("%s=\"%s\"", key, value);
-			signData += "&";
+		ServletContext application = this.getServletContext();
+		String access_token = request.getParameter("access_token");
+		String servertoken = (String) application.getAttribute("token" + phone);
+		if (null == servertoken) {
+			ITokenService iTokenService = new TokenService();
+			Token token = new Token(phone, "", "");
+			servertoken = iTokenService.getToken(token);
 		}
-		signData = signData.substring(0, signData.length() - 1);
+		System.out.println("phone:" + phone);
+		System.out.println("access_token:" + access_token);
+		System.out.println("servertoken:" + servertoken);
+		if (null != access_token && servertoken.equals(access_token)) {
+			String out_trade_no = "";
+			Map<String, String> val = new HashMap<>();
+			Map<String, String> query = new HashMap<>();
+			Map<String, String> resmap = new HashMap<>();
+			val.put("orderid", "");
+			val.put("cost", "");
+			query.put("phone", phone);
+			query.put("bikeid", bikeid);
+			query.put("paymode", null);
+			resmap = iOrderService.getOrderInfo(val, query);
+			if (resmap.containsKey("orderid"))
+				out_trade_no = resmap.get("orderid");
+			if (resmap.containsKey("cost"))
+				fee = resmap.get("cost");
+			System.out.println("out_trade_no:" + out_trade_no + "--phone:"
+					+ phone + "--bikeid:" + bikeid + "--fee:" + fee);
 
-		try {
-			sign = AlipaySignature.rsaSign(signData, ALiPayConfig.privateKey,
-					"utf-8");
-		} catch (AlipayApiException e) {
-			e.printStackTrace();
+			String service = "mobile.securitypay.pay";
+			String partner = ALiPayConfig.Partner;
+			String _input_charset = "utf-8";
+			String notify_url = BikeConstants.APP_URL
+					+ "/ElephantBike/api/pay/alipay";
+			String payment_type = "1";
+			String seller_id = ALiPayConfig.Seller_ID;
+
+			String total_fee = fee;
+
+			Map<String, Object> obj = new HashMap<>();
+			obj.put("service", service);
+			obj.put("partner", partner);
+			obj.put("_input_charset", _input_charset);
+			obj.put("notify_url", notify_url);
+			obj.put("out_trade_no", out_trade_no);
+			obj.put("subject", subject);
+			obj.put("payment_type", payment_type);
+			obj.put("seller_id", seller_id);
+			obj.put("total_fee", total_fee);
+			obj.put("body", body);
+			String sign = "", signData = "";
+
+			for (Object object : obj.keySet()) {
+				String key = object.toString();
+				String value = obj.get(key).toString();
+				signData += String.format("%s=\"%s\"", key, value);
+				signData += "&";
+			}
+			signData = signData.substring(0, signData.length() - 1);
+
+			try {
+				sign = AlipaySignature.rsaSign(signData,
+						ALiPayConfig.privateKey, "utf-8");
+			} catch (AlipayApiException e) {
+				e.printStackTrace();
+			}
+			sign = URLEncoder.encode(sign, "utf-8");
+			String sign_type = "RSA";
+
+			result.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
+			result.put("param", signData);
+			result.put("sign", sign);
+			result.put("sign_type", sign_type);
+			result.put("out_trade_no", out_trade_no);
+		} else {
+			result.put(BikeConstants.STATUS, BikeConstants.FAIL);
+			result.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
 		}
-		sign = URLEncoder.encode(sign, "utf-8");
-		String sign_type = "RSA";
-
-		result.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-		result.put("param", signData);
-		result.put("sign", sign);
-		result.put("sign_type", sign_type);
-		result.put("out_trade_no", out_trade_no);
-		// } else {
-		// result.put(BikeConstants.STATUS, BikeConstants.FAIL);
-		// result.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
-		// }
 
 		System.out.println(FastJsonTool.createJsonString(result));
 		out.print(FastJsonTool.createJsonString(result));

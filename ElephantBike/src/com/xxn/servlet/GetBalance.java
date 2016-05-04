@@ -61,33 +61,32 @@ public class GetBalance extends HttpServlet {
 
 		String phone = request.getParameter("phone");
 
-		// ServletContext application = this.getServletContext();
-		// String access_token = request.getParameter("access_token");
-		// String servertoken = (String) application.getAttribute("token" +
-		// phone);
-		// if(null == servertoken){
-		// ITokenService iTokenService = new TokenService();
-		// Token token = new Token(phone, "", "");
-		// servertoken = iTokenService.getToken(token);
-		// }
-		// System.out.println("phone:"+phone);
-		// System.out.println("access_token:"+access_token);
-		// System.out.println("servertoken:"+servertoken);
-		// if (null != access_token && servertoken.equals(access_token)) {
-		float balance = 0.0f;
-		if (NormalUtil.isStringLegal(phone)) {
-			Wallet wallet = new Wallet(phone);
-			balance = iWalletService.getBalance(wallet);
-			map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-			map.put("balance", String.valueOf(balance));
+		ServletContext application = this.getServletContext();
+		String access_token = request.getParameter("access_token");
+		String servertoken = (String) application.getAttribute("token" + phone);
+		if (null == servertoken) {
+			ITokenService iTokenService = new TokenService();
+			Token token = new Token(phone, "", "");
+			servertoken = iTokenService.getToken(token);
+		}
+		System.out.println("phone:" + phone);
+		System.out.println("access_token:" + access_token);
+		System.out.println("servertoken:" + servertoken);
+		if (null != access_token && servertoken.equals(access_token)) {
+			float balance = 0.0f;
+			if (NormalUtil.isStringLegal(phone)) {
+				Wallet wallet = new Wallet(phone);
+				balance = iWalletService.getBalance(wallet);
+				map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
+				map.put("balance", String.valueOf(balance));
+			} else {
+				map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+				map.put(BikeConstants.MESSAGE, "手机号码不合法");
+			}
 		} else {
 			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-			map.put(BikeConstants.MESSAGE, "手机号码不合法");
+			map.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
 		}
-		// } else {
-		// map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-		// map.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
-		// }
 
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));

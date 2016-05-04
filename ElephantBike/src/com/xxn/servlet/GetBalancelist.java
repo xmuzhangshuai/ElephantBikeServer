@@ -16,8 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.NormalUtil;
 import com.xxn.constants.BikeConstants;
+import com.xxn.entity.Token;
 import com.xxn.entity.Wallet;
+import com.xxn.iservice.ITokenService;
 import com.xxn.iservice.IWalletService;
+import com.xxn.service.TokenService;
 import com.xxn.service.WalletService;
 
 /**
@@ -60,34 +63,37 @@ public class GetBalancelist extends HttpServlet {
 		int count = 0;
 		String phone = request.getParameter("phone");
 
-		// ServletContext application = this.getServletContext();
-		// String access_token = request.getParameter("access_token");
-		// String servertoken = (String) application.getAttribute("token" +
-		// phone);
-		// System.out.println("phone:"+phone);
-		// System.out.println("access_token:"+access_token);
-		// System.out.println("servertoken:"+servertoken);
-		// if (null != access_token && null != servertoken &&
-		// servertoken.equals(access_token)) {
-		if (NormalUtil.isStringLegal(phone)) {
-			Wallet wallet = new Wallet(phone, 0.0f, "");
-			List<Map<String, Object>> list = iWalletService.getBalancelist(
-					wallet, count);
-			if (list.size() > 0) {
-				map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-				map.put("data", list);
+		ServletContext application = this.getServletContext();
+		String access_token = request.getParameter("access_token");
+		String servertoken = (String) application.getAttribute("token" + phone);
+		if (null == servertoken) {
+			ITokenService iTokenService = new TokenService();
+			Token token = new Token(phone, "", "");
+			servertoken = iTokenService.getToken(token);
+		}
+		System.out.println("phone:" + phone);
+		System.out.println("access_token:" + access_token);
+		System.out.println("servertoken:" + servertoken);
+		if (null != access_token && servertoken.equals(access_token)) {
+			if (NormalUtil.isStringLegal(phone)) {
+				Wallet wallet = new Wallet(phone, 0.0f, "");
+				List<Map<String, Object>> list = iWalletService.getBalancelist(
+						wallet, count);
+				if (list.size() > 0) {
+					map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
+					map.put("data", list);
+				} else {
+					map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+					map.put(BikeConstants.MESSAGE, "没有更多数据了...");
+				}
 			} else {
 				map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-				map.put(BikeConstants.MESSAGE, "没有更多数据了...");
+				map.put(BikeConstants.MESSAGE, "手机号码不合法");
 			}
 		} else {
 			map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-			map.put(BikeConstants.MESSAGE, "手机号码不合法");
+			map.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
 		}
-		// } else {
-		// map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-		// map.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);
-		// }
 
 		System.out.println(FastJsonTool.createJsonString(map));
 		out.print(FastJsonTool.createJsonString(map));
