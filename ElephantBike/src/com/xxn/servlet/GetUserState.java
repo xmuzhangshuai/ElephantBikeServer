@@ -3,7 +3,6 @@ package com.xxn.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -16,12 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.NormalUtil;
 import com.xxn.constants.BikeConstants;
-import com.xxn.entity.Message;
 import com.xxn.entity.Token;
-import com.xxn.iservice.IMessageService;
 import com.xxn.iservice.ITokenService;
 import com.xxn.iservice.IUserService;
-import com.xxn.service.MessageService;
 import com.xxn.service.TokenService;
 import com.xxn.service.UserService;
 

@@ -226,7 +226,6 @@ public class UserLogin extends HttpServlet {
 							} else {
 								iUserService.updateNewUser(joindate);
 							}
-							System.out.println("注册写入成功--钱包创建成功");
 							map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 							map.put("isfrozen", isfrozen);
 							map.put("isfinish", isfinish);

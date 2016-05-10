@@ -21,7 +21,7 @@ import com.xxn.butils.HttpClientUtil;
 import com.xxn.butils.XMLUtil;
 import com.xxn.constants.BikeConstants;
 import com.xxn.entity.PayReqData;
-import com.xxn.entity.PayResData;
+import com.xxn.entity.PayResData_WAP;
 import com.xxn.entity.Token;
 import com.xxn.iservice.ITokenService;
 import com.xxn.service.TokenService;
@@ -29,14 +29,14 @@ import com.xxn.service.TokenService;
 /**
  * Servlet implementation class WXRecharge 请求生成支付订单--会员充值功能
  */
-@WebServlet("/api/pay/wxpayvip")
-public class WXPayVip extends HttpServlet {
+@WebServlet("/api/pay/wxpayvip_wap")
+public class WXPayVip_WAP extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public WXPayVip() {
+	public WXPayVip_WAP() {
 		super();
 	}
 
@@ -59,7 +59,7 @@ public class WXPayVip extends HttpServlet {
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
-		System.out.println("/api/pay/wxpayvip");
+		System.out.println("/api/pay/wxpayvip_wap");
 		Map<String, Object> resultMap = new HashMap<>();
 
 		String phone = request.getParameter("phone");
@@ -73,7 +73,7 @@ public class WXPayVip extends HttpServlet {
 		}
 		if (null != access_token && servertoken.equals(access_token)) {
 			String month = request.getParameter("month");
-			System.out.println("month" + month);
+			String openid = request.getParameter("openid");
 			int totalFee = 0;
 			if (month.equals("1") || month.equals("3") || month.equals("6")
 					|| month.equals("12")) {
@@ -88,10 +88,10 @@ public class WXPayVip extends HttpServlet {
 
 				String url = BikeConstants.WX_PAY_ORDER;
 				String xmlString = "";
-				String key = BikeConstants.WX_KEY;
-				String appID = BikeConstants.WX_APP_ID;
-				String mchID = BikeConstants.WX_MCH_ID;
-				String certPassword = BikeConstants.WX_CERTPASSWORD;
+				String key = BikeConstants.WX_KEY_WAP;
+				String appID = BikeConstants.WX_APP_ID_WAP;
+				String mchID = BikeConstants.WX_MCH_ID_WAP;
+				String certPassword = "";
 
 				String orderid = phone + "_" + DateTool.date2String(new Date())
 						+ "_" + month;
@@ -102,14 +102,14 @@ public class WXPayVip extends HttpServlet {
 				String spBillCreateIP = "192.168.0.103";
 				String notify_url = BikeConstants.APP_URL
 						+ "/ElephantBike/api/pay/vipresponse";
-				String trade_type = "APP";
+				String trade_type = "JSAPI";
 				String sdbMchID = "";
 				String certLocalPath = "";
 
 				WXPay.initSDKConfiguration(key, appID, mchID, sdbMchID,
 						certLocalPath, certPassword);
 				PayReqData data = new PayReqData(notify_url, body, outTradeNo,
-						totalFee, spBillCreateIP, trade_type);
+						totalFee, spBillCreateIP, trade_type,openid);
 
 				Map<String, Object> map = data.toMap();
 				xmlString = XMLUtil.maptoXml(map);
@@ -126,18 +126,15 @@ public class WXPayVip extends HttpServlet {
 					}
 					String resSign = Signature.getSign(res);
 					if (resSign.equals(signRes)) {
-						System.out.println("sign验证通过");
 						// 返回客户端需要的参数值
 						String prepayid = (String) res.get("prepay_id");
-						PayResData resData = new PayResData(prepayid);
+						PayResData_WAP resData = new PayResData_WAP(prepayid);
 						resultMap = resData.toMap();
 						if (!resultMap.isEmpty()) {
 							resultMap.put("out_trade_no", outTradeNo);
-							resultMap.put(BikeConstants.STATUS,
-									BikeConstants.SUCCESS);
+							resultMap.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
 						} else {
-							resultMap.put(BikeConstants.STATUS,
-									BikeConstants.FAIL);
+							resultMap.put(BikeConstants.STATUS, BikeConstants.FAIL);
 							resultMap.put(BikeConstants.MESSAGE, "返回参数为空");
 						}
 					} else {

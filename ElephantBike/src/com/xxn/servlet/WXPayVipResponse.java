@@ -69,10 +69,8 @@ public class WXPayVipResponse extends HttpServlet {
 			Map<String, Object> xmlMap = XMLUtil.xmltoMap(notityXml);
 			if(xmlMap.get("return_code").equals("SUCCESS")){
 				String orderid = xmlMap.get("out_trade_no").toString();
-				String total_fee = xmlMap.get("total_fee").toString();
 				String phone = orderid.split("_")[0];
 				String month = orderid.split("_")[2];
-				System.out.println(orderid+"--"+phone+"--"+total_fee);
 				//两步操作，写入钱包余额和明细表
 				int m = Integer.parseInt(month);
     			Map<String, String> val = new HashMap<>();
@@ -114,9 +112,10 @@ public class WXPayVipResponse extends HttpServlet {
 					out.write(res);
 				}
 				else{
-					System.out.println("会员开通写入失败");
+					String res = "<xml><return_code><![CDATA[FAIL]]></return_code>"
+							+ "<return_msg><![CDATA[FAIL]]></return_msg></xml>";
+					out.write(res);
 				}
-				System.out.println(notityXml);
 			}
 		}
 	}

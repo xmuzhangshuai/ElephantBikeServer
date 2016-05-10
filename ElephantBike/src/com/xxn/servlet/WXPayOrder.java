@@ -73,9 +73,6 @@ public class WXPayOrder extends HttpServlet {
 			Token token = new Token(phone, "", "");
 			servertoken = iTokenService.getToken(token);
 		}
-		System.out.println("phone:" + phone);
-		System.out.println("access_token:" + access_token);
-		System.out.println("servertoken:" + servertoken);
 		if (null != access_token && servertoken.equals(access_token)) {
 			String orderid = "", notify_url = "", fee = "";
 			int totalFee = 0;
@@ -90,68 +87,75 @@ public class WXPayOrder extends HttpServlet {
 			query.put("phone", phone);
 			query.put("bikeid", bikeid);
 			query.put("paymode", null);
+			query.put("finishtime", "not null");
 			resmap = iOrderService.getOrderInfo(val, query);
 			if (resmap.containsKey("orderid")) {
 				orderid = resmap.get("orderid");
 				fee = resmap.get("cost");
 				totalFee = (int) (Float.parseFloat(fee) * 100);
-			}
-			System.out.println("orderid:" + orderid + "--phone:" + phone
-					+ "--bikeid:" + bikeid + "--fee:" + totalFee);
-			String url = BikeConstants.WX_PAY_ORDER;
-			String xmlString = "";
-			String key = BikeConstants.WX_KEY;
-			String appID = BikeConstants.WX_APP_ID;
-			String mchID = BikeConstants.WX_MCH_ID;
-			String certPassword = BikeConstants.WX_CERTPASSWORD;
-			String body = "elephantbike order";
-			String outTradeNo = orderid;
-			String spBillCreateIP = "192.168.0.123";
-			String trade_type = "APP";
-			String sdbMchID = "";
-			String certLocalPath = "";
+				System.out.println("orderid:" + orderid + "--phone:" + phone
+						+ "--bikeid:" + bikeid + "--fee:" + totalFee);
+				String url = BikeConstants.WX_PAY_ORDER;
+				String xmlString = "";
+				String key = BikeConstants.WX_KEY;
+				String appID = BikeConstants.WX_APP_ID;
+				String mchID = BikeConstants.WX_MCH_ID;
+				String certPassword = BikeConstants.WX_CERTPASSWORD;
+				String body = "elephantbike order";
+				String outTradeNo = orderid;
+				String spBillCreateIP = "192.168.0.123";
+				String trade_type = "APP";
+				String sdbMchID = "";
+				String certLocalPath = "";
 
-			WXPay.initSDKConfiguration(key, appID, mchID, sdbMchID,
-					certLocalPath, certPassword);
-			PayReqData data = new PayReqData(notify_url, body, outTradeNo,
-					totalFee, spBillCreateIP, trade_type);
+				WXPay.initSDKConfiguration(key, appID, mchID, sdbMchID,
+						certLocalPath, certPassword);
+				PayReqData data = new PayReqData(notify_url, body, outTradeNo,
+						totalFee, spBillCreateIP, trade_type);
 
-			Map<String, Object> map = data.toMap();
-			xmlString = XMLUtil.maptoXml(map);
-			String result = new HttpClientUtil().doPost(url, xmlString);
-			// 拿到返回结果
-			Map<String, Object> res = XMLUtil.xmltoMap(result);
-			String signRes = "";
-			if (!res.isEmpty()) {
-				for (String obj : res.keySet()) {
-					if (obj.equals("sign")) {
-						signRes = String.valueOf(res.get(obj));
-						res.put(obj, "");
+				Map<String, Object> map = data.toMap();
+				xmlString = XMLUtil.maptoXml(map);
+				String result = new HttpClientUtil().doPost(url, xmlString);
+				// 拿到返回结果
+				Map<String, Object> res = XMLUtil.xmltoMap(result);
+				String signRes = "";
+				if (!res.isEmpty()) {
+					for (String obj : res.keySet()) {
+						if (obj.equals("sign")) {
+							signRes = String.valueOf(res.get(obj));
+							res.put(obj, "");
+						}
 					}
-				}
-				String resSign = Signature.getSign(res);
-				if (resSign.equals(signRes)) {
-					System.out.println("sign验证通过");
-					// 返回客户端需要的参数值
-					String prepayid = (String) res.get("prepay_id");
-					PayResData resData = new PayResData(prepayid);
-					resultMap = resData.toMap();
-					if (!resultMap.isEmpty()) {
-						resultMap.put("out_trade_no", outTradeNo);
-						resultMap.put(BikeConstants.STATUS,
-								BikeConstants.SUCCESS);
+					String resSign = Signature.getSign(res);
+					if (resSign.equals(signRes)) {
+						System.out.println("sign验证通过");
+						// 返回客户端需要的参数值
+						String prepayid = (String) res.get("prepay_id");
+						PayResData resData = new PayResData(prepayid);
+						resultMap = resData.toMap();
+						if (!resultMap.isEmpty()) {
+							resultMap.put("out_trade_no", outTradeNo);
+							resultMap.put(BikeConstants.STATUS,
+									BikeConstants.SUCCESS);
+						} else {
+							resultMap.put(BikeConstants.STATUS,
+									BikeConstants.FAIL);
+							resultMap.put(BikeConstants.MESSAGE, "返回参数为空");
+						}
 					} else {
 						resultMap.put(BikeConstants.STATUS, BikeConstants.FAIL);
-						resultMap.put(BikeConstants.MESSAGE, "返回参数为空");
+						resultMap.put(BikeConstants.MESSAGE, "sign验证不通过");
 					}
 				} else {
 					resultMap.put(BikeConstants.STATUS, BikeConstants.FAIL);
-					resultMap.put(BikeConstants.MESSAGE, "sign验证不通过");
+					resultMap.put(BikeConstants.MESSAGE, res + "\n" + result);
 				}
-			} else {
-				resultMap.put(BikeConstants.STATUS, BikeConstants.FAIL);
-				resultMap.put(BikeConstants.MESSAGE, res + "\n" + result);
 			}
+			else{
+				resultMap.put(BikeConstants.STATUS, BikeConstants.FAIL);
+				resultMap.put(BikeConstants.MESSAGE, "查找不到该订单");
+			}
+
 		} else {
 			resultMap.put(BikeConstants.STATUS, BikeConstants.FAIL);
 			resultMap.put(BikeConstants.MESSAGE, BikeConstants.INVALID_TOKEN);

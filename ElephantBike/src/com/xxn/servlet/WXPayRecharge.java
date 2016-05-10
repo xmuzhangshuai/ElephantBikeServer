@@ -105,6 +105,7 @@ public class WXPayRecharge extends HttpServlet {
 
 			Map<String, Object> map = data.toMap();
 			xmlString = XMLUtil.maptoXml(map);
+			System.out.println(xmlString);
 			String result = new HttpClientUtil().doPost(url, xmlString);
 			// System.out.println(result);
 			// 拿到返回结果

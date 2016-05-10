@@ -23,10 +23,17 @@ public class BikeConstants {
 	 */
 	public static final String WX_PAY_ORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 	public static final String WX_PAY_ORDER_QUERY = "https://api.mch.weixin.qq.com/pay/orderquery";
-	public static final String WX_KEY = "13190819011daxiangdanche12345678";
+//	public static final String WX_KEY = "13190819011daxiangdanche12345678";
+	//----------------------APP-----------------------------------
+	public static final String WX_KEY = "6xznlcznookpazit3qa3iy7kmj587tnt";
 	public static final String WX_APP_ID = "wx4a480f3f5a6c4c6c";
 	public static final String WX_MCH_ID = "1319081901";
 	public static final String WX_CERTPASSWORD = "1319081901";
+	//----------------------WAP----------------------------------
+	public static final String WX_KEY_WAP = "6xznlcznookpazit3qa3iy7kmj587tnt";
+	public static final String WX_APP_ID_WAP = "wx27681300b188a7b1";
+	public static final String WX_MCH_ID_WAP = "1320443601";
+	
 	
 	
 	/**

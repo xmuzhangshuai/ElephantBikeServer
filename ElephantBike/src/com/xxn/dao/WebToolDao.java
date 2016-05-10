@@ -38,7 +38,7 @@ public class WebToolDao implements IWebToolDao{
 		PreparedStatement pstmt = null;
 		String[] sqlArray ={"delete from b_bike","delete from m_message",
 				"delete from o_order","delete from q_question","delete from u_users",
-				"delete from w_wallet","delete from wl_walletlist"};
+				"delete from w_wallet","delete from wl_walletlist","delete from t_token"};
 		for (String sql : sqlArray) {
 			try {
 				pstmt = connection.prepareStatement(sql);
