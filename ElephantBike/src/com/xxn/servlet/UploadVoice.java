@@ -53,7 +53,11 @@ public class UploadVoice extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/html;Charset=UTF-8");
+//		response.setContentType("text/html;Charset=UTF-8");
+		response.addHeader("Access-Control-Allow-Headers", 
+				"Origin, No-Cache, X-Requested-With, If-Modified-Since, "
+				+ "Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With");  
+		
 		PrintWriter out = response.getWriter();
 		System.out.println("/api/file/uploadvoice");
 		Map<String, String> map = new HashMap<>();

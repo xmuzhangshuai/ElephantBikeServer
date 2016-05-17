@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.xxn.butils.DateTool;
 import com.xxn.butils.JdbcUtils_DBCP;
@@ -143,6 +144,70 @@ public class BikeDao implements IBikeDao{
 			JdbcUtils_DBCP.release(connection, pstmt, null);
 		}
 		return result;
+	}
+
+	@Override
+	public int getObjectCount(Map queryParams) {
+		int count = 0;
+		String sql = "select count(*) from b_bike where 1 = 1";
+		for (Object object : queryParams.keySet()) {
+			String key = object.toString();
+			String value = queryParams.get(key).toString();
+			sql += String.format(" and  %s like '%%%s%%' ", key, value);
+		}
+		Connection connection = JdbcUtils_DBCP.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+		try {
+			pstmt = connection.prepareStatement(sql);
+			resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				count = resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, resultSet);
+		}
+		return count;
+	}
+
+	@Override
+	public List<Object> findForPage(int start, int end, String sort,
+			String order, Map queryParams) {
+		String sql = " select tmp.* from ( "
+				+ " select * from b_bike where 1=1 ";
+		for (Object object : queryParams.keySet()) {
+			String key = object.toString();
+			String value = queryParams.get(key).toString();
+			sql += String.format(" and  %s like '%%%s%%' ", key, value);
+		}
+		sql += " order by " + sort + " " + order + " ) tmp limit " + start
+				+ " ," + end;
+
+		Connection connection = JdbcUtils_DBCP.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+		List<Object> resultList = new ArrayList<Object>();
+		try {
+			pstmt = connection.prepareStatement(sql);
+			resultSet = pstmt.executeQuery();
+			while (resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String bikeid = resultSet.getString("bikeid");
+				int state = resultSet.getInt("state");
+				String college = resultSet.getString("college");
+				String usedtime = resultSet.getString("usedtime");
+				String lastusedtime = resultSet.getString("lastusedtime");
+				Bike bike = new Bike(id, bikeid, state, college, usedtime, lastusedtime);
+				resultList.add(bike);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JdbcUtils_DBCP.release(connection, pstmt, resultSet);
+		}
+		return resultList;
 	}
 
 }

@@ -25,7 +25,7 @@
     
     <div class="welinfo">
     <span><img src="../backimg/sun.png" alt="天气" /></span>
-    <b>早上好，欢迎使用RSLY后台管理系统</b>
+    <b>早上好，欢迎使用大象单车后台管理系统</b>
     <a href="#">修改密码</a>
     </div>
     

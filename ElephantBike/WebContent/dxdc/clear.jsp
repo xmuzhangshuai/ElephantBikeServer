@@ -14,25 +14,32 @@
 <link href="<%=basePath%>css/style.css" rel="stylesheet" type="text/css" />
 <link href="<%=basePath%>css/admin.css" rel="stylesheet" type="text/css" />
 
-<script type="text/javascript" src="<%=basePath%>js/jquery.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="<%=basePath%>/css/easyUI/themes/gray/easyui.css">
+<link rel="stylesheet" type="text/css" href="<%=basePath%>/css/easyUI/themes/icon.css">
+<script type="text/javascript" src="<%=basePath%>/js/easyUI/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>/js/easyUI/jquery.easyui.min.js"></script>
 
 <script type="text/javascript">
 	function clear(){
-		$.post("<%=basePath%>cleardata",
-				function (data, textStatus){
-				if(data > 0){
-					alert('已经清空');
-				} 
-				else{
-					alert('清空失败，请重试');
+		$.messager.confirm("操作警告", "清除数据后将不可修改！！", function(dd){
+			if(dd){
+				$.post("<%=basePath%>cleardata",
+						function (data, textStatus){
+						if(data > 0){
+							alert('已经清空');
+						} 
+						else{
+							alert('清空失败，请重试');
+						}
+				}, "text");
 				}
-		}, "text");
+			});
+	
 	}
 </script>
 
 </head>
-
-<body onload="clear()">
-
+	<body onload="clear()">
 </body>
 </html>

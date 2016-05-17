@@ -1,5 +1,8 @@
 package com.xxn.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.xxn.dao.BikeDao;
 import com.xxn.entity.Bike;
 import com.xxn.idao.IBikeDao;
@@ -42,6 +45,19 @@ public class BikeService implements IBikeService{
 	public int updateBikeState(Bike bike) {
 		IBikeDao iBikeDao = new BikeDao();
 		return iBikeDao.updateBikeState(bike);
+	}
+
+	@Override
+	public int getObjectCount(Map queryParams) {
+		IBikeDao iBikeDao = new BikeDao();
+		return iBikeDao.getObjectCount(queryParams);
+	}
+
+	@Override
+	public List<Object> findForPage(int start, int end, String sort,
+			String order, Map queryParams) {
+		IBikeDao iBikeDao = new BikeDao();
+		return iBikeDao.findForPage(start, end, sort, order, queryParams);
 	}
 	
 

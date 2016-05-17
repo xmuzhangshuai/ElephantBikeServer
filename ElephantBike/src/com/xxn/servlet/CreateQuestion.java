@@ -83,6 +83,9 @@ public class CreateQuestion extends HttpServlet {
 			String voiceurl = request.getParameter("voiceurl");
 			String ismissing = request.getParameter("ismissing");
 			String needfrozen = request.getParameter("needfrozen");
+			System.out.println(phone+"--bikeid:"+bikeid+"--type:"+type
+					+"--voiceurl:"+voiceurl+"--ismissing:"+ismissing
+					+"--needfrozen:"+needfrozen);
 			Question question = null;
 			if (null != needfrozen) {
 				if (null == ismissing) {

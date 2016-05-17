@@ -63,8 +63,6 @@ public class BAddBike extends HttpServlet {
 		if (NormalUtil.isStringLegal(fid) && NormalUtil.isStringLegal(lid)
 				&& NormalUtil.isStringLegal(name)) {
 			String bikeid = fid + lid;
-			System.out.println(fid + lid);
-			System.out.println(bikeid);
 			String usedtime = DateTool.dateToString(new Date());
 			Bike bike = new Bike(bikeid, 1, name, usedtime);
 			int result = iBikeService.addBike(bike);
@@ -74,6 +72,7 @@ public class BAddBike extends HttpServlet {
 				// TODO 加入新增自行车表
 			} else {
 				res = "添加自行车失败，已经存在该单车编号";
+				out.print(res);
 			}
 		}
 		System.out.println(res);

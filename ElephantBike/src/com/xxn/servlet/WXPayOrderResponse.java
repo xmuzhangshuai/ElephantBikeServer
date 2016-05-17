@@ -15,9 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.xxn.butils.DateTool;
 import com.xxn.butils.XMLUtil;
+import com.xxn.entity.NewOrder;
 import com.xxn.entity.Wallet;
+import com.xxn.iservice.INewOrderService;
 import com.xxn.iservice.IOrderService;
 import com.xxn.iservice.IWalletService;
+import com.xxn.service.NewOrderService;
 import com.xxn.service.OrderService;
 import com.xxn.service.WalletService;
 
@@ -94,12 +97,23 @@ public class WXPayOrderResponse extends HttpServlet {
 //						DateTool.dateToString(new Date()));
 				
 				if(iOrderService.updateOrder(val, query) > 0){
+					
 					String res = "<xml><return_code><![CDATA[SUCCESS]]></return_code>"
 							+ "<return_msg><![CDATA[OK]]></return_msg></xml>";
 					out.write(res);
 //					iWalletService.addWalletList(wallet2);
+					//写入新增订单表
+					INewOrderService iNewOrderService = new NewOrderService();
+					String date = DateTool.dateToStringYMD(new Date());
+					NewOrder newOrder = new NewOrder(date, 1, Float.parseFloat(total_fee)/100);
+					if(iNewOrderService.getNewOrderCount(date) == 1){
+						iNewOrderService.updateNewOrder(newOrder);
+					}
+					else{
+						iNewOrderService.addNewOrder(newOrder);
+					}
 				}
-				System.out.println(notityXml);
+//				System.out.println(notityXml);
 			}
 		}
 	}

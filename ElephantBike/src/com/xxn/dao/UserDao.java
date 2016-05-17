@@ -249,7 +249,6 @@ public class UserDao implements IUserDao {
 			else
 				sql += String.format(" and  %s like '%%%s%%' ", key, value);
 		}
-		System.out.println(sql);
 		Connection connection = JdbcUtils_DBCP.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;

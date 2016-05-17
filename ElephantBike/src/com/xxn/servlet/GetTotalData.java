@@ -14,21 +14,21 @@ import javax.servlet.http.HttpServletResponse;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.GridDataModel;
 import com.xxn.butils.NormalUtil;
-import com.xxn.entity.User;
-import com.xxn.iservice.IUserService;
-import com.xxn.service.UserService;
+import com.xxn.entity.TotalData;
+import com.xxn.iservice.INewOrderService;
+import com.xxn.service.NewOrderService;
 
 /**
- * Servlet implementation class BGetCertiUser
+ * Servlet implementation class GetTotalData
  */
-@WebServlet("/certiuser")
-public class BGetCertiUser extends HttpServlet {
+@WebServlet("/gettotaldata")
+public class GetTotalData extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BGetCertiUser() {
+    public GetTotalData() {
         super();
     }
 
@@ -48,8 +48,8 @@ public class BGetCertiUser extends HttpServlet {
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		Map<String, String> queryParams = new HashMap<String, String>();
-		IUserService iUserService = new UserService();
-		GridDataModel<User> model = new GridDataModel<User>();
+		INewOrderService iNewOrderService = new NewOrderService();
+		GridDataModel<TotalData> model = new GridDataModel<TotalData>();
 		// pageStr页码
 		String pageStr = request.getParameter("page");
 		if (null == pageStr)
@@ -61,7 +61,7 @@ public class BGetCertiUser extends HttpServlet {
 		// sortStr排序的字段
 		String sortStr = request.getParameter("sort");
 		if (null == sortStr)
-			sortStr = "id";
+			sortStr = "date";
 		// orderStr排序的规则
 		String orderStr = request.getParameter("order");
 		if (null == orderStr)
@@ -72,24 +72,20 @@ public class BGetCertiUser extends HttpServlet {
 		if(NormalUtil.isStringLegal(type)){
 			queryParams.put(type, keyword);
 		}
-		//用户认证状态
-		String userstate = request.getParameter("userstate");
-		if(null!=userstate){
-			queryParams.put("userstate", userstate);
-		}
-		int total = iUserService.getUserCount(queryParams);
+
+		int total = iNewOrderService.getTotalDataCount(queryParams);
 		int page = Integer.parseInt(pageStr);
 		int rows = Integer.parseInt(rowsStr);
 		int start = (page - 1) * rows;
 		int end = rows;
 		end = end > total ? total : end;
-		
 		model.setTotal(total);
-		model.setRows(iUserService.findForPage(start, end, sortStr, orderStr,
-				queryParams));
+		model.setRows(iNewOrderService.findForPage(start, end, sortStr, orderStr, queryParams));
 		System.out.println(FastJsonTool.createJsonString(model));
 		out.print(FastJsonTool.createJsonString(model));
 		out.close();
+		
+		
 	}
 
 }

@@ -15,21 +15,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script type="text/javascript">
 $(function(){	
 	//顶部导航切换
-	$(".nav li a").click(function(){
-		$(".nav li a.selected").removeClass("selected")
-		$(this).addClass("selected");
-	});
 	//$(".logout").click(function(){
+//		<%
+//			request.getSession().setAttribute("username", "");
+//		%>
 //	});
 	
-})	
+});
 </script>
 </head>
 <body>
     <div class="topbg">
     <div class="topleft">
     <a href="main.jsp" target="_parent">
-    <h2>瑞士麟瑜后台管理</h2>
+    <h2></h2>
     </a>
     </div>
         
@@ -46,10 +45,10 @@ $(function(){
     <ul>
     <li><span><img src="../backimg/help.png" title="帮助"  class="helpimg"/></span><a href="#">帮助</a></li>
     <li><a href="#">关于</a></li>
-    <li><a class = "logout" href="<%=basePath%>/admin.html" target="_parent">退出</a></li>
+    <li><a class = "logout" href="../LogoutServlet" target="_parent">退出</a></li>
     </ul>
     <div class="user">
-    <span></span>
+    <span>${user.account}</span>
     <i>消息</i>
     <b>XX</b>
     </div>    

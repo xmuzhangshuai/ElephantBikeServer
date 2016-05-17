@@ -14,21 +14,24 @@ import javax.servlet.http.HttpServletResponse;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.GridDataModel;
 import com.xxn.butils.NormalUtil;
+import com.xxn.entity.Bike;
 import com.xxn.entity.User;
+import com.xxn.iservice.IBikeService;
 import com.xxn.iservice.IUserService;
+import com.xxn.service.BikeService;
 import com.xxn.service.UserService;
 
 /**
  * Servlet implementation class BGetCertiUser
  */
-@WebServlet("/certiuser")
-public class BGetCertiUser extends HttpServlet {
+@WebServlet("/allbike")
+public class BGetAllBike extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BGetCertiUser() {
+    public BGetAllBike() {
         super();
     }
 
@@ -48,8 +51,8 @@ public class BGetCertiUser extends HttpServlet {
 		response.setContentType("text/html;Charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		Map<String, String> queryParams = new HashMap<String, String>();
-		IUserService iUserService = new UserService();
-		GridDataModel<User> model = new GridDataModel<User>();
+		IBikeService iBikeService = new BikeService();
+		GridDataModel<Object> model = new GridDataModel<Object>();
 		// pageStr页码
 		String pageStr = request.getParameter("page");
 		if (null == pageStr)
@@ -67,17 +70,8 @@ public class BGetCertiUser extends HttpServlet {
 		if (null == orderStr)
 			orderStr = "desc";
 		// 相关的条件限制
-		String keyword=request.getParameter("keyword");
-		String type=request.getParameter("search_type");
-		if(NormalUtil.isStringLegal(type)){
-			queryParams.put(type, keyword);
-		}
-		//用户认证状态
-		String userstate = request.getParameter("userstate");
-		if(null!=userstate){
-			queryParams.put("userstate", userstate);
-		}
-		int total = iUserService.getUserCount(queryParams);
+		
+		int total = iBikeService.getObjectCount(queryParams);
 		int page = Integer.parseInt(pageStr);
 		int rows = Integer.parseInt(rowsStr);
 		int start = (page - 1) * rows;
@@ -85,7 +79,7 @@ public class BGetCertiUser extends HttpServlet {
 		end = end > total ? total : end;
 		
 		model.setTotal(total);
-		model.setRows(iUserService.findForPage(start, end, sortStr, orderStr,
+		model.setRows(iBikeService.findForPage(start, end, sortStr, orderStr,
 				queryParams));
 		System.out.println(FastJsonTool.createJsonString(model));
 		out.print(FastJsonTool.createJsonString(model));

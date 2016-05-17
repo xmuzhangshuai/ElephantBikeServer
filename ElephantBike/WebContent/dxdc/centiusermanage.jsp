@@ -70,9 +70,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				},
 				{field:'vipdate',title:'会员有效期',sortable:true,width:'10%',
 				},
-				{field:'balance',title:'账户余额',sortable:true,width:'10%',
+				{field:'balance',title:'账户余额',width:'10%',
 				},
-				{field:'ma',title:'操作',sortable:true,width:'10%',
+				{field:'ma',title:'操作',width:'10%',
 					formatter:function(value, row){//使用formatter格式化刷子
 						return "<a href='javascript:frozen("+row.phone+")'>冻结</a>";
 					}

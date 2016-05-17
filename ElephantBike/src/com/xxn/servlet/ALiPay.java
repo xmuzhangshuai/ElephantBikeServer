@@ -15,9 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.xxn.butils.DateTool;
 import com.xxn.butils.NormalUtil;
+import com.xxn.entity.NewOrder;
 import com.xxn.entity.Wallet;
+import com.xxn.iservice.INewOrderService;
 import com.xxn.iservice.IOrderService;
 import com.xxn.iservice.IWalletService;
+import com.xxn.service.NewOrderService;
 import com.xxn.service.OrderService;
 import com.xxn.service.WalletService;
 
@@ -55,7 +58,6 @@ public class ALiPay extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-		IWalletService iWalletService = new WalletService();
 		IOrderService iOrderService = new OrderService();
         Map<String, String[]> map = request.getParameterMap();
         Map<String, String> obj = new HashMap<>();
@@ -84,25 +86,31 @@ public class ALiPay extends HttpServlet {
         			//两步操作，写入明细表和订单完成
         			ServletContext application = this.getServletContext();
 					application.setAttribute(out_trade_no, out_trade_no);
-    				
-//    				Wallet wallet2 = new Wallet(phone, -Float.parseFloat(total_fee),
-//    						DateTool.dateToString(new Date()));
+					
     				Map<String, String> val = new HashMap<>();
     				Map<String, String> query = new HashMap<>();
     				val.put("paymode", "支付宝支付");
     				query.put("orderid", out_trade_no);
     				if(iOrderService.updateOrder(val, query) > 0){
-    					//iWalletService.addWalletList(wallet2);
-    					System.out.println("扣费成功-订单修改成功");
+    					//写入新增订单
+    					INewOrderService iNewOrderService = new NewOrderService();
+    					String date = DateTool.dateToStringYMD(new Date());
+    					NewOrder newOrder = new NewOrder(date, 1, Float.parseFloat(total_fee));
+    					if(iNewOrderService.getNewOrderCount(date) == 1){
+    						iNewOrderService.updateNewOrder(newOrder);
+    					}
+    					else{
+    						iNewOrderService.addNewOrder(newOrder);
+    					}
     					out.print("success");
     				}
     				else{
-    					out.print("success");
+    					out.print("fail");
     					System.out.println("扣费成功-订单修改失败");
     				}
         		}
         		else{
-        			out.print("success");
+        			out.print("fail");
 					System.out.println("扣费成功-订单修改失败--phone:"+phone);
         		}
         	}

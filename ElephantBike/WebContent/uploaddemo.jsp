@@ -11,9 +11,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <title>大象单车</title>
 </head>
 <body>
+<script type="text/javascript" src="<%=basePath%>js/jquery.js"></script>
+<script type="text/javascript">
+	function load(){
+		alert(document.getElementById('play'));
+	}
+</script>
 	大象欢迎页测试成功
 	<form action="<%=basePath%>api/file/uploadvoice" method="post" enctype="multipart/form-data">
-		<input type="file" name="imgurl">
+		<input id = "play" type="file" name="imgurl" style="display:none">
+		<button id = "cc"  onclick="load()">试试</button>
 		<input type="submit" value="上传">
 	</form>
 </body>

@@ -65,7 +65,7 @@ $(function(){
     </dd>   
     <dd><div class="title"><span></span>车辆管理</div>
       <ul class="menuson">
-        <li><cite></cite><a href="myInfo.jsp" target="rightFrame">单车列表</a>
+        <li><cite></cite><a href="bikemanage.jsp" target="rightFrame">单车列表</a>
         <li><cite></cite><a href="choosecollege.jsp" target="rightFrame">添加单车</a>
         <li><cite></cite><a href="map.jsp" target="rightFrame">添加学校</a>
       <!--   <li><cite></cite><a href="../qrcode.jsp" target="rightFrame">生成二维码</a>

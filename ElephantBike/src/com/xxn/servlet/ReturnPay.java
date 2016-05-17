@@ -17,11 +17,14 @@ import com.xxn.butils.DateTool;
 import com.xxn.butils.FastJsonTool;
 import com.xxn.butils.NormalUtil;
 import com.xxn.constants.BikeConstants;
+import com.xxn.entity.NewOrder;
 import com.xxn.entity.Token;
 import com.xxn.entity.Wallet;
+import com.xxn.iservice.INewOrderService;
 import com.xxn.iservice.IOrderService;
 import com.xxn.iservice.ITokenService;
 import com.xxn.iservice.IWalletService;
+import com.xxn.service.NewOrderService;
 import com.xxn.service.OrderService;
 import com.xxn.service.TokenService;
 import com.xxn.service.WalletService;
@@ -117,6 +120,16 @@ public class ReturnPay extends HttpServlet {
 							if (iWalletService.addWalletList(wallet2) > 0
 									&& iOrderService.updateOrder(val, query) > 0) {
 								//
+								INewOrderService iNewOrderService = new NewOrderService();
+								String date = DateTool.dateToStringYMD(new Date());
+								NewOrder newOrder = new NewOrder(date, 1, fee);
+								if(iNewOrderService.getNewOrderCount(date) == 1){
+									iNewOrderService.updateNewOrder(newOrder);
+								}
+								else{
+									iNewOrderService.addNewOrder(newOrder);
+								}
+								
 								map.put(BikeConstants.STATUS,
 										BikeConstants.SUCCESS);
 								map.put(BikeConstants.MESSAGE, "支付成功");

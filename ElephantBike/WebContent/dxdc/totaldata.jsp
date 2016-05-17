@@ -33,14 +33,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     $(function(){
 		//获取数据的查询参数----过滤数据
 		var queryParams;
-		queryParams = {"userstate":"1"};
 		getData(queryParams);
 	});
     
 	function getData(queryParams){
 		$('#grid').datagrid({
-			url: '<%=basePath%>certiuser',
-			sortName: 'id',
+			url: '<%=basePath%>gettotaldata',
+			sortName: 'date',
 			sortOrder: 'asc',
 			queryParams: queryParams,
 			nowrap: true, //换行属性
@@ -52,27 +51,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			    {field: 'ck', checkbox: true},          
 			]],
 			columns: [[
-				{field:'id',title:'日期',sortable:true,width:'5%',},
-				{field:'registerdate',title:'订单总数',sortable:true,width:'10%',},
-				{field:'phone',title:'单车总收入',sortable:true,width:'6%',
+				{field:'date',title:'日期',sortable:true,width:'10%',},
+				{field:'count',title:'订单总数',sortable:true,width:'5%',},
+				{field:'totalfee',title:'单车总收入',sortable:true,width:'6%',
 					//如果要实现编辑功能，需要添加下面的属性
 					//editor: { type: 'validatebox',  }
 				},
-				{field:'college',title:'用车用户数',sortable:true,width:'6%',
+				{field:'totaluser',title:'用车用户数',sortable:true,width:'6%',
 				},
-				{field:'college',title:'人均使用次数',sortable:true,width:'6%',
+				{field:'averusercount',title:'人均使用次数',sortable:true,width:'6%',
 				},
-				{field:'college',title:'人均费用',sortable:true,width:'6%',
+				{field:'averuserfee',title:'人均费用',sortable:true,width:'6%',
 				},
-				{field:'college',title:'新增用户数',sortable:true,width:'6%',
+				{field:'newuser',title:'新增用户数',width:'6%',
 				},
-				{field:'college',title:'新增会员数',sortable:true,width:'6%',
+				{field:'newvip',title:'新增会员数',width:'6%',
 				},
-				{field:'college',title:'可使用单车数量',sortable:true,width:'6%',
+				{field:'totalbike',title:'可使用单车数量',sortable:true,width:'6%',
 				},
-				{field:'college',title:'车均使用次数',sortable:true,width:'6%',
+				{field:'averbikecount',title:'车均使用次数',sortable:true,width:'6%',
 				},
-				{field:'college',title:'车均收入',sortable:true,width:'6%',
+				{field:'averbikefee',title:'车均收入',sortable:true,width:'6%',
 				},
 			]],
 			

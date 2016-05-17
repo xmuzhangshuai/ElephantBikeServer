@@ -6,6 +6,7 @@ public class Bike {
 	private int state;
 	private String college;
 	private String usedtime;
+	private String lastusedtime;
 	private int m;
 	private int n;
 	private String lastpass;
@@ -32,6 +33,18 @@ public class Bike {
 	}
 	public void setUsedtime(String usedtime) {
 		this.usedtime = usedtime;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getLastusedtime() {
+		return lastusedtime;
+	}
+	public void setLastusedtime(String lastusedtime) {
+		this.lastusedtime = lastusedtime;
 	}
 	public int getM() {
 		return m;
@@ -64,6 +77,16 @@ public class Bike {
 		this.lastpass = lasspass;
 		this.m = m;
 		this.n = n;
+	}
+	public Bike(int id, String bikeid, int state, String college,
+			String usedtime, String lastusedtime) {
+		super();
+		this.id = id;
+		this.bikeid = bikeid;
+		this.state = state;
+		this.college = college;
+		this.usedtime = usedtime;
+		this.lastusedtime = lastusedtime;
 	}
 	
 }
