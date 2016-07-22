@@ -51,22 +51,19 @@ public class UploadVoice extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("/api/file/uploadvoice");
 		request.setCharacterEncoding("utf-8");
 		response.setCharacterEncoding("UTF-8");
-//		response.setContentType("text/html;Charset=UTF-8");
-		response.addHeader("Access-Control-Allow-Headers", 
-				"Origin, No-Cache, X-Requested-With, If-Modified-Since, "
-				+ "Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With");  
-		
+		response.addHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+		response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT");
 		PrintWriter out = response.getWriter();
-		System.out.println("/api/file/uploadvoice");
 		Map<String, String> map = new HashMap<>();
 		IWebToolService iWebToolService = new WebToolService();
 
 		String imgurl = iWebToolService.getURL()+"/voice";
+		System.out.println(imgurl);
 		// 图片地址正确
 		if (!imgurl.equals("")) {
-			System.out.println(imgurl);
 			java.io.File fpath1 = new java.io.File(imgurl);
 			if (!fpath1.exists()) {
 				fpath1.mkdirs();
@@ -77,26 +74,32 @@ public class UploadVoice extends HttpServlet {
 			su.setAllowedFilesList("mp3,wma,cd,mpeg-4");
 			try {
 				su.upload();
-				for (int i = 0; i < su.getFiles().getCount(); i++) {
-					System.out.println("格式:"
-							+ su.getFiles().getFile(i).getFileExt());
-					File image_file = su.getFiles().getFile(i);
-					if (image_file.isMissing()) {
-						System.out.println("录音文件丢失");
-						out.print("error");
-						map.put(BikeConstants.STATUS, BikeConstants.FAIL);
-						map.put(BikeConstants.MESSAGE, "录音文件上传失败");
-					} else {
-						String imgurl_name = "/"
-								+ new Date(System.currentTimeMillis())
-								+ (new Random().nextInt(900) + 100) + "."
-								+ image_file.getFileExt();
-//						imgurl = imgurl + "/voice";
-						image_file.saveAs(imgurl + imgurl_name);
-						map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
-						map.put("url", BikeConstants.WEB_IMAGR_URL + "voice/"
-								+ imgurl_name);
+				if(su.getFiles().getCount() > 0){
+					for (int i = 0; i < su.getFiles().getCount(); i++) {
+						System.out.println("格式:"
+								+ su.getFiles().getFile(i).getFileExt());
+						File image_file = su.getFiles().getFile(i);
+						if (image_file.isMissing()) {
+							System.out.println("录音文件丢失");
+//							out.print("error");
+							map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+							map.put(BikeConstants.MESSAGE, "录音文件上传失败");
+						} else {
+							String imgurl_name = "/"
+									+ new Date(System.currentTimeMillis())
+									+ (new Random().nextInt(900) + 100) + "."
+									+ image_file.getFileExt();
+//							imgurl = imgurl + "/voice";
+							image_file.saveAs(imgurl + imgurl_name);
+							map.put(BikeConstants.STATUS, BikeConstants.SUCCESS);
+							map.put("url", BikeConstants.WEB_IMAGR_URL + "voice/"
+									+ imgurl_name);
+						}
 					}
+				}
+				else{
+					map.put(BikeConstants.STATUS, BikeConstants.FAIL);
+					map.put(BikeConstants.MESSAGE, "没有录音文件");
 				}
 
 			} catch (SmartUploadException e) {

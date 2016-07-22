@@ -54,13 +54,13 @@ public class BUserBatchBalance extends HttpServlet {
 		IWalletService iWalletService = new WalletService();
 
 		String value = request.getParameter("val");
-		String ids = request.getParameter("ids");
-		String[] idArray = ids.split(",");
-		System.out.println(ids);
+		String phones = request.getParameter("phones");
+		String[] phoneArray = phones.split(",");
+		System.out.println(phones);
 		if(NormalUtil.isStringLegal(value)&&NormalUtil.isStringFloat(value)){
 			float val = Float.parseFloat(value);
 			if(val > 0.0f){
-				int result = iWalletService.batchRecharge(val,idArray);
+				int result = iWalletService.batchRecharge(val,phoneArray);
 				if(result > 0)
 					resString = "1";
 				else resString = "批量充值失败";

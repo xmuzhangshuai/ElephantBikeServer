@@ -74,18 +74,18 @@ public class CreateQuestion extends HttpServlet {
 			Token token = new Token(phone, "", "");
 			servertoken = iTokenService.getToken(token);
 		}
-		System.out.println("phone:" + phone);
-		System.out.println("access_token:" + access_token);
-		System.out.println("servertoken:" + servertoken);
+//		System.out.println("phone:" + phone);
+//		System.out.println("access_token:" + access_token);
+//		System.out.println("servertoken:" + servertoken);
 		if (null != access_token && servertoken.equals(access_token)) {
 			String bikeid = request.getParameter("bikeid");
 			String type = request.getParameter("type");
 			String voiceurl = request.getParameter("voiceurl");
 			String ismissing = request.getParameter("ismissing");
 			String needfrozen = request.getParameter("needfrozen");
-			System.out.println(phone+"--bikeid:"+bikeid+"--type:"+type
-					+"--voiceurl:"+voiceurl+"--ismissing:"+ismissing
-					+"--needfrozen:"+needfrozen);
+//			System.out.println(phone+"--bikeid:"+bikeid+"--type:"+type
+//					+"--voiceurl:"+voiceurl+"--ismissing:"+ismissing
+//					+"--needfrozen:"+needfrozen);
 			Question question = null;
 			if (null != needfrozen) {
 				if (null == ismissing) {
@@ -95,6 +95,10 @@ public class CreateQuestion extends HttpServlet {
 					if (ismissing.equals("1")) {
 						// TODO 扣费
 						question = new Question(phone, bikeid, type, "", 0,
+								DateTool.dateToString(new Date()), needfrozen);
+					}
+					else{
+						question = new Question(phone, bikeid, type, voiceurl, 0,
 								DateTool.dateToString(new Date()), needfrozen);
 					}
 				}

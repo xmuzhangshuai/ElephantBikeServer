@@ -115,13 +115,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				$.messager.alert('警告','您没有选择','error');
 			}
 			else if(rows.length >= 1){
-				var id = [];
+				var phones = [];
 				for(var i = 0; i < rows.length; ++i)
 				{
-					id[i] = rows[i].id;
+					phones[i] = rows[i].phone;
 				}
 				var balance = $('#balance').val();
-		        $.post("<%=basePath%>batchbalance", {val: balance,ids: id.toString()},
+		        $.post("<%=basePath%>batchbalance", {val: balance,phones: phones.toString()},
 						function (data, textStatus){
 						if(data == '1'){
 							$.messager.alert('提示','批量增加成功','info');

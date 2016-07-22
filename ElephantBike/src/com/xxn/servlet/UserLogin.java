@@ -110,6 +110,7 @@ public class UserLogin extends HttpServlet {
 				valUserInfo.put("name", "");
 				valUserInfo.put("userstate", "");
 				valUserInfo.put("college", "");
+				valUserInfo.put("vipdate", "");
 				queryUserInfo.put("phone", phone);
 
 				Map<String, String> resMap = iUserService.getUserInfo(valUserInfo,
@@ -168,6 +169,7 @@ public class UserLogin extends HttpServlet {
 						valUserInfo.put("name", "");
 						valUserInfo.put("userstate", "");
 						valUserInfo.put("college", "");
+						valUserInfo.put("vipdate", "");
 						
 						queryUserInfo.put("phone", phone);
 						Map<String, String> resMap = iUserService.getUserInfo(valUserInfo,
